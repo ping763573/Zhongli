@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣全民財務健康學習平台</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <button id="fullscreenBtn" class="fullscreen-btn" aria-label="全螢幕切換">
+        <span id="fullscreenIcon">⛶</span>
+    </button>
+
+    <button id="backToTop" class="back-to-top" aria-label="返回頂端">
+        ↑
+    </button>
+
+    <div class="download-menu-container">
+        <button id="downloadMenuBtn" class="download-menu-btn" aria-label="下載選單">
+            <span>&#9776;</span>&nbsp;下載區
+        </button>
+        <div id="downloadDropdown" class="download-dropdown-content">
+            <a href="#" onclick="downloadFile('01.pdf', '0904上課講義'); return false;">📄 0904上課講義</a>
+            <a href="#" onclick="downloadFile('02.pdf', '國泰2023年台灣全民財務健康檢查關鍵報告'); return false;">📊 國泰2023年財務健康報告</a>
+            <a href="#" onclick="downloadFile('03.pdf', '最新台灣全民財務洞察分析報告'); return false;">📈 最新財務洞察報告</a>
+        </div>
+    </div>
+
+    <nav class="top-nav">
+        <div class="container">
+            <h1>台灣全民財務健康學習平台</h1>
+            <ul class="nav-menu">
+                <li><a href="#overview">概覽</a></li>
+                <li><a href="#dimensions">五大構面</a></li>
+                <li><a href="#age-analysis">年齡分析</a></li>
+                <li><a href="#goals">理財目標</a></li>
+                <li><a href="#tools">投資工具</a></li>
+                <li><a href="#retirement">退休規劃</a></li>
+                <li><a href="#media">影音摘要</a></li>
+                <li><a href="#quiz">財務健檢</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="overview" class="section hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>台灣全民財務健康現況</h2>
+                    <div class="overview-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">59.2分</div>
+                            <div class="stat-label">平均財務健康分數</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">20,751人</div>
+                            <div class="stat-label">調查受訪者總數</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">58%</div>
+                            <div class="stat-label">分數未滿60分</div>
+                        </div>
+                    </div>
+                    <div class="key-findings">
+                        <h3>重要發現</h3>
+                        <ul>
+                            <li>58%台灣人財務健康分數未滿60分</li>
+                            <li>34%台灣人沒有財務目標</li>
+                            <li>15%台灣人自認金融知識不足</li>
+                            <li>45-49歲是財務健康重要分水嶺</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dimensions" class="section">
+            <div class="container">
+                <h2>財務健康五大構面分析</h2>
+                <div class="chart-container">
+                    <canvas id="dimensionsRadarChart"></canvas>
+                </div>
+                <div class="chart-explanation">
+                    <h3>數據解析</h3>
+                    <p>台灣民眾在財務健康五大構面中，<strong>「風險抵抗力」</strong>表現最佳（65.2分），顯示近5成民眾儲蓄可支應6個月以上生活所需。然而，<strong>「財務規劃」</strong>構面分數最低（52.1分），反映出台灣人在設定具體財務目標與制定長期規劃方面仍有改善空間。</p>
+                    <ul>
+                        <li><strong>風險抵抗力 (65.2分)</strong>：緊急預備金與風險承受能力表現良好</li>
+                        <li><strong>日常生活支出 (60.5分)</strong>：收支控制與支出管理能力尚可</li>
+                        <li><strong>心理富足程度 (58.9分)</strong>：對財富的滿足感與幸福感中等</li>
+                        <li><strong>財務信心 (55.8分)</strong>：對財務狀況的信心程度待加強</li>
+                        <li><strong>財務規劃 (52.1分)</strong>：設定目標與檢視規劃能力需要提升</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="age-analysis" class="section">
+            <div class="container">
+                <h2>不同年齡層財務健康趨勢</h2>
+                <div class="chart-container">
+                    <canvas id="ageLineChart"></canvas>
+                </div>
+                <div class="chart-explanation">
+                    <h3>年齡與財務健康關係分析</h3>
+                    <p><strong>45-49歲</strong>是台灣民眾財務健康的重要分水嶺，平均得分達到<strong>61.1分</strong>的高峰。這個年齡層的民眾通常面臨多重財務壓力，包括子女教育、房貸支出、父母照護等責任，促使他們更積極管理財務狀況。</p>
+                    <ul>
+                        <li><strong>25-34歲</strong>：剛進入職場，財務規劃經驗相對不足</li>
+                        <li><strong>35-44歲</strong>：開始承擔家庭責任，財務意識逐漸提升</li>
+                        <li><strong>45-49歲</strong>：多重壓力下的財務管理高峰期</li>
+                        <li><strong>50歲以上</strong>：接近退休，開始關注退休規劃</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="goals" class="section">
+            <div class="container">
+                <h2>台灣民眾十大理財目標</h2>
+                <div class="chart-container">
+                    <canvas id="goalsBarChart"></canvas>
+                </div>
+                <div class="chart-explanation">
+                    <h3>理財目標優先順序分析</h3>
+                    <p><strong>「退休金準備」</strong>以58.6%高居榜首，顯示台灣人對退休生活的重視。然而，調查也發現多數民眾雖然將退休列為目標，但缺乏具體的執行計畫。其次是「緊急預備金」(48.7%)和「旅遊」(45.2%)，反映出台灣人在追求生活品質的同時，也重視風險管控。</p>
+                    <ul>
+                        <li><strong>退休金準備 (58.6%)</strong>：長期財務安全的首要考量</li>
+                        <li><strong>緊急預備金 (48.7%)</strong>：風險管理意識提升</li>
+                        <li><strong>旅遊 (45.2%)</strong>：生活品質追求的體現</li>
+                        <li><strong>買房 (43.8%)</strong>：置產需求仍然強烈</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools" class="section">
+            <div class="container">
+                <h2>理財工具使用分布</h2>
+                <div class="chart-container">
+                    <canvas id="toolsBarChart"></canvas>
+                </div>
+                <div class="chart-explanation">
+                    <h3>理財工具偏好分析</h3>
+                    <p>台灣民眾的理財行為偏向<strong>穩健保守</strong>，「台幣存款」(59.4%)和「定存」(45.8%)為最主要的理財工具。雖然「股票」(43.0%)使用率也不低，但整體而言，台灣人仍偏好低風險的投資方式。值得注意的是，新興投資工具如「ETF」(25.6%)和「虛擬貨幣」(8.9%)的使用率逐漸上升。</p>
+                    <ul>
+                        <li><strong>傳統穩健型</strong>：台幣存款、定存佔主導地位</li>
+                        <li><strong>股票投資</strong>：超過4成民眾參與股市投資</li>
+                        <li><strong>多元化趨勢</strong>：ETF、基金等工具使用率提升</li>
+                        <li><strong>新興投資</strong>：虛擬貨幣等創新工具開始受到關注</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="retirement" class="section">
+            <div class="container">
+                <h2>退休規劃現況分析</h2>
+                <div class="retirement-stats">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">1,431萬元</div>
+                            <div class="stat-desc">理想退休金目標</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5.0萬元</div>
+                            <div class="stat-desc">預估月生活費</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8,500元</div>
+                            <div class="stat-desc">平均月儲蓄金額</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">39.6歲</div>
+                            <div class="stat-desc">開始規劃退休年齡</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-explanation">
+                    <h3>退休規劃關鍵洞察</h3>
+                    <p>調查顯示，台灣民眾認為至少需要<strong>1,431萬元</strong>才能安心退休，但實際的儲蓄行為與目標存在落差。多數人在39.6歲才開始認真規劃退休，相對較晚。建議提早開始退休規劃，善用複利效應達成退休目標。</p>
+                    <div class="retirement-tips">
+                        <h4>退休規劃建議</h4>
+                        <ul>
+                            <li><strong>提早規劃</strong>：建議25-30歲就開始退休規劃</li>
+                            <li><strong>定期檢視</strong>：每年檢視退休計畫執行進度</li>
+                            <li><strong>多元配置</strong>：結合不同理財工具分散風險</li>
+                            <li><strong>通膨考量</strong>：將通膨因素納入退休金計算</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="media" class="section">
+            <div class="container">
+                <h2>影片與語音摘要</h2>
+                <div class="media-grid">
+                    <a href="https://drive.google.com/file/d/1Hf6BsLG7UBn_X-d77l7rhiC56MpeGDW0/view?usp=sharing" target="_blank" class="media-card">
+                        <span class="media-icon">&#9654;</span>
+                        <div class="media-content">
+                            <h3>摘要影片 (一)</h3>
+                            <p>點擊觀看重點摘要影片，掌握財務健康核心觀念。</p>
+                        </div>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1fHRiA1M6g0Sp-mtDfCofXiUa8umMO_B7/view?usp=sharing" target="_blank" class="media-card">
+                        <span class="media-icon">&#9654;</span>
+                        <div class="media-content">
+                            <h3>摘要語音(一)</h3>
+                            <p>深入解析退休規劃與投資工具的選擇策略。</p>
+                        </div>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1RoiY0s2QIjC3LWscAzGo9f9ehCYyTQrD/view?usp=sharing" target="_blank" class="media-card">
+                        <span class="media-icon">&#128266;</span>
+                        <div class="media-content">
+                            <h3>摘要影片 (二)</h3>
+                            <p>通勤時間隨身聽，學習財務知識不間斷。</p>
+                        </div>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1RoiY0s2QIjC3LWscAzGo9f9ehCYyTQrD/view?usp=sharing" target="_blank" class="media-card">
+                        <span class="media-icon">&#128266;</span>
+                        <div class="media-content">
+                            <h3>摘要語音 (二)</h3>
+                            <p>專家對談，分享台灣民眾常見的理財迷思。</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="section">
+            <div class="container">
+                <h2>財務健康素養測驗</h2>
+                <div class="quiz-container">
+                    <div id="quizIntro" class="quiz-intro">
+                        <p>透過以下測驗了解您的財務健康素養程度，我們將隨機抽取5題進行測驗。</p>
+                        <button id="startQuiz" class="btn btn--primary btn--lg">開始測驗</button>
+                    </div>
+                    
+                    <div id="quizContent" class="quiz-content hidden">
+                        <div class="quiz-header">
+                            <div class="quiz-progress">
+                                <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
+                            </div>
+                            <div class="quiz-score">
+                                得分: <span id="currentScore">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="question-container">
+                            <h3 id="questionText"></h3>
+                            <div id="optionsContainer" class="options-container">
+                                </div>
+                            <div id="explanationContainer" class="explanation-container hidden">
+                                <p id="explanationText"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="quiz-actions">
+                            <button id="submitAnswer" class="btn btn--primary" disabled>提交答案</button>
+                            <button id="nextQuestion" class="btn btn--secondary hidden">下一題</button>
+                            <button id="finishQuiz" class="btn btn--primary hidden">完成測驗</button>
+                        </div>
+                    </div>
+                    
+                    <div id="quizResults" class="quiz-results hidden">
+                        <h3>測驗結果</h3>
+                        <div class="result-summary">
+                            <div class="final-score">
+                                您的得分: <span id="finalScore"></span> / <span id="totalScore"></span>
+                            </div>
+                            <div class="score-percentage">
+                                正確率: <span id="scorePercentage"></span>%
+                            </div>
+                        </div>
+                        <div id="resultAnalysis" class="result-analysis">
+                            </div>
+                        <div class="result-recommendations">
+                            <h4>改善建議</h4>
+                            <div id="recommendations">
+                                </div>
+                        </div>
+                        <button id="restartQuiz" class="btn btn--outline">重新測驗</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 台灣全民財務健康學習平台. 數據來源：國泰世華銀行調查報告</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
