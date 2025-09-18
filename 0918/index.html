@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣民眾財務健康洞察</title>
+    <!-- 引入 Tailwind CSS 以進行快速的 UI 開發 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Chart.js 用於數據可視化 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入 Google Fonts 的字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 自定義樣式 --- */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f0f4f8; /* 設定頁面背景色 */
+        }
+        
+        /* --- 視覺優化: 導航欄 --- */
+        .nav-link {
+            padding: 0.6rem 1.25rem; /* 增加內距，使按鈕更大 */
+            border-radius: 9999px; /* 圓角膠囊形狀 */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 平滑過渡效果 */
+            font-weight: 600; /* 字體加粗 */
+            color: #4b5563; /* gray-600 文字顏色 */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none; /* 防止文字選取 */
+        }
+
+        .nav-link:hover {
+            background-color: #f3f4f6; /* 滑鼠懸停時的淺灰色背景 */
+            color: #1f2937; /* gray-800 */
+        }
+
+        /* 導航欄 active 狀態的樣式，取代原本的底線 */
+        .nav-link-active {
+            background-color: #10B981; /* an emerald-500 color */
+            color: white !important;
+            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3); /* 添加柔和陰影 */
+        }
+
+        /* --- 視覺優化: 閃卡堆疊效果 --- */
+        #flashcard-container-wrapper {
+            position: relative;
+        }
+
+        /* 使用偽元素製作下方的兩張卡片，營造堆疊感 */
+        #flashcard-container-wrapper::before,
+        #flashcard-container-wrapper::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 1rem; /* 圓角 */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-out;
+            margin: 0 auto;
+            width: 95%;
+        }
+
+        #flashcard-container-wrapper::before {
+            transform: translateY(16px) scale(0.95);
+            background-color: #f3f4f6; /* a gray-100 color */
+            z-index: -2;
+            width: 90%;
+        }
+
+        #flashcard-container-wrapper::after {
+            transform: translateY(8px) scale(0.975);
+            background-color: #e5e7eb; /* a gray-200 color */
+            z-index: -1;
+        }
+
+        .flip-card {
+            perspective: 1500px; /* 增加3D深度 */
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            /* 移除主卡片的陰影，陰影改由偽元素提供 */
+        }
+
+        .flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        .flip-card-back {
+            background-image: linear-gradient(to top right, #2c3e50, #4ca1af); /* 新增漸層背景 */
+            color: white;
+            transform: rotateY(180deg);
+            border: none;
+        }
+
+        /* --- 視覺優化: 測驗選項 --- */
+        .quiz-option {
+            display: flex; /* 使用 flexbox 佈局 */
+            align-items: center; /* 垂直置中 */
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem; /* 圓角 */
+            border: 1px solid #d1d5db; /* 邊框顏色 */
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .quiz-option:hover {
+            border-color: #3B82F6; /* blue-500 */
+            background-color: #eff6ff; /* blue-50 */
+            transform: translateY(-3px); /* 向上微移更多 */
+            box-shadow: 0 7px 15px rgba(0,0,0,0.06); /* 懸停陰影更明顯 */
+        }
+
+        /* 正確選項樣式 */
+        .quiz-option.correct {
+            background-color: #ecfdf5; /* emerald-50 */
+            border-color: #10B981; /* emerald-500 */
+            color: #065f46; /* emerald-800 */
+            font-weight: 600;
+        }
+        
+        /* 錯誤選項樣式 */
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-500 */
+            color: #991b1b; /* red-800 */
+            font-weight: 600;
+        }
+        
+        /* --- 視覺優化: 按鈕 --- */
+        .action-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn-blue { background-color: #3B82F6; } /* blue-500 */
+        .btn-blue:hover { background-color: #2563EB; } /* blue-600 */
+        .btn-emerald { background-color: #10B981; } /* emerald-500 */
+        .btn-emerald:hover { background-color: #059669; } /* emerald-600 */
+        .btn-gray { background-color: #6b7280; } /* gray-500 */
+        .btn-gray:hover { background-color: #4b5563; } /* gray-600 */
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 主容器 -->
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- 頁面標題 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">台灣民眾財務健康洞察報告</h1>
+            <p class="text-gray-600 mt-2">基於《2023臺灣全民財務健康關鍵報告》與《台灣民眾財務健康洞察報告》</p>
+        </header>
+
+        <!-- 導航欄 -->
+        <nav class="bg-white rounded-full shadow-md p-2 mb-8 sticky top-4 z-10">
+            <ul class="flex justify-center items-center space-x-2 md:space-x-4">
+                <!-- 導航連結 -->
+                <li><a href="#dashboard" onclick="showSection('dashboard', this)" class="nav-link nav-link-active">儀表板</a></li>
+                <li><a href="#flashcards" onclick="showSection('flashcards', this)" class="nav-link">閃卡學習</a></li>
+                <li><a href="#quiz" onclick="showSection('quiz', this)" class="nav-link">隨堂測驗</a></li>
+                <!-- 新增：檔案下載按鈕 -->
+                <li class="relative" id="download-menu-container">
+                    <button onclick="toggleDropdown(event)" class="nav-link flex items-center space-x-2 focus:outline-none">
+                        <span>檔案下載</span>
+                        <svg id="download-arrow" class="w-4 h-4 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <!-- 下拉式選單 -->
+                    <div id="download-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg z-20 overflow-hidden border border-gray-100">
+                        <div class="py-1">
+                            <a href="https://drive.google.com/file/d/1jFdXKliX5CVogGzEnfliJx4nRgNJrd8w/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="block w-full text-left px-4 py-3 text-sm text-gray-800 hover:bg-emerald-50 hover:text-emerald-700 transition-colors duration-150">
+                                <strong>2023國泰全民財務健康檢查.pdf</strong>
+                            </a>
+                            <a href="https://drive.google.com/file/d/1FeFA-xNZvckAo4oevJ7PsZA3ft1dcPF-/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="block w-full text-left px-4 py-3 text-sm text-gray-800 hover:bg-emerald-50 hover:text-emerald-700 transition-colors duration-150 border-t border-gray-100">
+                                <strong>台灣民眾財務健康洞察報告.pdf</strong>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- 儀表板區塊 -->
+            <section id="dashboard" class="space-y-8">
+                <!-- 主要數據卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <h3 class="text-lg font-semibold text-gray-500">全民財務健康總分</h3>
+                        <p class="text-5xl font-bold text-emerald-500 mt-2">59.2 <span class="text-2xl">分</span></p>
+                        <p class="text-gray-500 mt-2">（普通等級）</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <h3 class="text-lg font-semibold text-gray-500">表現最佳構面</h3>
+                        <p class="text-3xl font-bold text-green-500 mt-2">金融風險抵抗力</p>
+                        <p class="text-2xl text-gray-700 font-semibold">65%</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <h3 class="text-lg font-semibold text-gray-500">待加強構面</h3>
+                        <p class="text-3xl font-bold text-red-500 mt-2">財務規劃 & 信心</p>
+                        <p class="text-2xl text-gray-700 font-semibold">43% & 47%</p>
+                    </div>
+                </div>
+                <!-- 圖表區塊 -->
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">財務健康五大構面</h3>
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">各年齡層財務健康分數</h3>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+                <!-- 新增數據洞察卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <h3 class="text-lg font-semibold text-gray-500">金融素養NG行為</h3>
+                        <p class="text-4xl font-bold text-blue-500 mt-2">48%</p>
+                        <p class="text-gray-600 mt-2">的台灣人至少有一項NG行為</p>
+                        <p class="text-sm text-gray-500 mt-1">(最常見：無訂定財務目標 31%)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <h3 class="text-lg font-semibold text-gray-500">安心退休準備</h3>
+                        <p class="text-4xl font-bold text-purple-500 mt-2">1,431 <span class="text-xl">萬</span></p>
+                        <p class="text-gray-600 mt-2">為民眾認為的平均所需金額</p>
+                         <p class="text-sm text-gray-500 mt-1">(退休後月需 5 萬元)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <h3 class="text-lg font-semibold text-gray-500">緊急預備金</h3>
+                        <p class="text-4xl font-bold text-yellow-500 mt-2">84%</p>
+                        <p class="text-gray-600 mt-2">財務健康<span class="text-green-600 font-semibold">良好者</span>具備6個月以上</p>
+                        <p class="text-sm text-gray-500 mt-1">(不佳者僅 8%)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                         <h3 class="text-lg font-semibold text-gray-500">投資意願</h3>
+                        <p class="text-4xl font-bold text-red-500 mt-2">75%</p>
+                        <p class="text-gray-600 mt-2">財務健康<span class="text-green-600 font-semibold">良好者</span>投資意願高</p>
+                         <p class="text-sm text-gray-500 mt-1">(vs 不佳者 25%)</p>
+                    </div>
+                </div>
+                <!-- 新增圖表與核心洞察 -->
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">儲蓄習慣比較</h3>
+                        <canvas id="savingHabitChart"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">核心洞察摘要</h3>
+                        <ul class="list-disc list-inside space-y-3 text-gray-700">
+                            <li><span class="font-semibold">外在堅韌，內在脆弱：</span> 普遍有儲蓄習慣，但在長期「財務規劃」與「財務信心」上明顯不足。</li>
+                            <li><span class="font-semibold">被動的財務覺醒：</span> 民眾常在 45-49 歲面臨多重壓力時，才開始被動規劃財務，錯失資產累積黃金期。</li>
+                            <li><span class="font-semibold">高投資意願 vs. 低金融知識：</span> 投資熱情高，但因知識不足易形成理財盲區，追逐短期報酬而忽略風險。</li>
+                            <li><span class="font-semibold">資訊不對稱與信任危機：</span> 如實支實付醫療險爭議，反映出消費者與金融機構間的信任鴻溝。</li>
+                        </ul>
+                    </div>
+                 </div>
+                 <!-- 新增摘要與建議區塊 -->
+                 <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- 內容摘要 -->
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-emerald-500 pl-3">內容摘要</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                本報告綜合分析顯示，台灣民眾財務健康平均分數為59.2分，屬「普通」等級。民眾在「金融風險抵抗力」上因有儲蓄習慣而表現較佳，但在「財務規劃」與「財務信心」上則顯著不足。這種「外在堅韌，內在脆弱」的現象，源於金融教育的不足、被動的理財行為模式，以及對金融市場的信任問題，構成了個人與家庭實現長期財務目標的主要障礙。
+                            </p>
+                        </div>
+                        <!-- 核心建議 -->
+                         <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-blue-500 pl-3">核心建議</h3>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li><strong>個人：</strong>應提早並主動進行財務規劃，建立從分析、目標設定到定期檢視的系統化流程，並追求「財務幸福」而非單純的「財富自由」。</li>
+                                <li><strong>金融機構：</strong>應從產品銷售轉向客戶教育與諮詢，提供整合性規劃服務(如CFP®)，並重建與消費者的信任關係。</li>
+                                <li><strong>主管機關：</strong>應大力推動普惠金融教育，並優化金融消費爭議的處理機制，營造更健康的金融環境。</li>
+                            </ul>
+                        </div>
+                        <!-- 總結 -->
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-purple-500 pl-3">總結</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                提升台灣全民的財務健康，是一項需要個人、金融產業及政府共同努力的系統工程。唯有透過觀念的轉變、服務模式的革新與政策的推動，才能彌補規劃與紀律的不足，引導民眾從單純「存錢」邁向有效的「理財」，最終實現更自信與幸福的生活。
+                            </p>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+
+            <!-- 閃卡學習區塊 -->
+            <section id="flashcards" class="hidden">
+                 <div class="max-w-2xl mx-auto text-center">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">理財閃卡</h2>
+                    <p class="text-gray-600 mb-6">點擊卡片或按鈕來翻轉學習，並使用左右箭頭切換卡片。</p>
+                    <!-- 閃卡容器增加一個 wrapper 來實現堆疊效果 -->
+                    <div id="flashcard-container-wrapper">
+                        <div id="flashcard-container" class="w-full h-64 md:h-80 flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <p id="flashcard-question" class="text-xl md:text-2xl font-semibold"></p>
+                                </div>
+                                <div class="flip-card-back">
+                                    <p id="flashcard-answer" class="text-xl md:text-2xl font-bold"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <!-- 按鈕增加通用 class "action-button" 和特定顏色 class "btn-blue" -->
+                        <button id="flip-button" class="action-button btn-blue">查看答案</button>
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                         <!-- 按鈕樣式微調 -->
+                        <button id="prev-card" class="bg-gray-200 text-gray-700 font-bold p-3 rounded-full hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+                        <p id="card-counter" class="text-gray-600 font-semibold"></p>
+                        <button id="next-card" class="bg-gray-200 text-gray-700 font-bold p-3 rounded-full hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 隨堂測驗區塊 -->
+            <section id="quiz" class="hidden">
+                <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg"> <!-- 增加圓角和陰影 -->
+                    <div id="quiz-container">
+                        <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">隨堂測驗</h2>
+                        <p class="text-center text-gray-600 mb-8">來測驗一下你的學習成果吧！共 10 題。</p>
+                        <div id="question-container">
+                             <p id="question-text" class="text-xl font-semibold text-gray-800 mb-6 min-h-[6rem] flex items-center justify-center"></p> <!-- 設定最小高度避免跳動 -->
+                             <div id="options-container" class="space-y-4"></div>
+                        </div>
+                        <div class="text-center mt-8">
+                            <button id="next-question-btn" class="action-button btn-emerald disabled:opacity-50" disabled>下一題</button>
+                        </div>
+                    </div>
+                    <div id="results-container" class="hidden text-center">
+                        <h2 class="text-3xl font-bold text-gray-800">測驗完成！</h2>
+                        <p class="mt-4 text-xl">你的分數是：</p>
+                        <p id="score-text" class="text-6xl font-bold text-emerald-500 my-4"></p>
+                        <p id="score-feedback" class="text-gray-600 text-lg mb-8"></p>
+                        <button onclick="restartQuiz()" class="action-button btn-blue">再測一次</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- 全局變數和資料定義 ---
+        const sections = ['dashboard', 'flashcards', 'quiz'];
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // --- 閃卡與測驗資料庫 (內容未變動) ---
+        const flashcardData = [ { q: "根據國泰世華銀行的報告，什麼是「良好的財務健康」？", a: "透過財務規劃，滿足生活基本及風險保障需求，創造穩定現金流，持續累積資產，造就自信及幸福生活。" }, { q: "2023年台灣全民的財務健康平均分數是多少？", a: "59.2分" }, { q: "財務健康的五大構面中，台灣民眾得分最高的是哪一項？", a: "金融風險抵抗力 (65%)" }, { q: "財務健康的五大構面中，哪兩項得分最低，顯示為待加強項目？", a: "財務規劃 (43%) 與 財務信心 (47%)" }, { q: "報告中指出，幾歲是台灣民眾財務健康的「重要分水嶺」或「財務覺醒期」？", a: "45-49歲" }, { q: "財務健康良好者中，有多少比例的人表示有落實儲蓄的習慣？", a: "77%" }, { q: "報告指出，財務健康不佳者在做投資理財判斷時，最常參考的資訊來源是什麼？", a: "親朋好友推薦 (42%)" }, { q: "儘管金融知識普遍被認為不足，但財務健康良好者中有多少比例的人表示「投資意願高」？", a: "75%" }, { q: "報告分析，台灣民眾的理財規劃行為，通常是「主動」還是「被動」的？", a: "被動的，常因現實壓力才開始規劃。" }, { q: "台灣人認為至少要準備多少退休金才能安心退休？", a: "約 1,431 萬元" }, { q: "報告中提到的五大金融素養 NG 行為包含哪些？", a: "無訂定財務目標、無檢視財務規劃習慣、帳單遲繳、娛樂支出占比過高、金融知識不足仍經常投資。" }, { q: "財務健康分數的分佈中，平均數和中位數分別是多少？", a: "平均數 59.2分，中位數 59.7分" }, { q: "65歲以上族群的財務健康平均分數是多少？", a: "68.9分" }, { q: "財務健康良好者，有99%的人會進行什麼活動？", a: "儲蓄及投資" }, { q: "財務健康不佳者，有多少比例的人支出大於等於收入，無法進行儲蓄或投資？", a: "21%" }, { q: "當被問到一週內能否籌措10萬元時，財務健康良好者有多少比例可以支應全部費用？", a: "95%" }, { q: "相對地，財務健康不佳者，有多少比例的人連一毛錢都籌不到？", a: "10%" }, { q: "財務健康良好者中，有多少比例的人具備6個月以上的緊急預備金？", a: "84%" }, { q: "財務健康不佳者中，有多少比例的人緊急預備金不足6個月？", a: "92%" }, { q: "在制定財務目標方面，財務健康良好者有多少比例的人有具體目標？", a: "90%" }, { q: "相對地，財務健康不佳者有多少比例的人沒有財務目標？", a: "53%" }, { q: "在財務檢視頻率上，財務健康良好者與不佳者，有多少比例的人「無檢視習慣」？", a: "良好者 23%，不佳者 48%" }, { q: "自評金融知識程度時，財務健康良好者有多少比例認為自己「具充足金融知識」？", a: "32%" }, { q: "財務健康不佳者，僅有多少比例認為自己「具充足金融知識」？", a: "4%" }, { q: "提升財務健康的「錦囊3計」是指哪三件事？", a: "計畫、紀律、技能" }, { q: "有多少比例的台灣人有至少一項金融素養NG行為？", a: "48%" }, { q: "近六成的台灣人將什麼列為首要財務目標？", a: "退休金準備" }, { q: "25歲以下年輕人的三大財務目標是什麼？", a: "旅遊、買房、購車" }, { q: "台灣人認為退休後，每個月的生活費大約需要多少？", a: "約 5 萬元" }, { q: "報告指出，提早退休的關鍵行為之一是無負債，或債務多為哪一種類型？", a: "房貸" }, { q: "財務迷思之一：休閒娛樂支出較多的人，心理就一定比較富足嗎？", a: "否，兩者無顯著差異" }, { q: "財務迷思之二：有無子女是否為影響財務健康的關鍵因素？", a: "否，無論有無子女，財務健康分數無顯著差異" }, { q: "無債務者的財務健康分數(63.1分)比有2項(含)以上債務者(49.9分)高出多少？", a: "約 13.2 分" }, { q: "即使是有2項以上債務者，財務健康良好的人仍有多少比例具備6個月以上緊急預備金？", a: "87%" }, { q: "報告將財務健康分為九大型，其中「現在」和「未來」都表現良好的被稱為什麼？", a: "財務資優生" }, { q: "九大型中，「現在」不佳但「未來」良好的類型被稱為什麼？", a: "熱血夢想家" }, { q: "九大型中，「現在」良好但「未來」不佳的類型被稱為什麼？", a: "浪漫享樂者" }, { q: "九大型中，「現在」和「未來」都表現不佳的類型被稱為什麼？", a: "財務躺平族" }, { q: "洞察報告指出，台灣民眾的財務現況呈現一種什麼樣的矛盾特徵？", a: "外在堅韌，內在脆弱" }, { q: "「外在堅韌」主要體現在哪個構面？", a: "金融風險抵抗力（良好的儲蓄習慣）" }, { q: "「內在脆弱」主要體現在哪兩個構面？", a: "財務規劃與財務信心" }, { q: "洞察報告指出，理財教育存在「套裝知識」與什麼的衝突？", a: "經驗知識" }, { q: "超過七成的大專生認為學校課程對生活財務的助益程度為何？", a: "低或極低" }, { q: "實支實付醫療險保費調漲的爭議，暴露了消費者與金融機構之間的什麼問題？", a: "資訊不對稱與信任鴻溝" }, { q: "許多消費者將「保證續保」誤解成什麼？", a: "保證費率不變" }, { q: "洞察報告中，以什麼資產的傳承為例，說明了單一專業人士的侷限性？", a: "不動產資產" }, { q: "在不動產傳承規劃中，CFP®（國際認證理財規劃顧問）的角色類似於什麼？", a: "家庭財務醫師" }, { q: "洞察報告建議，個人應將理財目標從追求「財富自由」轉變為追求什麼？", a: "財務幸福（夠用就好且具備選擇權）" }, { q: "金融機構應從以「產品銷售」為核心的模式，轉型為以什麼為中心的服務模式？", a: "客戶教育與諮詢" }, { q: "針對主管機關，報告建議應推動什麼樣的金融教育？", a: "普惠金融教育，針對不同年齡層與弱勢群體設計。" }];
+        const quizData = [ { question: "根據國泰世華銀行的《2023臺灣全民財務健康關鍵報告》，臺灣民眾的財務健康平均分數是多少？", options: ["52.8分", "59.2分", "65.4分", "66.3分"], answer: "59.2分" }, { question: "在財務健康的五大構面中，臺灣民眾在哪一項表現最佳？", options: ["財務規劃", "財務信心", "日常生活收支", "金融風險抵抗力"], answer: "金融風險抵抗力" }, { question: "報告指出，台灣民眾財務健康的「重要分水嶺」或「財務覺醒期」大約在哪個年齡區間？", options: ["25-29歲", "35-39歲", "45-49歲", "55-59歲"], answer: "45-49歲" }, { question: "財務健康良好者有多少比例的人表示「投資意願高」？", options: ["25%", "50%", "75%", "90%"], answer: "75%" }, { question: "財務健康不佳者在投資理財時，最主要的判斷依據是什麼？", options: ["諮詢理專或專業機構", "自行研究規劃", "查詢網路社群討論", "參考親朋好友推薦"], answer: "參考親朋好友推薦" }, { question: "根據報告，以下何者是「金融素養NG行為」之一？", options: ["每月檢視財務", "有儲蓄習慣", "帳單遲繳", "諮詢專業人士"], answer: "帳單遲繳" }, { question: "台灣人普遍認為，要準備大約多少錢才能安心退休？", options: ["約500萬", "約1000萬", "約1431萬", "約2000萬"], answer: "約1431萬" }, { question: "報告顯示，台灣民眾的財務現況呈現一種「外在堅韌，內在脆弱」的矛盾，其中「內在脆弱」主要指哪方面的不足？", options: ["儲蓄能力不足", "應對突發狀況的能力", "財務規劃與信心", "收入水平過低"], answer: "財務規劃與信心" }, { question: "根據報告，有子女與否是否是影響財務健康的關鍵因素？", options: ["是，有子女者財務健康顯著較差", "是，無子女者財務健康顯著較差", "否，兩者無顯著差異", "報告未提及"], answer: "否，兩者無顯著差異" }, { question: "報告建議個人應建立系統性的理財規劃流程，不包含以下何者？", options: ["現況分析", "設定目標", "追求最高報酬的單一投資", "定期檢視與調整"], answer: "追求最高報酬的單一投資" }, { question: "財務健康分數為65.5分，是屬於哪個年齡層的平均分數？", options: ["35-44歲", "45-54歲", "55-64歲", "65歲以上"], answer: "55-64歲" }, { question: "財務健康不佳者中，有多少比例的人支出大於等於收入？", options: ["3%", "14%", "21%", "34%"], answer: "21%" }, { question: "若突然需要10萬元，財務健康不佳者中有10%的人會如何？", options: ["可支應一半費用", "會減少支出來籌錢", "會向第三方尋求協助", "籌不到任何錢"], answer: "籌不到任何錢" }, { question: "財務健康良好者中，有多少比例每月或每季會檢視自己的財務狀況？", options: ["23%", "48%", "54%", "90%"], answer: "54%" }, { question: "在投資理財判斷依據上，財務健康良好者參考「親朋好友推薦」的比例是多少?", options: ["16%", "29%", "31%", "42%"], answer: "42%" }, { question: "提升財務健康的「錦囊3計」中，「紀律」指的是什麼？", options: ["制定收支儲蓄目標", "控制收支並定期檢視", "持續提升金融知識", "善用專業金融機構"], answer: "控制收支並定期檢視" }, { question: "台灣人的三大財務目標中，哪一項最為普遍，近六成的人都將其列入？", options: ["旅遊", "買房", "子女教育基金", "退休金準備"], answer: "退休金準備" }, { question: "35-44歲族群最主要的財務目標是什麼？", options: ["旅遊", "買房", "子女教育基金", "退休金準備"], answer: "退休金準備" }, { question: "無債務者的平均財務健康分數是多少？", options: ["49.9分", "57.3分", "59.2分", "63.1分"], answer: "63.1分" }, { question: "財務健康九大型中，被稱為「理財潛力股」的類型，其「現在」與「未來」的表現分別為何？", options: ["良好、普通", "普通、普通", "不佳、普通", "普通、不佳"], answer: "普通、普通" }, { question: "洞察報告指出，台灣金融教育長期偏重於哪種知識的傳授，導致與實務脫節？", options: ["經驗知識", "套裝知識", "網路知識", "國際知識"], answer: "套裝知識" }, { question: "造成實支實付醫療險保費調漲的原因，不包含下列何者？", options: ["醫療科技進步", "通貨膨脹壓力", "保險公司惡性競爭", "部分醫療資源濫用"], answer: "保險公司惡性競爭" }, { question: "在不動產傳承方式中，哪一種方式可能因為「取得成本認定較低」，導致子女未來出售時需繳納更高額的房地合一稅？", options: ["贈與", "買賣", "繼承", "信託"], answer: "贈與" }, { question: "洞察報告建議，CFP®顧問應扮演何種類似角色，以提供整合性規劃？", options: ["家庭財務醫師", "個人理財教練", "資產配置專家", "風險管理師"], answer: "家庭財務醫師" }, { question: "報告建議，個人應擁抱「財務幸福」觀，其核心概念是什麼？", options: ["越多越好", "夠用就好且具備選擇權", "完全不為錢煩惱", "比身邊的人都有錢"], answer: "夠用就好且具備選擇權" }, { question: "財務健康分數的PR30是多少分，低於此分數為「不佳」？", options: ["52.8分", "59.2分", "59.7分", "66.3分"], answer: "52.8分" }, { question: "財務健康良好者有77%落實儲蓄，那財務健康不佳者有多少比例「無法落實儲蓄或無儲蓄習慣」?", options: ["13%", "37%", "50%", "87%"], answer: "87%" }, { question: "財務健康不佳者中，有多少比例緊急預備金在「1個月以內」?", options: ["4%", "15%", "24%", "40%"], answer: "24%" }, { question: "自評金融知識程度時，財務健康不佳者有多少比例認為自己「甚少或無金融知識」？", options: ["4%", "10%", "30%", "66%"], answer: "30%" }, { question: "財務健康不佳者中，有多少比例的人投資意願是「低的」？", options: ["25%", "49%", "75%", "80%"], answer: "75%" }, { question: "在五大金融素養NG行為中，哪一項的佔比最高(31%)？", options: ["帳單遲繳", "無訂定財務目標", "完全無檢視財務規劃習慣", "金融知識不足仍經常投資"], answer: "無訂定財務目標" }, { question: "台灣人認為退休後每月生活費約需5萬，那麼一年約需多少？", options: ["30萬", "40萬", "50萬", "60萬"], answer: "60萬" }, { question: "報告中提到，約有多少比例的45-64歲台灣人有機會能提早退休？", options: ["5%", "10%", "15%", "20%"], answer: "15%" }, { question: "提早退休的關鍵行為中，有多少比例的人表示「投資意願高」？", options: ["58%", "61%", "67%", "72%"], answer: "67%" }, { question: "有2項(含)以上債務的財務健康良好者，有多少比例投資意願是高的？", options: ["73%", "86%", "87%", "96%"], answer: "86%" }, { question: "財務健康九大型中的「自律實踐者」，其「現在」與「未來」的表現分別為何？", options: ["良好、普通", "普通、良好", "普通、普通", "良好、良好"], answer: "普通、良好" }, { question: "洞察報告提到，理財規劃的核心理念是「人生是一條單行道」，越早開始，什麼效應就越強？", options: ["馬太效應", "蝴蝶效應", "時間複利效應", "羊群效應"], answer: "時間複利效應" }, { question: "在不動產傳承方式中，哪一種方式需要買方證明「資金來源」？", options: ["贈与", "買賣", "繼承", "信託"], answer: "買賣" }, { question: "報告建議主管機關應優化爭議處理機制，主要是提升哪個單位的獨立性與公信力？", options: ["金融監督管理委員會", "財政部", "中央銀行", "金融消費評議中心"], answer: "金融消費評議中心" }, { question: "財務健康分數的PR70是多少分，高於此分數為「良好」？", options: ["52.8分", "59.2分", "66.3分", "70.0分"], answer: "66.3分" }, { question: "25歲以下年輕人的財務健康平均分數是多少？", options: ["54.0分", "57.0分", "58.1分", "62.1分"], answer: "54.0分" }, { question: "財務健康良好者中，支出與儲蓄投資的比例，哪一種組合佔比最高(34%)？", options: ["30%支出 : 70%儲蓄及投資", "50%支出 : 50%儲蓄及投資", "60%支出 : 40%儲蓄及投資", "80%支出 : 20%儲蓄及投資"], answer: "30%支出 : 70%儲蓄及投資" }, { question: "財務健康不佳者，若收入中斷，有多少比例的人需要「立刻有收入」？", options: ["1%", "10%", "15%", "24%"], answer: "15%" }, { question: "財務健康良好者有90%具財務目標，其中有多少比例是「持續執行中」？", options: ["23%", "45%", "67%", "90%"], answer: "67%" }, { question: "財務健康良好者在做投資判斷時，除了自行研究外，最常參考的資訊來源是？", options: ["親朋好友推薦", "網路社群討論", "諮詢理專或參考專業機構資訊", "財經新聞"], answer: "親朋好友推薦" }, { question: "有5%的台灣人每月娛樂支出佔比超過多少，被視為金融素養NG行為？", options: ["10%", "20%", "30%", "40%"], answer: "40%" }, { question: "無債務者的財務健康分數為63.1分，而只有1種債務者分數為何？", options: ["49.9分", "52.8分", "57.3分", "59.2分"], answer: "57.3分" }, { question: "財務健康九大型中的「理財練習生」，其「現在」與「未來」的表現分別為何？", options: ["不佳、普通", "普通、不佳", "不佳、不佳", "普通、普通"], answer: "不佳、普通" }, { question: "洞察報告指出，「高投資意願」與「低金融知識」的矛盾，構成了台灣民眾理財行為中的巨大什麼？", options: ["機會點", "成長潛力", "盲區與風險敞口", "世代差異"], answer: "盲區與風險敞口" }, { question: "洞察報告建議，金融機構應深化專業整合，並推廣何種整合性理財規劃服務？", options: ["TGA台灣分析師", "CFA特許金融分析師", "CFP國際認證理財規劃顧問", "FRM金融風險管理師"], answer: "CFP國際認證理財規劃顧問" }, { question: "報告建議，主管機關應鼓勵金融機構在商品設計上，與哪個體系互補，為民眾提供更完善的風險保障？", options: ["國民年金", "勞工保險", "全民健保", "長期照護"], answer: "全民健保" }];
+
+        
+        // --- 核心功能函式 ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboardCharts();
+            initFlashcards();
+            initQuiz();
+            showSection('dashboard', document.querySelector('.nav-link'));
+
+            // 新增：點擊頁面其他地方時，關閉下載選單
+            window.addEventListener('click', function(event) {
+                const dropdownContainer = document.getElementById('download-menu-container');
+                if (!dropdownContainer.contains(event.target)) {
+                    const dropdown = document.getElementById('download-dropdown');
+                    const arrow = document.getElementById('download-arrow');
+                    const button = dropdownContainer.querySelector('button');
+                    
+                    dropdown.classList.add('hidden');
+                    arrow.classList.remove('rotate-180');
+                    button.classList.remove('nav-link-active');
+                }
+            });
+        });
+
+        // 新增：切換下載選單的顯示與隱藏
+        function toggleDropdown(event) {
+            event.stopPropagation(); // 防止觸發 window 的 click 事件
+            const dropdown = document.getElementById('download-dropdown');
+            const arrow = document.getElementById('download-arrow');
+            const button = event.currentTarget;
+            
+            dropdown.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+            button.classList.toggle('nav-link-active');
+            
+            // 當開啟下載選單時，取消其他區塊的 active 狀態
+            if (!dropdown.classList.contains('hidden')) {
+                document.querySelectorAll('a.nav-link').forEach(link => {
+                    link.classList.remove('nav-link-active');
+                });
+            }
+        }
+
+        // 修改：showSection 函式
+        function showSection(sectionId, clickedLink) {
+            // 新增：切換區塊時，確保下載選單是關閉且非 active 狀態
+            const dropdownContainer = document.getElementById('download-menu-container');
+            dropdownContainer.querySelector('button').classList.remove('nav-link-active');
+            document.getElementById('download-dropdown').classList.add('hidden');
+            document.getElementById('download-arrow').classList.remove('rotate-180');
+            
+            // --- 以下為原始功能 ---
+            sections.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            navLinks.forEach(link => {
+                link.classList.remove('nav-link-active'); /* 更新: 移除 active 樣式 */
+            });
+            clickedLink.classList.add('nav-link-active'); /* 更新: 添加新的 active 樣式 */
+        }
+
+        function initDashboardCharts() {
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            new Chart(radarCtx, { type: 'radar', data: { labels: ['日常生活收支', '金融風險抵抗力', '財務規劃', '財務信心', '心理富足'], datasets: [{ label: '財務健康分數 (%)', data: [61, 65, 43, 47, 60], fill: true, backgroundColor: 'rgba(22, 163, 74, 0.2)', borderColor: 'rgb(22, 163, 74)', pointBackgroundColor: 'rgb(22, 163, 74)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(22, 163, 74)' }] }, options: { responsive: true, maintainAspectRatio: true, elements: { line: { borderWidth: 3 } }, scales: { r: { angleLines: { display: false }, suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 14 } } } }, plugins: { legend: { position: 'top' } } } });
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            new Chart(barCtx, { type: 'bar', data: { labels: ['25歲以下', '25-34歲', '35-44歲', '45-54歲', '55-64歲', '65歲以上'], datasets: [{ label: '財務健康分數', data: [54.0, 57.0, 58.1, 62.1, 65.5, 68.9], backgroundColor: 'rgba(54, 162, 235, 0.6)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: true, scales: { y: { beginAtZero: true, suggestedMax: 100 } }, plugins: { legend: { display: false } } } });
+            const savingHabitCtx = document.getElementById('savingHabitChart').getContext('2d');
+            new Chart(savingHabitCtx, { type: 'bar', data: { labels: ['有儲蓄習慣', '盡量控制花費', '無儲蓄習慣'], datasets: [ { label: '財務健康良好者', data: [77, 18, 6], backgroundColor: 'rgba(22, 163, 74, 0.7)', borderColor: 'rgba(22, 163, 74, 1)', borderWidth: 1 }, { label: '財務健康不佳者', data: [13, 50, 37], backgroundColor: 'rgba(239, 68, 68, 0.7)', borderColor: 'rgba(239, 68, 68, 1)', borderWidth: 1 } ] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, scales: { x: { ticks: { callback: function(value) { return value + "%" } } } }, plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: function(context) { return `${context.dataset.label}: ${context.raw}%`; } } } } } });
+        }
+        
+        // --- 閃卡功能 ---
+        let currentCardIndex = 0;
+        function initFlashcards() {
+            const flipButton = document.getElementById('flip-button');
+            const flashcardContainer = document.getElementById('flashcard-container');
+            const nextButton = document.getElementById('next-card');
+            const prevButton = document.getElementById('prev-card');
+            flipButton.addEventListener('click', flipCard);
+            flashcardContainer.addEventListener('click', flipCard);
+            nextButton.addEventListener('click', nextCard);
+            prevButton.addEventListener('click', prevCard);
+            displayCard();
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard-container').classList.toggle('is-flipped');
+        }
+
+        function displayCard() {
+            if (document.getElementById('flashcard-container').classList.contains('is-flipped')) {
+                flipCard();
+            }
+            setTimeout(() => {
+                document.getElementById('flashcard-question').textContent = flashcardData[currentCardIndex].q;
+                document.getElementById('flashcard-answer').textContent = flashcardData[currentCardIndex].a;
+                document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${flashcardData.length}`;
+                document.getElementById('prev-card').disabled = currentCardIndex === 0;
+                document.getElementById('next-card').disabled = currentCardIndex === flashcardData.length - 1;
+            }, 200);
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcardData.length - 1) {
+                currentCardIndex++;
+                displayCard();
+            }
+        }
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                displayCard();
+            }
+        }
+
+        // --- 測驗功能 ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answerSelected = false;
+        let quizQuestions = [];
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const scoreText = document.getElementById('score-text');
+        const scoreFeedback = document.getElementById('score-feedback');
+        const quizIntro = document.querySelector('#quiz-container p');
+        
+        function initQuiz() {
+            nextQuestionBtn.addEventListener('click', () => {
+                if (!answerSelected) return;
+                if (currentQuestionIndex < quizQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    displayQuestion();
+                } else {
+                    showResults();
+                }
+            });
+            startQuiz();
+        }
+
+        function startQuiz() {
+            const shuffled = [...quizData].sort(() => 0.5 - Math.random());
+            quizQuestions = shuffled.slice(0, 10);
+            quizIntro.textContent = `來測驗一下你的學習成果吧！從題庫中隨機抽取 ${quizQuestions.length} 題。`;
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            answerSelected = false;
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            questionText.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+            optionsContainer.innerHTML = '';
+            
+            const shuffledOptions = [...currentQuestion.options].sort(() => Math.random() - 0.5);
+            
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('quiz-option'); // 更新: 簡化 class，由 CSS 控制樣式
+                button.onclick = () => selectAnswer(button, option, currentQuestion.answer);
+
+                // 更新: 新增 span 結構，用於 icon 顯示
+                button.innerHTML = `
+                    <span class="flex-grow text-left">${option}</span>
+                    <span class="status-icon ml-4 flex-shrink-0"></span>
+                `;
+                optionsContainer.appendChild(button);
+            });
+            
+            nextQuestionBtn.disabled = true;
+            nextQuestionBtn.textContent = (currentQuestionIndex === quizQuestions.length - 1) ? '查看結果' : '下一題';
+        }
+
+        function selectAnswer(selectedButton, selectedOption, correctAnswer) {
+            if (answerSelected) return;
+            answerSelected = true;
+
+            const allOptions = optionsContainer.querySelectorAll('.quiz-option');
+            
+            // 更新: 顯示 icon
+            const correctIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+            const incorrectIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+
+            allOptions.forEach(btn => {
+                btn.disabled = true;
+                const optionText = btn.querySelector('.flex-grow').textContent;
+                const iconSpan = btn.querySelector('.status-icon');
+                if (optionText === correctAnswer) {
+                    btn.classList.add('correct');
+                    if(btn !== selectedButton) iconSpan.innerHTML = correctIcon;
+                }
+            });
+            
+            const selectedIconSpan = selectedButton.querySelector('.status-icon');
+            if (selectedOption === correctAnswer) {
+                score++;
+                selectedButton.classList.add('correct');
+                selectedIconSpan.innerHTML = correctIcon;
+            } else {
+                selectedButton.classList.add('incorrect');
+                selectedIconSpan.innerHTML = incorrectIcon;
+            }
+
+            nextQuestionBtn.disabled = false;
+        }
+
+        function showResults() {
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            const finalScore = (score / quizQuestions.length) * 100;
+            scoreText.textContent = `${finalScore}分`;
+            
+            let feedback = '';
+            if (finalScore === 100) {
+                feedback = '太厲害了，您是財務健康達人！';
+            } else if (finalScore >= 80) {
+                feedback = '表現優異，對財務健康有很好的理解！';
+            } else if (finalScore >= 60) {
+                feedback = '不錯的成績，再多複習一下會更好！';
+            } else {
+                feedback = '別氣餒，可以回到儀表板和閃卡區多加學習喔！';
+            }
+            scoreFeedback.textContent = feedback;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answerSelected = false;
+            quizContainer.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+            startQuiz();
+        }
+
+    </script>
+</body>
+</html>
