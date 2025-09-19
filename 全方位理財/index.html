@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闕又上全方位理財互動學習平台 - 完整版</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>闕又上全方位理財學習平台</h1>
+                <span class="version-badge">完整版</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <button class="nav-link active" data-section="home">首頁</button>
+                <button class="nav-link" data-section="dashboard">儀表板分析</button>
+                <button class="nav-link" data-section="reviews">多元評論</button>
+                <button class="nav-link" data-section="summary">摘要建議</button>
+                <button class="nav-link" data-section="flashcards">學習閃卡</button>
+                <button class="nav-link" data-section="quiz">測驗題庫</button>
+                <button class="nav-link" data-section="downloads">下載區</button>
+                <button class="nav-link" data-section="report">總結報告</button>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- 首頁 -->
+        <section class="content-section active" id="home">
+            <div class="container">
+                <div class="hero-section">
+                    <h2>歡迎來到闕又上全方位理財學習平台</h2>
+                    <p class="hero-subtitle">透過互動式學習掌握全方位理財的精髓，從保險規劃到遺產規劃的完整財務人生</p>
+                    <div class="hero-stats">
+                        <div class="stat-badge">
+                            <span class="stat-number">56</span>
+                            <span class="stat-label">學習閃卡</span>
+                        </div>
+                        <div class="stat-badge">
+                            <span class="stat-number">53</span>
+                            <span class="stat-label">測驗題目</span>
+                        </div>
+                        <div class="stat-badge">
+                            <span class="stat-number">5</span>
+                            <span class="stat-label">視覺分析</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card" data-section="dashboard">
+                        <h3>📊 儀表板分析</h3>
+                        <p>視覺化展示五大支柱分析與複利效應對比，每個圖表都有詳細說明</p>
+                    </div>
+
+                    <div class="feature-card" data-section="flashcards">
+                        <h3>🎯 學習閃卡 (56題)</h3>
+                        <p>按15個類別分類的互動式學習卡片，幫助記憶關鍵概念</p>
+                    </div>
+
+                    <div class="feature-card" data-section="quiz">
+                        <h3>📝 測驗題庫 (53題)</h3>
+                        <p>四種題型、四個難度級別的完整測試系統，檢驗學習成效</p>
+                    </div>
+
+                    <div class="feature-card" data-section="reviews">
+                        <h3>💭 多元評論</h3>
+                        <p>正面、質疑、中性三類專業觀點，全面了解不同角度的分析</p>
+                    </div>
+
+                    <div class="feature-card" data-section="summary">
+                        <h3>📋 摘要建議</h3>
+                        <p>核心概念總結與實用建議，快速掌握重點知識</p>
+                    </div>
+
+                    <div class="feature-card" data-section="downloads">
+                        <h3>📥 下載資源</h3>
+                        <p>影片、語音、PDF報告完整下載區，支援離線學習</p>
+                    </div>
+
+                    <div class="feature-card" data-section="report">
+                        <h3>📈 總結報告</h3>
+                        <p>個人化學習建議與執行指南，制定專屬理財計畫</p>
+                    </div>
+                </div>
+
+                <div class="intro-section">
+                    <h3>關於全方位理財</h3>
+                    <p>闕又上老師基於近30年投資管理經驗，提出了突破性的全方位理財概念。不同於傳統只聚焦投資操作的理財觀念，全方位理財是一個涵蓋人生從出生到終結的系統工程，包含保險、稅務、投資、退休、遺產五大支柱的整合規劃。</p>
+
+                    <div class="key-insights">
+                        <div class="insight-item">
+                            <h4>🎯 核心理念</h4>
+                            <p>五大支柱如同籃球隊，各司其職才能發揮1+1>2的綜效</p>
+                        </div>
+                        <div class="insight-item">
+                            <h4>⚡ 複利威力</h4>
+                            <p>9%與10%的1%差距，50年後造成52.4%的巨大差異</p>
+                        </div>
+                        <div class="insight-item">
+                            <h4>❤️ 深層意義</h4>
+                            <p>假理財，真談愛 - 為所愛之人創造更美好的生活</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 儀表板分析 -->
+        <section class="content-section" id="dashboard">
+            <div class="container">
+                <h2>儀表板分析</h2>
+
+                <div class="dashboard-grid">
+                    <!-- 五大支柱分析 -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>五大支柱分析</h3>
+                            <p>平衡發展的財務規劃架構</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="pillarsChart"></canvas>
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>圖表說明</h4>
+                            <p><strong>數據含義：</strong>每個支柱各佔20%，強調平衡發展的重要性。</p>
+                            <p><strong>實務意義：</strong>五大支柱如同籃球隊的五名球員，各司其職才能發揮1+1>2的綜效。任何一項的缺失，都可能導致滿盤皆落索。</p>
+                            <p><strong>注意事項：</strong>避免「偏食」現象，不要過度專注某一支柱而忽略整體平衡。許多人誤把投資操作視為理財的全部，忽略了其他四大支柱的重要性。</p>
+                        </div>
+                    </div>
+
+                    <!-- 複利效應對比 -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>複利效應對比</h3>
+                            <p>9% vs 10%的50年差異</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="compoundChart"></canvas>
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>圖表說明</h4>
+                            <p><strong>關鍵數據：</strong>9%報酬率讓100萬成長至7400萬（74倍），10%報酬率達到11700萬（117倍），差距高達52.4%。</p>
+                            <p><strong>深層意義：</strong>證明愛因斯坦所說「複利是世界第八大奇蹟」的威力。表面看似微小的1%差距，經時間複利放大後產生巨大差異。</p>
+                            <p><strong>執行啟示：</strong>及早開始投資，選擇長期穩健的投資策略，讓時間成為財富增長的最大助力。</p>
+                        </div>
+                    </div>
+
+                    <!-- 台美資產配置對比 -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>台美資產配置對比</h3>
+                            <p>投資習慣的跨國比較</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="allocationChart"></canvas>
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>圖表說明</h4>
+                            <p><strong>現況分析：</strong>台灣人將42%資金配置於保險，僅18%投入股票市場，相比美國人32%的股市投資比例明顯偏低。</p>
+                            <p><strong>問題診斷：</strong>反映台灣人對風險的過度擔憂與對成長機會的把握不足。過度保守的資產配置可能導致長期購買力被通膨侵蝕。</p>
+                            <p><strong>改善方向：</strong>台灣投資者需要在投資上「自救」，適度提高股票等成長性資產比例，利用資本市場創造財富。</p>
+                        </div>
+                    </div>
+
+                    <!-- 風險報酬交通工具比喻 -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>風險報酬交通工具比喻</h3>
+                            <p>投資方式的生動比較</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="vehicleChart"></canvas>
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>圖表說明</h4>
+                            <p><strong>比喻含義：</strong>1%定存如走路（安全但緩慢）、4%高殖利率股如騎腳踏車（穩健前進）、9%被動投資如開車（效率與安全的平衡）、20%以上主動投資如開賽車（速度快但風險高）。</p>
+                            <p><strong>選擇策略：</strong>長期理財建議選擇「開車」等級的穩健策略。過度保守（走路）會被通膨追過，過度激進（賽車）風險太高。</p>
+                            <p><strong>實務建議：</strong>根據個人情況和理財目標，選擇合適的「交通工具」組合。</p>
+                        </div>
+                    </div>
+
+                    <!-- 勞退自提分析 -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>勞退自提決策分析</h3>
+                            <p>第二層思考的實務應用</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="pensionChart"></canvas>
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>圖表說明</h4>
+                            <p><strong>關鍵發現：</strong>第9年為翻轉點，自主投資策略開始超越勞退基金收益加上節稅優惠的總和。</p>
+                            <p><strong>第二層思考：</strong>展示超越表面節稅效益，洞察長期因果關係的重要性。延稅的核心價值在於讓稅金持續進行複利再投資。</p>
+                            <p><strong>決策框架：</strong>需要個人化評估，考慮稅務級距、投資能力、風險承受度等多重因素，沒有標準答案。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 多元評論 -->
+        <section class="content-section" id="reviews">
+            <div class="container">
+                <h2>多元評論</h2>
+
+                <div class="reviews-grid">
+                    <div class="review-category">
+                        <h3>正面評論</h3>
+                        <div class="review-cards">
+                            <div class="review-card positive">
+                                <h4>突破性的理財思維</h4>
+                                <p>本書成功地將理財視野從單純的投資操作提升到人生全方位規劃，五大支柱環環相扣的概念令人耳目一新。</p>
+                                <span class="review-source">- 專業理財顧問</span>
+                            </div>
+                            <div class="review-card positive">
+                                <h4>複利效應的深度解析</h4>
+                                <p>作者用9%vs10%的50年對比清楚說明了複利的威力，讓人深刻體會到時間和微小差異的巨大影響。</p>
+                                <span class="review-source">- 投資專家</span>
+                            </div>
+                            <div class="review-card positive">
+                                <h4>實用的第二層思考</h4>
+                                <p>勞退自提6%的案例研究展現了第二層思考的重要性，從表面節稅利益深入到長期機會成本分析。</p>
+                                <span class="review-source">- 財務規劃師</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-category">
+                        <h3>質疑觀點</h3>
+                        <div class="review-cards">
+                            <div class="review-card negative">
+                                <h4>理論與實踐的落差</h4>
+                                <p>雖然理論完整，但對一般投資者而言，要同時掌握五大支柱可能過於複雜，執行上有困難。</p>
+                                <span class="review-source">- 實務工作者</span>
+                            </div>
+                            <div class="review-card negative">
+                                <h4>個人化程度不足</h4>
+                                <p>書中建議較為通用，但每個人的財務狀況、風險承受度不同，需要更個人化的指導。</p>
+                                <span class="review-source">- 理財新手</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-category">
+                        <h3>中性分析</h3>
+                        <div class="review-cards">
+                            <div class="review-card neutral">
+                                <h4>系統性與複雜性的平衡</h4>
+                                <p>本書在系統性理財規劃方面確實有突破，但讀者需要根據自身情況調整實施策略。</p>
+                                <span class="review-source">- 學術研究者</span>
+                            </div>
+                            <div class="review-card neutral">
+                                <h4>台灣在地化的考量</h4>
+                                <p>作者的美國投資經驗豐富，但在台灣稅制和金融環境下，某些建議需要在地化調整。</p>
+                                <span class="review-source">- 本土分析師</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 摘要建議 -->
+        <section class="content-section" id="summary">
+            <div class="container">
+                <h2>摘要與建議</h2>
+
+                <div class="summary-grid">
+                    <div class="summary-section">
+                        <h3>核心概念摘要</h3>
+                        <div class="concept-cards">
+                            <div class="concept-card">
+                                <h4>五大支柱架構</h4>
+                                <p>保險規劃（第一道防線）→ 稅務規劃（合法節稅）→ 投資規劃（重中之重）→ 退休規劃（財務大會考）→ 遺產規劃（最後一關）</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>複利效應</h4>
+                                <p>愛因斯坦稱為世界第八大奇蹟，1%的微小差距經過50年可產生52.4%的巨大差異，時間是最好的朋友。</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>第二層思考</h4>
+                                <p>超越直觀效益、洞察長期因果關係的思維模式，是最優質決策的來源，如勞退自提的深度分析。</p>
+                            </div>
+                            <div class="concept-card">
+                                <h4>資產配置</h4>
+                                <p>核心目標是犧牲少部分報酬來大幅減少波動，學會與波動共處，提供穿越市場風暴的心理韌性。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3>實用建議</h3>
+                        <div class="advice-list">
+                            <div class="advice-item">
+                                <h4>🎯 避免偏食現象</h4>
+                                <p>不要過度專注某一支柱而忽略整體平衡，每個領域都要適度發展，形成完整的風險管理體系。</p>
+                            </div>
+                            <div class="advice-item">
+                                <h4>🚀 及早開始投資</h4>
+                                <p>利用複利效應，即使小額開始也要儘早啟動，選擇長期穩健的投資策略，讓時間成為助力。</p>
+                            </div>
+                            <div class="advice-item">
+                                <h4>🧠 培養第二層思考</h4>
+                                <p>超越表面效益，深入分析長期影響，多徵詢專家意見，補齊知識盲點，做出更好的決策。</p>
+                            </div>
+                            <div class="advice-item">
+                                <h4>⚖️ 適度承擔風險</h4>
+                                <p>無法承受適度風險才是最大的風險，選擇適合的「交通工具」，在安全與效率間取得平衡。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3>行動步驟</h3>
+                        <div class="action-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>現況評估</h4>
+                                    <p>整理個人財務狀況，檢視五大支柱的完整性，找出需要改善的環節。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>目標設定</h4>
+                                    <p>設定明確的短中長期財務目標，制定各支柱的具體行動方案。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>執行與調整</h4>
+                                    <p>按計畫執行，定期檢視調整，持續學習，必要時尋求專業協助。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 學習閃卡 -->
+        <section class="content-section" id="flashcards">
+            <div class="container">
+                <h2>學習閃卡 (56題)</h2>
+
+                <div class="flashcards-controls">
+                    <div class="filter-controls">
+                        <select id="categoryFilter">
+                            <option value="all">所有類別</option>
+                        </select>
+                        <button id="shuffleBtn">隨機排序</button>
+                        <button id="resetProgressBtn">重置進度</button>
+                    </div>
+                    <div class="progress-info">
+                        <span id="currentCard">1</span> / <span id="totalCards">56</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-front">
+                            <div class="card-category" id="cardCategory">基礎概念</div>
+                            <div class="card-question" id="cardQuestion">點擊開始學習</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="card-answer" id="cardAnswer">歡迎使用學習閃卡系統</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-controls">
+                    <button id="prevCard" disabled>上一題</button>
+                    <button id="flipCard">翻轉卡片</button>
+                    <button id="nextCard">下一題</button>
+                </div>
+
+                <div class="learning-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">已學習</span>
+                        <span class="stat-value" id="learnedCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">答對率</span>
+                        <span class="stat-value" id="correctRate">0%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 測驗題庫 -->
+        <section class="content-section" id="quiz">
+            <div class="container">
+                <h2>測驗題庫 (53題)</h2>
+
+                <div class="quiz-controls">
+                    <div class="filter-controls">
+                        <select id="typeFilter">
+                            <option value="all">所有題型</option>
+                            <option value="單選題">單選題 (24題)</option>
+                            <option value="多選題">多選題 (7題)</option>
+                            <option value="是非題">是非題 (11題)</option>
+                            <option value="填空題">填空題 (11題)</option>
+                        </select>
+                        <select id="difficultyFilter">
+                            <option value="all">所有難度</option>
+                            <option value="基礎">基礎 (14題)</option>
+                            <option value="中等">中等 (25題)</option>
+                            <option value="進階">進階 (9題)</option>
+                            <option value="應用">應用 (5題)</option>
+                        </select>
+                        <button id="startQuiz">開始測驗</button>
+                    </div>
+                </div>
+
+                <div class="quiz-container" id="quizContainer" style="display: none;">
+                    <div class="quiz-header">
+                        <div class="quiz-progress">
+                            <span id="currentQuestion">1</span> / <span id="totalQuestions">53</span>
+                        </div>
+                        <div class="quiz-timer" id="quizTimer">00:00</div>
+                    </div>
+
+                    <div class="question-card" id="questionCard">
+                        <div class="question-meta">
+                            <span class="question-type" id="questionType">單選題</span>
+                            <span class="question-difficulty" id="questionDifficulty">基礎</span>
+                        </div>
+                        <div class="question-text" id="questionText">題目將在這裡顯示</div>
+                        <div class="question-options" id="questionOptions">
+                            <!-- 選項將動態生成 -->
+                        </div>
+                        <div class="question-feedback" id="questionFeedback" style="display: none;">
+                            <!-- 反饋將在這裡顯示 -->
+                        </div>
+                    </div>
+
+                    <div class="quiz-controls-bottom">
+                        <button id="prevQuestion" disabled>上一題</button>
+                        <button id="submitAnswer">提交答案</button>
+                        <button id="nextQuestion" disabled>下一題</button>
+                        <button id="finishQuiz" style="display: none;">完成測驗</button>
+                    </div>
+                </div>
+
+                <div class="quiz-results" id="quizResults" style="display: none;">
+                    <h3>測驗結果</h3>
+                    <div class="results-summary">
+                        <div class="result-item">
+                            <span class="result-label">總分</span>
+                            <span class="result-value" id="totalScore">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">答對題數</span>
+                            <span class="result-value" id="correctAnswers">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">答題時間</span>
+                            <span class="result-value" id="testTime">00:00</span>
+                        </div>
+                    </div>
+                    <div class="results-analysis" id="resultsAnalysis">
+                        <!-- 詳細分析將在這裡顯示 -->
+                    </div>
+                    <button id="retakeQuiz">重新測驗</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 下載區 -->
+        <section class="content-section" id="downloads">
+            <div class="container">
+                <h2>下載資源</h2>
+
+                <div class="downloads-grid">
+                    <div class="download-category">
+                        <h3>📹 影片資源</h3>
+                        <div class="download-item">
+                            <h4>影片摘要</h4>
+                            <p>闕又上全方位理財核心概念影片摘要</p>
+                            <a href="https://drive.google.com/file/d/15LSSsuGzDpQYEqtmJ3luOEmrOEvJPvWe/view?usp=sharing" target="_blank" class="download-btn">
+                                📹 觀看影片
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="download-category">
+                        <h3>🎵 語音資源</h3>
+                        <div class="download-item">
+                            <h4>語音摘要</h4>
+                            <p>全方位理財重點內容語音檔案</p>
+                            <a href="https://drive.google.com/file/d/1gm9F9VUJLGC3_YrGncNqcVk-8f6bRxQE/view?usp=sharing" target="_blank" class="download-btn">
+                                🎵 收聽語音
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="download-category">
+                        <h3>📄 PDF文件</h3>
+                        <div class="download-items">
+                            <div class="download-item">
+                                <h4>你的第一份全方位理財藍圖</h4>
+                                <p>個人化理財規劃指南</p>
+                                <a href="https://drive.google.com/file/d/1YDqw5Nz_ZNeXcB3BN_QHkYZYV4_T-81p/view?usp=sharing" target="_blank" class="download-btn">
+                                    📄 下載PDF
+                                </a>
+                            </div>
+                            <div class="download-item">
+                                <h4>全方位理財的第一堂課</h4>
+                                <p>五大支柱理論詳細解析</p>
+                                <a href="https://drive.google.com/file/d/1c-XZA0nknhpT70494HBQTojrGPQeDX2E/view?usp=sharing" target="_blank" class="download-btn">
+                                    📄 下載PDF
+                                </a>
+                            </div>
+                            <div class="download-item">
+                                <h4>全方位理財的哲學與實踐白皮書</h4>
+                                <p>理財哲學與實務操作指南</p>
+                                <a href="https://drive.google.com/file/d/154zIbYt0QnT03vnnzsq9GLpi4PI09mLb/view?usp=sharing" target="_blank" class="download-btn">
+                                    📄 下載PDF
+                                </a>
+                            </div>
+                            <div class="download-item">
+                                <h4>全方位理財的個案研究</h4>
+                                <p>勞退自提決策深度分析</p>
+                                <a href="https://drive.google.com/file/d/1KBaggYKz3V1a-QpIqSjBT4IAalsDuQJD/view?usp=sharing" target="_blank" class="download-btn">
+                                    📄 下載PDF
+                                </a>
+                            </div>
+                            <div class="download-item">
+                                <h4>打造你的全方位財富藍圖</h4>
+                                <p>實用財富建構策略</p>
+                                <a href="https://drive.google.com/file/d/1yS1ROGpTKHYe_aKdSZIcfPnbUr2TNSMD/view?usp=sharing" target="_blank" class="download-btn">
+                                    📄 下載PDF
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="usage-tips">
+                    <h3>使用建議</h3>
+                    <div class="tip-grid">
+                        <div class="tip-item">
+                            <h4>📚 學習順序</h4>
+                            <p>建議先閱讀「全方位理財的第一堂課」建立基礎概念，再深入其他專題資料</p>
+                        </div>
+                        <div class="tip-item">
+                            <h4>🎯 重點複習</h4>
+                            <p>影片和語音摘要適合通勤時間學習，PDF文件適合深度研讀和做筆記</p>
+                        </div>
+                        <div class="tip-item">
+                            <h4>💡 實務應用</h4>
+                            <p>個案研究提供實際決策參考，理財藍圖幫助制定個人化計畫</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 總結報告 -->
+        <section class="content-section" id="report">
+            <div class="container">
+                <h2>總結報告</h2>
+
+                <div class="report-grid">
+                    <div class="report-section">
+                        <h3>學習成果評估</h3>
+                        <div class="assessment-levels">
+                            <div class="level-item excellent">
+                                <h4>優秀 (90分以上)</h4>
+                                <p>全面掌握五大支柱，能獨立制定理財計畫，具備第二層思考能力，可以開始執行全方位理財規劃。</p>
+                            </div>
+                            <div class="level-item good">
+                                <h4>良好 (80-89分)</h4>
+                                <p>理解核心概念，需要適度指導執行，建議深入學習特定領域，逐步完善理財知識架構。</p>
+                            </div>
+                            <div class="level-item pass">
+                                <h4>及格 (70-79分)</h4>
+                                <p>基本概念清楚，執行上需要專業協助，建議先從單一支柱開始實作，累積經驗後再整合。</p>
+                            </div>
+                            <div class="level-item improve">
+                                <h4>需加強 (70分以下)</h4>
+                                <p>概念理解不足，建議重新學習基礎，可先從閃卡和基礎測驗開始，建立完整知識體系。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>個人化執行建議</h3>
+                        <div class="age-groups">
+                            <div class="age-group">
+                                <h4>年輕族群 (20-35歲)</h4>
+                                <div class="group-content">
+                                    <p><strong>優先順序：</strong>保險規劃 → 投資規劃 → 稅務規劃 → 退休規劃 → 遺產規劃</p>
+                                    <div class="action-points">
+                                        <p><strong>具體行動：</strong></p>
+                                        <ul>
+                                            <li>建立6個月生活費的緊急預備金</li>
+                                            <li>購買基本人身保險（死亡、失能、醫療）</li>
+                                            <li>開始定期定額投資，培養投資紀律</li>
+                                            <li>了解勞退自提等稅務優惠的利弊</li>
+                                            <li>設定長期財務目標，利用時間複利優勢</li>
+                                        </ul>
+                                    </div>
+                                    <div class="warning-points">
+                                        <p><strong>注意事項：</strong></p>
+                                        <ul>
+                                            <li>不要被短期市場波動影響長期投資計畫</li>
+                                            <li>避免過度保險排擠投資資金</li>
+                                            <li>建立正確投資觀念，避免投機行為</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="age-group">
+                                <h4>中年族群 (35-50歲)</h4>
+                                <div class="group-content">
+                                    <p><strong>優先順序：</strong>投資規劃 → 退休規劃 → 稅務規劃 → 保險規劃 → 遺產規劃</p>
+                                    <div class="action-points">
+                                        <p><strong>具體行動：</strong></p>
+                                        <ul>
+                                            <li>檢視現有保險是否充足，避免保險過度或不足</li>
+                                            <li>加強退休規劃，計算退休金缺口</li>
+                                            <li>優化投資組合，提高資產配置效率</li>
+                                            <li>善用各種節稅工具，合法減輕稅務負擔</li>
+                                            <li>開始思考遺產規劃，保護家庭財務安全</li>
+                                        </ul>
+                                    </div>
+                                    <div class="warning-points">
+                                        <p><strong>注意事項：</strong></p>
+                                        <ul>
+                                            <li>平衡現在生活品質與未來退休需求</li>
+                                            <li>不要為了節稅而做不合適的投資</li>
+                                            <li>考慮子女教育費用與退休金的資源分配</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="age-group">
+                                <h4>中高齡族群 (50歲以上)</h4>
+                                <div class="group-content">
+                                    <p><strong>優先順序：</strong>退休規劃 → 遺產規劃 → 稅務規劃 → 保險規劃 → 投資規劃</p>
+                                    <div class="action-points">
+                                        <p><strong>具體行動：</strong></p>
+                                        <ul>
+                                            <li>確定退休計畫，評估退休收入來源</li>
+                                            <li>調整投資組合，降低風險提高穩定性</li>
+                                            <li>完善遺產規劃，包含財產與價值觀傳承</li>
+                                            <li>檢討保險需求，可能減少壽險增加醫療險</li>
+                                            <li>規劃稅務，特別是遺產稅與贈與稅</li>
+                                        </ul>
+                                    </div>
+                                    <div class="warning-points">
+                                        <p><strong>注意事項：</strong></p>
+                                        <ul>
+                                            <li>避免為追求高報酬承擔過高風險</li>
+                                            <li>提早與家人溝通遺產規劃意圖</li>
+                                            <li>關注通膨對退休生活的影響</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>實施步驟指南</h3>
+                        <div class="implementation-phases">
+                            <div class="phase">
+                                <h4>第一階段：現況評估 (1-2週)</h4>
+                                <ul>
+                                    <li>整理個人/家庭財務狀況（資產負債表、現金流量表）</li>
+                                    <li>檢視現有保險保障是否充足</li>
+                                    <li>評估投資組合風險與報酬</li>
+                                    <li>了解稅務優化空間</li>
+                                    <li>思考退休與遺產規劃需求</li>
+                                </ul>
+                            </div>
+                            <div class="phase">
+                                <h4>第二階段：計畫制定 (2-4週)</h4>
+                                <ul>
+                                    <li>設定明確的財務目標（短中長期）</li>
+                                    <li>制定五大支柱的具體行動方案</li>
+                                    <li>決定資產配置比例</li>
+                                    <li>選擇合適的投資工具與保險商品</li>
+                                    <li>建立執行時程與檢核機制</li>
+                                </ul>
+                            </div>
+                            <div class="phase">
+                                <h4>第三階段：執行與調整 (持續進行)</h4>
+                                <ul>
+                                    <li>按計畫執行各項理財行動</li>
+                                    <li>定期檢視與調整（建議每季或半年）</li>
+                                    <li>持續學習新的理財知識</li>
+                                    <li>關注法規變化對規劃的影響</li>
+                                    <li>適時尋求專業顧問協助</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>常見執行障礙與解決方案</h3>
+                        <div class="obstacles">
+                            <div class="obstacle">
+                                <h4>拖延症候群</h4>
+                                <p><strong>症狀：</strong>知道重要但總是延後執行</p>
+                                <p><strong>解決方案：</strong></p>
+                                <ul>
+                                    <li>設定具體的執行日期與里程碑</li>
+                                    <li>採用自動化機制（如自動扣款投資）</li>
+                                    <li>找家人朋友互相監督</li>
+                                    <li>從小額開始建立執行習慣</li>
+                                </ul>
+                            </div>
+                            <div class="obstacle">
+                                <h4>資訊過載</h4>
+                                <p><strong>症狀：</strong>接收太多資訊反而不知如何選擇</p>
+                                <p><strong>解決方案：</strong></p>
+                                <ul>
+                                    <li>專注學習基礎知識，避免追逐市場雜音</li>
+                                    <li>選擇2-3個可信任的資訊來源</li>
+                                    <li>定期學習而非每日關注市場變化</li>
+                                    <li>必要時尋求專業諮詢</li>
+                                </ul>
+                            </div>
+                            <div class="obstacle">
+                                <h4>完美主義</h4>
+                                <p><strong>症狀：</strong>想要找到完美方案才開始執行</p>
+                                <p><strong>解決方案：</strong></p>
+                                <ul>
+                                    <li>接受沒有完美的理財方案</li>
+                                    <li>先開始執行，過程中持續優化</li>
+                                    <li>重視行動力勝過完美計畫</li>
+                                    <li>學會在不完美中做最佳選擇</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>進階學習建議</h3>
+                        <div class="learning-resources">
+                            <div class="resource-category">
+                                <h4>深度閱讀</h4>
+                                <ul>
+                                    <li>《阿甘投資法》- 闕又上</li>
+                                    <li>《你沒學到的資產配置》- 闕又上</li>
+                                    <li>《漫步華爾街》- 柏頓·墨基爾</li>
+                                    <li>《窮查理寶典》- 查理·蒙格</li>
+                                </ul>
+                            </div>
+                            <div class="resource-category">
+                                <h4>實務技能</h4>
+                                <ul>
+                                    <li>學習基本財報分析</li>
+                                    <li>了解不同投資工具特性</li>
+                                    <li>掌握稅務規劃技巧</li>
+                                    <li>培養理性投資心理</li>
+                                </ul>
+                            </div>
+                            <div class="resource-category">
+                                <h4>持續成長</h4>
+                                <ul>
+                                    <li>參加理財相關課程或講座</li>
+                                    <li>加入投資理財社群交流</li>
+                                    <li>定期檢視投資績效</li>
+                                    <li>關注總體經濟與市場變化</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
