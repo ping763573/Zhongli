@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TISA 台灣個人投資儲蓄帳戶 - 155檔基金完整分析平台</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 導覽列 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>TISA 學習平台 2.0</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" data-section="home" class="nav-link active">首頁</a></li>
+                <li><a href="#" data-section="intro" class="nav-link">制度詳解</a></li>
+                <li><a href="#" data-section="analysis" class="nav-link">完整基金分析</a></li>
+                <li><a href="#" data-section="learning" class="nav-link">學習中心</a></li>
+                <li><a href="#" data-section="review" class="nav-link">多元評論</a></li>
+                <li><a href="#" data-section="downloads" class="nav-link">資料下載</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要內容區域 -->
+    <main class="main-content">
+        <!-- 首頁區域 -->
+        <section id="home" class="section active">
+            <div class="hero-banner">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>台灣個人投資儲蓄帳戶</h1>
+                        <p class="hero-subtitle">TISA - Taiwan Individual Savings Account</p>
+                        <p class="hero-description">
+                            全面升級的TISA學習平台，提供深度制度分析、155檔完整基金資料與績效分析、60題專業閃卡、50題測驗題庫，以及多元觀點評論，助您全方位掌握TISA投資策略。
+                        </p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">155</div>
+                                <div class="stat-label">檔基金完整分析</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">110+</div>
+                                <div class="stat-label">題學習題庫</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">1,000</div>
+                                <div class="stat-label">最低申購門檻</div>
+                            </div>
+                        </div>
+                        <button class="btn btn--primary btn--lg" onclick="showSection('analysis')">查看完整基金分析</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>155檔基金完整分析</h3>
+                        <p>涵蓋所有TISA適格基金的詳細資料、績效分析與智能篩選</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h3>升級學習中心</h3>
+                        <p>60題專業閃卡+50題測驗，全面提升投資知識</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚖️</div>
+                        <h3>多元評論分析</h3>
+                        <p>正反多元思考，深度優缺點評論與投資建議</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 制度詳解區域 -->
+        <section id="intro" class="section">
+            <div class="container">
+                <h2 class="section-title">TISA 制度詳解</h2>
+                <div class="intro-content">
+                    <div class="intro-card">
+                        <h3>什麼是 TISA？</h3>
+                        <p>台灣個人投資儲蓄帳戶（TISA）是政府於2025年7月1日正式推出的稅務優惠投資制度。TISA制度設計的核心理念是鼓勵國人建立長期投資紀律，透過稅務優惠機制，協助民眾累積退休準備金，建構更完善的退休保障體系。</p>
+                        <p>TISA制度借鏡英國ISA（Individual Savings Account）的成功經驗，結合台灣本土金融市場特色，為投資人提供簡單、透明、低成本的投資管道。</p>
+                    </div>
+                    
+                    <div class="intro-card">
+                        <h3>核心優勢特色</h3>
+                        <div class="mechanism-grid">
+                            <div class="mechanism-item">
+                                <h4>💰 稅務優惠</h4>
+                                <ul>
+                                    <li>每年24萬元免稅投資額度</li>
+                                    <li>投資收益完全免徵所得稅</li>
+                                    <li>資本利得與孳息收入皆免稅</li>
+                                    <li>長期複利效應顯著</li>
+                                </ul>
+                            </div>
+                            <div class="mechanism-item">
+                                <h4>💸 費用優勢</h4>
+                                <ul>
+                                    <li>申購手續費完全免收</li>
+                                    <li>經理費率低於1%</li>
+                                    <li>TISA級別享費率優惠</li>
+                                    <li>降低投資成本負擔</li>
+                                </ul>
+                            </div>
+                            <div class="mechanism-item">
+                                <h4>🎯 專業篩選</h4>
+                                <ul>
+                                    <li>155檔嚴格篩選基金</li>
+                                    <li>晨星3星以上評等</li>
+                                    <li>基金規模5億元以上</li>
+                                    <li>優秀績效表現要求</li>
+                                </ul>
+                            </div>
+                            <div class="mechanism-item">
+                                <h4>🔒 長期投資</h4>
+                                <ul>
+                                    <li>培養投資紀律習慣</li>
+                                    <li>24個月連續投資優惠</li>
+                                    <li>定期定額降低風險</li>
+                                    <li>退休準備第三支柱</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="intro-card">
+                        <h3>投資條件與規範</h3>
+                        <div class="comparison-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>項目</th>
+                                        <th>TISA級別基金</th>
+                                        <th>R級別基金</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>最低申購金額</td>
+                                        <td>每月1,000元</td>
+                                        <td>每月3,000元</td>
+                                    </tr>
+                                    <tr>
+                                        <td>申購方式</td>
+                                        <td>僅限定期定額</td>
+                                        <td>定期定額或單筆申購</td>
+                                    </tr>
+                                    <tr>
+                                        <td>申購手續費</td>
+                                        <td>完全免收</td>
+                                        <td>依各機構規定</td>
+                                    </tr>
+                                    <tr>
+                                        <td>經理費率</td>
+                                        <td>低於1%</td>
+                                        <td>依基金規定</td>
+                                    </tr>
+                                    <tr>
+                                        <td>年度投資額度</td>
+                                        <td>24萬元免稅額度</td>
+                                        <td>無額度限制</td>
+                                    </tr>
+                                    <tr>
+                                        <td>稅務優惠</td>
+                                        <td>投資收益完全免稅</td>
+                                        <td>依稅法規定課稅</td>
+                                    </tr>
+                                    <tr>
+                                        <td>連續扣款優惠</td>
+                                        <td>24個月享完整優惠</td>
+                                        <td>無此要求</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 完整基金分析區域 -->
+        <section id="analysis" class="section">
+            <div class="container">
+                <h2 class="section-title">完整基金分析 - 155檔TISA適格基金</h2>
+                
+                <!-- 基金統計概覽 -->
+                <div class="fund-overview">
+                    <div class="overview-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">155</div>
+                            <div class="stat-label">總基金檔數</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">79</div>
+                            <div class="stat-label">股票型基金</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">14</div>
+                            <div class="stat-label">債券型基金</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">62</div>
+                            <div class="stat-label">資產配置型基金</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 績效統計 -->
+                <div class="performance-overview">
+                    <h3>整體績效表現統計</h3>
+                    <div class="performance-stats">
+                        <div class="perf-stat-item">
+                            <div class="perf-number">16.8%</div>
+                            <div class="perf-label">平均年化報酬</div>
+                        </div>
+                        <div class="perf-stat-item">
+                            <div class="perf-number">28.5%</div>
+                            <div class="perf-label">最佳年化報酬</div>
+                        </div>
+                        <div class="perf-stat-item">
+                            <div class="perf-number">0.67</div>
+                            <div class="perf-label">平均夏普比率</div>
+                        </div>
+                        <div class="perf-stat-item">
+                            <div class="perf-number">0.75%</div>
+                            <div class="perf-label">平均經理費率</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 基金類型分布圖表 -->
+                <div class="chart-section">
+                    <h3>基金類型與投資地區分布</h3>
+                    <div class="charts-grid">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="fundTypeChart"></canvas>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="fundCategoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 進階篩選器 -->
+                <div class="fund-filter-section">
+                    <h3>智能基金篩選與搜尋</h3>
+                    <div class="advanced-filters">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="fundType">投資類型:</label>
+                                <select id="fundType" class="form-control">
+                                    <option value="">全部類型</option>
+                                    <option value="股票型">股票型</option>
+                                    <option value="債券型">債券型</option>
+                                    <option value="資產配置型">資產配置型</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="fundCategory">投資地區:</label>
+                                <select id="fundCategory" class="form-control">
+                                    <option value="">全部地區</option>
+                                    <option value="台股">台股</option>
+                                    <option value="全球股票">全球股票</option>
+                                    <option value="科技主題">科技主題</option>
+                                    <option value="多重資產">多重資產</option>
+                                    <option value="債券">債券</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="fundCompany">投信公司:</label>
+                                <select id="fundCompany" class="form-control">
+                                    <option value="">全部公司</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="feeRange">經理費率:</label>
+                                <select id="feeRange" class="form-control">
+                                    <option value="">全部費率</option>
+                                    <option value="0-0.5">0.5%以下</option>
+                                    <option value="0.5-0.8">0.5%-0.8%</option>
+                                    <option value="0.8-1.0">0.8%-1.0%</option>
+                                    <option value="1.0+">1.0%以上</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="riskLevel">風險等級:</label>
+                                <select id="riskLevel" class="form-control">
+                                    <option value="">全部等級</option>
+                                    <option value="RR1">RR1 (極低風險)</option>
+                                    <option value="RR2">RR2 (低風險)</option>
+                                    <option value="RR3">RR3 (中低風險)</option>
+                                    <option value="RR4">RR4 (中高風險)</option>
+                                    <option value="RR5">RR5 (高風險)</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="fundSearch">基金名稱:</label>
+                                <input type="text" id="fundSearch" class="form-control" placeholder="搜尋基金名稱或公司...">
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="btn btn--primary" onclick="applyFilters()">套用篩選</button>
+                            <button class="btn btn--outline" onclick="clearFilters()">清除篩選</button>
+                            <button class="btn btn--secondary" onclick="showTopPerformers()">績效排行</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 排序與檢視控制 -->
+                <div class="fund-list-section">
+                    <div class="fund-list-header">
+                        <h3>TISA適格基金完整清單</h3>
+                        <div class="list-controls">
+                            <span id="fundCount">顯示 155 檔基金</span>
+                            <div class="sort-control">
+                                <label for="sortBy">排序方式:</label>
+                                <select id="sortBy" class="form-control" onchange="applySorting()">
+                                    <option value="name">基金名稱</option>
+                                    <option value="performance_1y">年化報酬</option>
+                                    <option value="sharpe_ratio">夏普比率</option>
+                                    <option value="fee">經理費率</option>
+                                    <option value="company">投信公司</option>
+                                </select>
+                            </div>
+                            <div class="view-toggle">
+                                <button class="btn btn--sm view-btn active" data-view="grid">網格檢視</button>
+                                <button class="btn btn--sm view-btn" data-view="table">表格檢視</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 網格檢視 -->
+                    <div id="fundGridView" class="fund-grid">
+                        <!-- 基金卡片將由JavaScript動態生成 -->
+                    </div>
+                    
+                    <!-- 表格檢視 -->
+                    <div id="fundTableView" class="fund-table-container hidden">
+                        <table class="fund-table">
+                            <thead>
+                                <tr>
+                                    <th>基金名稱</th>
+                                    <th>投信公司</th>
+                                    <th>類型</th>
+                                    <th>投資地區</th>
+                                    <th>經理費率</th>
+                                    <th>風險等級</th>
+                                    <th>1年報酬</th>
+                                    <th>夏普比率</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fundTableBody">
+                                <!-- 表格內容將由JavaScript動態生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 基金比較功能 -->
+                <div class="fund-comparison-section hidden" id="fundComparison">
+                    <h3>基金比較分析</h3>
+                    <div class="comparison-container">
+                        <div id="comparisonFunds"></div>
+                        <button class="btn btn--outline" onclick="clearComparison()">清除比較</button>
+                    </div>
+                </div>
+
+                <!-- 績效圖表 -->
+                <div class="performance-chart-section">
+                    <h3>績效表現分析</h3>
+                    <div class="chart-container" style="position: relative; height: 400px;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 學習中心區域 -->
+        <section id="learning" class="section">
+            <div class="container">
+                <h2 class="section-title">學習中心 - 升級版</h2>
+                <div class="learning-stats">
+                    <div class="learning-stat-item">
+                        <div class="stat-number">60</div>
+                        <div class="stat-label">專業閃卡題目</div>
+                    </div>
+                    <div class="learning-stat-item">
+                        <div class="stat-number">50</div>
+                        <div class="stat-label">綜合測驗題目</div>
+                    </div>
+                    <div class="learning-stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">學習分類</div>
+                    </div>
+                </div>
+
+                <div class="learning-tabs">
+                    <button class="tab-btn active" data-tab="flashcards">閃卡學習</button>
+                    <button class="tab-btn" data-tab="quiz">測驗中心</button>
+                </div>
+
+                <!-- 閃卡區域 -->
+                <div id="flashcards" class="tab-content active">
+                    <div class="flashcard-categories">
+                        <h3>學習分類</h3>
+                        <div class="category-buttons">
+                            <button class="btn btn--outline category-btn active" data-category="all">全部題目</button>
+                            <button class="btn btn--outline category-btn" data-category="basic">基礎知識</button>
+                            <button class="btn btn--outline category-btn" data-category="technical">技術條件</button>
+                            <button class="btn btn--outline category-btn" data-category="practical">實務操作</button>
+                        </div>
+                    </div>
+
+                    <div class="flashcard-container">
+                        <div class="flashcard" id="flashcard">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-front">
+                                    <div class="card-header">題目</div>
+                                    <div class="card-content" id="question-text"></div>
+                                    <button class="btn btn--secondary" onclick="flipCard()">查看答案</button>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="card-header">答案</div>
+                                    <div class="card-content" id="answer-text"></div>
+                                    <button class="btn btn--secondary" onclick="flipCard()">返回題目</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flashcard-controls">
+                            <button class="btn btn--outline" onclick="previousCard()" id="prev-btn">上一題</button>
+                            <div class="card-progress">
+                                <span id="current-card">1</span> / <span id="total-cards">60</span>
+                            </div>
+                            <button class="btn btn--outline" onclick="nextCard()" id="next-btn">下一題</button>
+                        </div>
+                        
+                        <div class="learning-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="flashcard-progress"></div>
+                            </div>
+                            <p>學習進度: <span id="progress-text">0%</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 測驗區域 -->
+                <div id="quiz" class="tab-content">
+                    <div id="quiz-start" class="quiz-start">
+                        <h3>TISA 綜合知識測驗</h3>
+                        <p>升級版測驗包含50道專業題目，全面檢測您的TISA知識水平</p>
+                        <div class="quiz-info">
+                            <div class="quiz-info-item">📝 50道題目</div>
+                            <div class="quiz-info-item">⏰ 不限時間</div>
+                            <div class="quiz-info-item">🎯 立即評分</div>
+                            <div class="quiz-info-item">📊 詳細分析</div>
+                        </div>
+                        <button class="btn btn--primary btn--lg" onclick="startQuiz()">開始測驗</button>
+                    </div>
+
+                    <div id="quiz-content" class="quiz-content hidden">
+                        <div class="quiz-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <div class="progress-text">
+                                題目 <span id="current-question">1</span> / <span id="total-questions">50</span>
+                            </div>
+                        </div>
+
+                        <div class="question-container">
+                            <h3 id="quiz-question"></h3>
+                            <div class="options-container" id="options-container"></div>
+                        </div>
+
+                        <div class="quiz-controls">
+                            <button class="btn btn--outline" onclick="previousQuestion()" id="prev-question" disabled>上一題</button>
+                            <button class="btn btn--primary" onclick="nextQuestion()" id="next-question">下一題</button>
+                        </div>
+                    </div>
+
+                    <div id="quiz-result" class="quiz-result hidden">
+                        <h3>測驗結果</h3>
+                        <div class="result-score">
+                            <div class="score-circle">
+                                <span id="final-score">0</span>%
+                            </div>
+                        </div>
+                        <div class="result-analysis" id="result-analysis"></div>
+                        <div class="result-details" id="result-details"></div>
+                        <div class="result-actions">
+                            <button class="btn btn--primary" onclick="restartQuiz()">重新測驗</button>
+                            <button class="btn btn--outline" onclick="reviewMistakes()">檢討錯題</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 多元評論區域 -->
+        <section id="review" class="section">
+            <div class="container">
+                <h2 class="section-title">多元評論 - 正反多元思考</h2>
+                
+                <div class="review-intro">
+                    <p>透過正反多元觀點的深度分析，幫助您全面理解TISA制度的優勢與挑戰，做出更明智的投資決策。</p>
+                </div>
+
+                <div class="review-content">
+                    <!-- 正面觀點 -->
+                    <div class="review-section positive">
+                        <div class="review-header">
+                            <div class="review-icon">👍</div>
+                            <h3>正面觀點 - 制度優勢分析</h3>
+                        </div>
+                        <div class="review-grid">
+                            <div class="review-card">
+                                <h4>政府政策支持</h4>
+                                <p>政府主導推動，制度設計穩定可靠，提供長期政策保障，有助於建立投資人信心。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>費用優勢明顯</h4>
+                                <p>申購手續費全免，經理費普遍減半，大幅降低投資成本，提升實際投資報酬率。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>稅務優惠顯著</h4>
+                                <p>投資收益完全免稅，複利效應更加明顯，長期累積財富效果卓著。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>專業篩選機制</h4>
+                                <p>透過專家委員會嚴格篩選，確保基金品質，降低投資人選擇風險。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>培養投資紀律</h4>
+                                <p>定期定額機制培養長期投資習慣，避免追高殺低的投資行為。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>退休準備利器</h4>
+                                <p>作為第三支柱退休準備工具，補強政府與企業退休金的不足。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 反面觀點 -->
+                    <div class="review-section negative">
+                        <div class="review-header">
+                            <div class="review-icon">👎</div>
+                            <h3>反面觀點 - 潛在挑戰與限制</h3>
+                        </div>
+                        <div class="review-grid">
+                            <div class="review-card">
+                                <h4>投資標的限制</h4>
+                                <p>目前僅限基金投資，選擇相對有限，無法投資個股或其他金融商品。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>資金流動性限制</h4>
+                                <p>24個月連續扣款要求可能造成資金壓力，中途贖回有重新申購限制。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>基金規模風險</h4>
+                                <p>TISA級別基金規模較小，可能面臨流動性不足的風險。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>市場風險依然存在</h4>
+                                <p>投資績效仍須承擔市場波動風險，無法保證獲利。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>平台選擇有限</h4>
+                                <p>目前僅有5家主要銷售機構，選擇相對有限，服務品質參差不齊。</p>
+                            </div>
+                            <div class="review-card">
+                                <h4>制度運作經驗不足</h4>
+                                <p>新制度實施時間尚短，長期運作效果有待觀察。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 客觀評論 -->
+                    <div class="review-section neutral">
+                        <div class="review-header">
+                            <div class="review-icon">⚖️</div>
+                            <h3>客觀評論 - 平衡分析</h3>
+                        </div>
+                        <div class="neutral-analysis">
+                            <div class="analysis-item">
+                                <h4>制度設計合理性</h4>
+                                <p>TISA制度借鏡國際成功經驗，結合台灣本土特色，在額度設定、稅務優惠、投資標的等方面都有合理考量。24萬元年度額度對大多數投資人而言適中，既能發揮稅務優惠效果，又不會造成政府稅收過度流失。</p>
+                            </div>
+                            <div class="analysis-item">
+                                <h4>適用族群分析</h4>
+                                <p>TISA制度特別適合：(1)投資新手，透過專業篩選降低選擇困難；(2)穩健型投資人，追求長期穩定報酬；(3)退休規劃者，作為第三支柱補強工具。對於追求高報酬或頻繁交易的投資人，可能不是最佳選擇。</p>
+                            </div>
+                            <div class="analysis-item">
+                                <h4>長期發展前景</h4>
+                                <p>隨著制度逐步成熟，預期會有更多優質投資標的納入，服務品質也會持續改善。政府政策的長期支持是制度成功的關鍵因素，需要持續關注相關政策變動。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 資料下載區域 -->
+        <section id="downloads" class="section">
+            <div class="container">
+                <h2 class="section-title">資料下載區</h2>
+                <div class="download-categories">
+                    <!-- 基金數據下載 -->
+                    <div class="download-category">
+                        <h3>基金數據與分析</h3>
+                        <div class="download-grid">
+                            <div class="download-item">
+                                <div class="download-icon">📊</div>
+                                <div class="download-info">
+                                    <h4>完整155檔基金清單</h4>
+                                    <p>包含所有TISA適格基金的完整資料 (CSV格式)</p>
+                                </div>
+                                <a href="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/09eb06441e7fc02765666d159f436b12/5e335401-c879-4042-b99e-24554c4cb663/f8815f1c.csv" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                            <div class="download-item">
+                                <div class="download-icon">📈</div>
+                                <div class="download-info">
+                                    <h4>基金統計分析資料</h4>
+                                    <p>TISA基金統計與績效分析數據 (CSV格式)</p>
+                                </div>
+                                <a href="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/09eb06441e7fc02765666d159f436b12/5e335401-c879-4042-b99e-24554c4cb663/f8815f1c.csv" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 研究報告下載 -->
+                    <div class="download-category">
+                        <h3>研究報告與指南</h3>
+                        <div class="download-grid">
+                            <div class="download-item">
+                                <div class="download-icon">📋</div>
+                                <div class="download-info">
+                                    <h4>TISA入門指南</h4>
+                                    <p>完整的TISA制度介紹與操作指南 (PDF)</p>
+                                </div>
+                                <a href="https://drive.google.com/file/d/1i9Di8niOrs6jI_W4rbkQ3cUuPtHV6z8V/view?usp=sharing" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                            <div class="download-item">
+                                <div class="download-icon">📊</div>
+                                <div class="download-info">
+                                    <h4>投資策略白皮書</h4>
+                                    <p>深度投資策略分析與建議 (PDF)</p>
+                                </div>
+                                <a href="https://drive.google.com/file/d/1ZDe9cLMkO1u1RI6Kew5WC7M1UFau1RQu/view?usp=sharing" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                            <div class="download-item">
+                                <div class="download-icon">📈</div>
+                                <div class="download-info">
+                                    <h4>市場分析報告</h4>
+                                    <p>台灣TISA市場深度分析報告 (PDF)</p>
+                                </div>
+                                <a href="https://drive.google.com/file/d/1fUygIdi4opEzyFFIXvvolOQLSJWql3Ku/view?usp=sharing" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 學習資料下載 -->
+                    <div class="download-category">
+                        <h3>學習教材</h3>
+                        <div class="download-grid">
+                            <div class="download-item">
+                                <div class="download-icon">🎥</div>
+                                <div class="download-info">
+                                    <h4>影片教學摘要</h4>
+                                    <p>TISA制度完整介紹影片摘要</p>
+                                </div>
+                                <a href="https://drive.google.com/file/d/1Dxb1snRaCXgbIqULPPxv97VFwzcnqhyf/view?usp=sharing" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                            <div class="download-item">
+                                <div class="download-icon">🎵</div>
+                                <div class="download-info">
+                                    <h4>語音學習檔</h4>
+                                    <p>TISA制度重點講解語音檔</p>
+                                </div>
+                                <a href="https://drive.google.com/file/d/1Xn5uZ2vh0IRgzV5EoYlb19kjgjArRMaT/view?usp=sharing" target="_blank" class="btn btn--secondary">下載</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TISA 學習平台 2.0</h4>
+                    <p>全面升級的台灣個人投資儲蓄帳戶專業學習資源平台</p>
+                </div>
+                <div class="footer-section">
+                    <h4>快速連結</h4>
+                    <ul>
+                        <li><a href="#" data-section="intro">制度詳解</a></li>
+                        <li><a href="#" data-section="analysis">155檔基金分析</a></li>
+                        <li><a href="#" data-section="learning">學習中心</a></li>
+                        <li><a href="#" data-section="review">多元評論</a></li>
+                        <li><a href="#" data-section="downloads">資料下載</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>版本資訊</h4>
+                    <ul>
+                        <li>版本 2.0 - 155檔基金完整版</li>
+                        <li>多維度智能篩選功能</li>
+                        <li>績效分析與比較工具</li>
+                        <li>110+題學習題庫</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>免責聲明</h4>
+                    <p>本平台僅供教育學習用途，不構成投資建議。投資有風險，請謹慎評估。</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TISA 學習平台 2.0. 版權所有.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
