@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025年台灣房地產市場綜合洞察</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基本樣式設定 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        /* Chart.js 工具提示樣式 */
+        .chartjs-tooltip {
+            opacity: 1;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 8px;
+            padding: 8px 12px;
+            transition: all .1s ease;
+            pointer-events: none;
+            transform: translate(-50%, -100%);
+            font-size: 12px;
+        }
+        .dark .chartjs-tooltip {
+             background: rgba(255, 255, 255, 0.85);
+             color: #1f2937;
+        }
+        /* 導覽列啟用連結樣式 */
+        .nav-link.active {
+            color: #2563eb; /* 淺色模式啟用顏色 */
+            border-bottom-color: #2563eb;
+        }
+        .dark .nav-link.active {
+            color: #60a5fa; /* 深色模式啟用顏色 */
+            border-bottom-color: #60a5fa;
+        }
+        /* 卡片懸停效果 */
+        .card-hover {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+        }
+        /* 時間軸樣式 */
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 1.5rem;
+            border-left: 2px solid #e5e7eb;
+        }
+        .dark .timeline-item {
+            border-left-color: #4b5563;
+        }
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -0.5rem;
+            top: 0.25rem;
+            height: 1rem;
+            width: 1rem;
+            background-color: #fff;
+            border: 4px solid #3b82f6;
+            border-radius: 9999px;
+        }
+        .dark .timeline-marker {
+            background-color: #1f2937;
+            border-color: #60a5fa;
+        }
+    </style>
+    <script>
+        // 偵測並應用儲存的主題模式
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 antialiased">
+
+    <!-- Header and Navigation -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white">2025 房地產綜合洞察</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">市場總覽</a>
+                        <a href="#price-comparison" class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">六都房價</a>
+                        <a href="#risk-opportunity" class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">機會風險</a>
+                        <a href="#regional-analysis" class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">區域分析</a>
+                        <a href="#policy-data" class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">政策與數據</a>
+                        <a href="#calculator" class="nav-link px-3 py-2 text-sm font-medium border-b-2 border-transparent text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">購屋能力試算</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                     <button id="themeBtn" title="切換深淺色" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <svg id="theme-icon-light" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="theme-icon-dark" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <button id="fsBtn" title="切換全螢幕" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                         <svg id="fs-icon-enter" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5"></path></svg>
+                         <svg id="fs-icon-exit" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H4m0 0v4m0-4l5 5m1-1V4m0 0h4m-4 0l5 5M8 20H4m0 0v-4m0 4l5-5m1 1v4m0 0h4m-4 0l5-5"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Section: Market Overview -->
+        <section id="overview" class="scroll-mt-20 text-center mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-4">市場總覽：審慎樂觀中的結構性轉變</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-400 mb-2">
+                2025年台灣房市在多空因素交織下呈現複雜格局。剛性需求、科技業投資及政策支持共同支撐市場穩定發展，但全球經濟與緊縮政策仍帶來挑戰。
+            </p>
+             <p class="max-w-3xl mx-auto text-gray-500 dark:text-gray-400 text-sm mb-10">
+                全國房價指數預估將從2024年的135上升至138，<span class="font-semibold text-gray-700 dark:text-gray-200">平均房價漲幅約2.2%</span>，顯示市場由高漲轉為溫和成長。然而，房價年增率已明顯高於租金與薪資成長，負擔能力議題值得關注。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4 text-center">全國房價與租金指數趨勢</h3>
+                    <div class="relative h-64 md:h-80"><canvas id="priceTrendChart"></canvas></div>
+                </div>
+                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4 text-center">指數年增率 vs. 薪資成長</h3>
+                    <div class="relative h-64 md:h-80"><canvas id="growthCompareChart"></canvas></div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover md:col-span-2 lg:col-span-1">
+                    <h3 class="font-semibold text-lg mb-4 text-center">2025 市場信心指數</h3>
+                    <div class="relative h-64 md:h-80"><canvas id="sentimentChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: 6 Cities Price Comparison -->
+        <section id="price-comparison" class="scroll-mt-20 mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 text-center mb-4">都會區房價與負擔能力比較</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-400 text-center mb-10">
+                比較主要都會區在2024年與2025年預估的平均房價與漲幅。南部科技廊帶漲幅雖顯著，但整體市場因交易量下滑，漲勢可能趨緩。下方圖表亦加入「房價所得比」與「租售比」，以評估各區的實際負擔與投資潛力。
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4">房價比較：2024 vs 2025（萬元/坪）</h3>
+                    <div class="relative h-96"><canvas id="barChart"></canvas></div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4">2025預估房價漲幅排名 (%)</h3>
+                    <div class="relative h-96"><canvas id="growthRankChart"></canvas></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4">房價所得比 (倍)</h3>
+                    <div class="relative h-96"><canvas id="incomeRatioChart"></canvas></div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4">租售比 (年化報酬率 %)</h3>
+                    <div class="relative h-96"><canvas id="rentalYieldChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section: Risk & Opportunity -->
+        <section id="risk-opportunity" class="scroll-mt-20 mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 text-center mb-4">機會與風險評估 (正反觀點)</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-400 text-center mb-10">
+                市場前景並非一片坦途，每個機會背後都可能伴隨風險。此處將關鍵因子以正反並陳的方式呈現，助您進行更全面的評估。
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                     <h3 class="font-semibold text-lg mb-4">主要影響因子：衝擊強度 vs. 影響時間</h3>
+                     <div class="relative h-96"><canvas id="scatterChart"></canvas></div>
+                </div>
+                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                     <h3 class="font-semibold text-lg mb-4">關鍵機會與潛在挑戰</h3>
+                     <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="opportunity-card bg-gray-100 dark:bg-gray-700 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500" data-topic="tech">
+                            <h4 class="font-bold">🚀 科技園區擴張</h4>
+                        </div>
+                        <div class="opportunity-card bg-gray-100 dark:bg-gray-700 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500" data-topic="urban">
+                            <h4 class="font-bold">🏗️ 都更危老加速</h4>
+                        </div>
+                        <div class="opportunity-card bg-gray-100 dark:bg-gray-700 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500" data-topic="green">
+                            <h4 class="font-bold">🌿 綠色永續建築</h4>
+                        </div>
+                         <div class="opportunity-card bg-gray-100 dark:bg-gray-700 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500" data-topic="aging">
+                            <h4 class="font-bold">👵 高齡化社會需求</h4>
+                        </div>
+                    </div>
+                    <div id="opportunity-display" class="relative h-64 md:h-[304px]">
+                       <div id="opportunity-content" class="hidden flex flex-col justify-center">
+                            <h4 id="opportunity-title" class="text-lg font-bold mb-2"></h4>
+                            <p id="opportunity-text" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                        </div>
+                        <div id="opportunity-placeholder" class="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                             <svg class="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path></svg>
+                            <p>請點擊上方卡片查看</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Regional Analysis -->
+        <section id="regional-analysis" class="scroll-mt-20 mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 text-center mb-4">區域深度分析</h2>
+             <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-400 text-center mb-10">
+                台灣房市存在顯著的區域差異。透過下方的指標比較，找出各都會區的市場特性與潛力。本次分析特別納入「新竹縣市」，並增加「供給壓力」指標。
+            </p>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                 <div class="flex justify-center flex-wrap gap-2 mb-8">
+                    <button class="btn-region active px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="taipei">台北市</button>
+                    <button class="btn-region px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="new_taipei">新北市</button>
+                    <button class="btn-region px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="taoyuan">桃園市</button>
+                    <button class="btn-region px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="hsinchu">新竹縣市</button>
+                    <button class="btn-region px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="taichung">台中市</button>
+                    <button class="btn-region px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="tainan">台南市</button>
+                    <button class="btn-region px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-full text-sm font-medium" data-city="kaohsiung">高雄市</button>
+                 </div>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <div>
+                         <h3 id="regional-title" class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"></h3>
+                         <p id="regional-text" class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6"></p>
+                         <h4 class="font-semibold mb-4">城市綜合指標雷達圖</h4>
+                         <div class="relative h-80"><canvas id="regionalRadarChart"></canvas></div>
+                     </div>
+                      <div>
+                         <h4 class="font-semibold mb-4">區域投資價值 vs. 風險評分</h4>
+                         <div class="relative h-96"><canvas id="bubbleChart"></canvas></div>
+                      </div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- New Section: Policy & Data Insights -->
+        <section id="policy-data" class="scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 text-center mb-4">政策風向與市場數據</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-400 text-center mb-10">
+                深入了解當前政府與央行的房市政策走向，並結合最新的交易數據，為您的購屋決策提供更全面的參考依據。
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Policy Analysis -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-4">政府與央行現行政策</h3>
+                    <div class="space-y-4 text-sm">
+                        <div>
+                            <h4 class="font-semibold text-gray-700 dark:text-gray-300">🏛️ 政府政策風向</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mt-1">
+                                當前政府政策呈現「一手打炒房、一手挺自住」的雙軌並行策略。透過《平均地權條例》修正案嚴格限制預售屋換約轉售，並嚴查新青安貸款的違規使用，旨在抑制市場投機行為。 同時，透過新青安政策協助首購族，顯示政策核心在於滿足剛性需求，而非全面打壓房市。
+                            </p>
+                            <p class="text-gray-600 dark:text-gray-400 mt-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-400">
+                                <strong>專家觀點：</strong>此種政策長期可能造成「剛性需求」與「投資置產」市場的斷層。自住市場因有政策支撐而維持溫度，但投資市場在信用管制下流動性降低，高端產品或蛋白區可能面臨較大壓力。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 dark:text-gray-300">🏦 央行房屋政策</h4>
+                            <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 mt-1 space-y-1">
+                                <li><strong>利率政策：</strong>截至2025年第三季，中央銀行連續六次決議維持政策利率不變，重貼現率維持在2%。</li>
+                                <li><strong>貸款融資政策：</strong>持續實施「選擇性信用管制」，針對特定地區（六都+新竹縣市）的自然人第二戶購屋貸款成數上限為6成且無寬限期；第三戶以上貸款成數更低。</li>
+                                <li><strong>打房措施：</strong>央行總裁近期表示「房地產風險還沒解決」，顯示其對房市信用擴張的審慎態度，短期內放寬管制措施的可能性極低。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Policy Timeline -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="font-semibold text-lg mb-6">近年房市政策時間軸</h3>
+                    <div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <p class="font-semibold text-blue-600 dark:text-blue-400">2025 H2 (預計)</p>
+                            <h4 class="font-bold text-md mt-1">新青安貸款加強查核</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">政府部會合作，針對新青安貸款資格與轉租等違規行為，進行更嚴格的稽查，確保政策資源落實於自住需求。</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <p class="font-semibold text-blue-600 dark:text-blue-400">2025 Q3</p>
+                            <h4 class="font-bold text-md mt-1">央行利率六度凍結</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">考量國內經濟景氣與通膨狀況，中央銀行連續第六次維持政策利率不變，暫時緩解房貸族的升息壓力。</p>
+                        </div>
+                         <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <p class="font-semibold text-blue-600 dark:text-blue-400">2023 Q3</p>
+                            <h4 class="font-bold text-md mt-1">新青年安心成家貸款上路</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">推出升級版「新青安」貸款，提供最高額度1000萬、最長40年期、5年寬限期及利息補貼，大幅活絡首購買氣。</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <p class="font-semibold text-blue-600 dark:text-blue-400">2023 Q3</p>
+                            <h4 class="font-bold text-md mt-1">《平均地權條例》修法上路</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">俗稱「打炒房條例」，嚴格限制預售屋及新建成屋換約轉售，並建立檢舉獎金制度，有效抑制短期投機行為。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transaction Data Chart -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover">
+                <h3 class="font-semibold text-lg mb-2">建物買賣移轉棟數分析</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                    建物買賣移轉棟數是衡量房市交易熱度的關鍵指標。2025年上半年六都總移轉量年減約27%，顯示市場動能明顯放緩。從歷史數據看，目前交易量已從2021年的高峰回落，進入盤整階段。
+                </p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <div>
+                        <h4 class="text-center font-medium text-sm mb-2">歷史交易量走勢 (2019-2025)</h4>
+                        <div class="relative h-80"><canvas id="historicalTransactionChart"></canvas></div>
+                    </div>
+                     <div>
+                        <h4 class="text-center font-medium text-sm mb-2">2025上半年交易量年變動率 (%)</h4>
+                        <div class="relative h-80"><canvas id="transactionChangeChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW Section: Affordability Calculator -->
+        <section id="calculator" class="scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 text-center mb-4">購屋能力模擬計算機</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-400 text-center mb-10">
+                想知道以您目前的財務狀況，可以負擔多少總價的房子嗎？輸入您的條件，我們將以房產專家的角度，為您提供一個合理的購屋總價建議。
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover space-y-4">
+                    <div>
+                        <label for="monthlyIncome" class="block text-sm font-medium text-gray-700 dark:text-gray-300">您的家庭月收入 (萬元)</label>
+                        <input type="number" id="monthlyIncome" value="10" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+                    </div>
+                    <div>
+                        <label for="savings" class="block text-sm font-medium text-gray-700 dark:text-gray-300">您準備的自備款 (萬元)</label>
+                        <input type="number" id="savings" value="200" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+                    </div>
+                    <div>
+                        <label for="mortgageRate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">預期房貸利率 (%)</label>
+                        <input type="number" id="mortgageRate" value="2.2" step="0.1" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+                    </div>
+                    <div>
+                        <label for="mortgageTerm" class="block text-sm font-medium text-gray-700 dark:text-gray-300">預期貸款年限 (年)</label>
+                        <input type="number" id="mortgageTerm" value="30" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+                    </div>
+                    <button id="calculateBtn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                        開始計算
+                    </button>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md card-hover flex flex-col justify-center text-center">
+                    <h3 class="font-semibold text-lg mb-4 text-gray-600 dark:text-gray-400">專家建議購屋總價</h3>
+                    <p id="resultPrice" class="text-4xl font-bold text-green-600 dark:text-green-400 mb-4">-- 萬元</p>
+                    <div id="resultDetails" class="text-sm text-left space-y-2 text-gray-500 dark:text-gray-400 p-4 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
+                        <p><strong>計算基礎：</strong></p>
+                        <ul class="list-disc list-inside">
+                            <li>每月房貸還款不超過月收入的 <span class="font-bold">1/3</span>，以確保生活品質。</li>
+                            <li>自備款中保留 <span class="font-bold">10%</span> 作為購屋雜費與簡易裝潢預備金。</li>
+                        </ul>
+                        <hr class="my-2 border-gray-300 dark:border-gray-600">
+                        <div id="detailsOutput" class="space-y-1">
+                            <p>每月可負擔房貸： <span class="font-semibold" id="monthlyPayment">-- 元</span></p>
+                            <p>預估可貸款金額： <span class="font-semibold" id="loanAmount">-- 萬元</span></p>
+                            <p>可用於頭期款金額： <span class="font-semibold" id="downPayment">-- 萬元</span></p>
+                            <p>雜項預備金： <span class="font-semibold" id="otherFees">-- 萬元</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+    
+    <footer class="bg-gray-100 dark:bg-gray-800 mt-16">
+        <div class="container mx-auto py-4 px-5 text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 房地產市場洞察. 資料僅供參考，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 資料區 ---
+        const housingData = [
+          {城市:'台北市', y2024:108, y2025:112, 漲幅:3.7, 所得比: 15.8, 租售比: 1.8}, 
+          {城市:'新北市', y2024:65,  y2025:68,  漲幅:4.6, 所得比: 12.5, 租售比: 2.1},
+          {城市:'桃園市', y2024:36,  y2025:39,  漲幅:8.3, 所得比: 8.5, 租售比: 2.5},
+          {城市:'新竹市', y2024:55,  y2025:60,  漲幅:9.1, 所得比: 11.2, 租售比: 2.2},
+          {城市:'台中市', y2024:42,  y2025:45,  漲幅:7.1, 所得比: 9.8, 租售比: 2.4},
+          {城市:'台南市', y2024:31,  y2025:34,  漲幅:9.7, 所得比: 8.2, 租售比: 2.6},
+          {城市:'高雄市', y2024:29,  y2025:32,  漲幅:10.3,所得比: 7.9, 租售比: 2.7}
+        ];
+        const riskOpportunityData = [
+          {label:'預售屋交屋潮', x:2, y:8, type:'風險'}, {label:'銀行放貸緊縮', x:1, y:7, type:'風險'},
+          {label:'人口結構改變', x:4, y:6, type:'風險'}, {label:'全球經濟不確定', x:1, y:7, type:'風險'},
+          {label:'新青安政策支持', x:2, y:8, type:'機會'}, {label:'科技產業聚集', x:4, y:9, type:'機會'},
+          {label:'危老都更', x:3, y:7, type:'機會'}, {label:'蛋白區價格修正', x:1, y:6, type:'機會'}
+        ];
+        const regionalValueData = [
+          {label:'台北市核心區', x:8.5, y:4.0, r:20, group:'北部/核心'}, {label:'新北市蛋白區', x:7.0, y:6.0, r:16, group:'北部/核心'},
+          {label:'桃園重劃區', x:8.0, y:7.0, r:18, group:'北部/核心'}, {label:'台中七期', x:7.5, y:5.0, r:17, group:'中部/發展'},
+          {label:'台南科技園區', x:8.2, y:5.5, r:19, group:'南部/科技'}, {label:'高雄亞灣區', x:7.8, y:6.5, r:18, group:'南部/科技'},
+          {label:'新竹竹北', x:9.0, y:5.0, r:22, group:'北部/科技'}
+        ];
+        const opportunityCardData = {
+            tech: { title: '🚀 科技園區擴張效應', text: '正面：台積電等龍頭設廠，強勁就業與高收入人口移入，帶動周邊住宅需求與價格。 \n\n反思：過度依賴單一產業可能造成區域泡沫化，若產業景氣反轉，房市支撐力將面臨考驗。' },
+            urban: { title: '🏗️ 都市更新與危老重建', text: '正面：雙北等核心都市素地稀缺，都更是新供給主要來源，改善市容並注入房市活力。\n\n反思：整合曠日廢時，法規門檻高，實際推動速度緩慢，且重建後的高昂房價並非人人可負擔。' },
+            green: { title: '🌿 綠色永續建築趨勢', text: '正面：ESG浪潮下，綠建築標章建案在市場上更具吸引力，也利於取得較佳的鑑價與貸款條件。\n\n反思：建造成本較高，最終可能轉嫁給消費者，推高房價門檻。' },
+            aging: { title: '👵 高齡化社會新商機', text: '正面：2025年進入超高齡社會，銀髮族住宅如無障礙設計、社區醫療服務等產品，是極具潛力的藍海市場。\n\n反思：目前市場供給仍不足，且需與長照、醫療體系充分結合，需求未必能立即轉化為有效購屋動能。' }
+        };
+        const regionalRadarData = {
+            taipei: { title: '台北市：保值性佳，都更為核心', text: '首都房價基期最高，但保值性最強。市場動能主要來自市中心的都市更新案，新案供給稀缺性支撐價格。', data: [8, 6, 7, 9, 5, 4] },
+            new_taipei: { title: '新北市：交通建設，環狀線效應', text: '擁有多元重劃區(如林口、淡水)與捷運路網擴張的優勢，承接大量台北市外溢的購屋需求。捷運沿線站點周邊成為房市交易熱區。', data: [7, 8, 8, 6, 7, 7] },
+            taoyuan: { title: '桃園市：人口紅利，產業進駐', text: '六都中唯一人口正成長的城市，航空城計畫與亞矽創新園區等重大建設，吸引大量就業人口，房價穩健成長。', data: [7, 9, 8, 7, 8, 8] },
+            hsinchu: { title: '新竹縣市：竹科效應，所得支撐', text: '全台所得最高、消費力最強的城市。竹科買盤強勁，房價漲幅驚人，但近期面臨供給量大增的挑戰。', data: [9, 10, 7, 8, 9, 9] },
+            taichung: { title: '台中市：建設題材，穩居二哥', text: '捷運綠線通車後，帶動沿線房市發展。水湳經貿園區、烏日高鐵特區等大型開發案持續進行，是中台灣的房市領頭羊。', data: [8, 8, 9, 7, 7, 6] },
+            tainan: { title: '台南市：南科效應，價量齊揚', text: '受惠於南科擴廠效應，台南房市近年表現最為亮眼。高科技人才進駐帶來強勁的剛性需求，但房價基期已大幅墊高。', data: [9, 7, 6, 8, 9, 5] },
+            kaohsiung: { title: '高雄市：產業轉型，後發先至', text: '從重工業城市轉型為高科技半導體聚落，台積電設廠帶來龐大想像空間。房價基期相對較低，補漲潛力受矚目。', data: [9, 7, 6, 8, 9, 6] }
+        };
+        const historicalTransactionData = {
+            labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025(H1)'],
+            data: [27.8, 30.2, 34.8, 31.8, 29.5, 27.5, 10.0] 
+        };
+         const transactionChangeData = [
+            { city: '台北市', change: -24 }, { city: '新北市', change: -30 },
+            { city: '桃園市', change: -17 }, { city: '台中市', change: -22 },
+            { city: '台南市', change: -32 }, { city: '高雄市', change: -34 }
+        ];
+
+        // --- 全域變數與設定 ---
+        let priceTrendChart, growthCompareChart, sentimentChart, barChart, growthRankChart, scatterChart, bubbleChart, regionalRadarChart, incomeRatioChart, rentalYieldChart, historicalTransactionChart, transactionChangeChart;
+        const isDarkMode = () => document.documentElement.classList.contains('dark');
+        const chartTextColor = () => isDarkMode() ? 'rgba(229, 231, 235, 0.8)' : 'rgba(55, 65, 81, 0.9)';
+        const chartGridColor = () => isDarkMode() ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.6)';
+        
+        Chart.defaults.font.family = "'Noto Sans TC', sans-serif";
+        Chart.defaults.maintainAspectRatio = false;
+        Chart.defaults.responsive = true;
+
+        // --- 圖表繪製函式 ---
+        const createPriceTrendChart = () => {
+            const ctx = document.getElementById('priceTrendChart').getContext('2d');
+            priceTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025 (預測)'],
+                    datasets: [
+                        { label: '全國房價指數', data: [100, 115, 128, 135, 138], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4 },
+                        { label: '全國租金指數', data: [100, 102, 104.5, 107, 109], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: false, tension: 0.4 }
+                    ]
+                },
+                options: { scales: { y: { beginAtZero: false, grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }, x: { grid: { display: false }, ticks: { color: chartTextColor() } } }, plugins: { legend: { display: true, position: 'bottom', labels: { color: chartTextColor() } } } }
+            });
+        };
+
+        const createGrowthCompareChart = () => {
+             const ctx = document.getElementById('growthCompareChart').getContext('2d');
+             growthCompareChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025(E)'],
+                    datasets: [
+                        { type: 'line', label: '房價年增率', data: [15.0, 11.3, 5.5, 2.2], borderColor: '#ef4444', tension: 0.2, fill: false, yAxisID: 'y' },
+                        { type: 'bar', label: '租金年增率', data: [2.0, 2.5, 2.4, 1.9], backgroundColor: '#3b82f6', yAxisID: 'y' },
+                        { type: 'bar', label: '實質薪資成長', data: [0.1, 0.5, -0.2, 0.8], backgroundColor: '#f97316', yAxisID: 'y' }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: { position: 'left', grid: { color: chartGridColor() }, ticks: { color: chartTextColor(), callback: v => v + '%' } }
+                    },
+                    plugins: { legend: { display: true, position: 'bottom', labels: { color: chartTextColor() } } }
+                }
+             });
+        };
+
+        const createSentimentChart = () => {
+            const ctx = document.getElementById('sentimentChart').getContext('2d');
+            sentimentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['審慎樂觀', '觀望'],
+                    datasets: [{ data: [65, 35], backgroundColor: ['#3b82f6', '#93c5fd'], borderColor: isDarkMode() ? '#1f2937' : '#f9fafb', borderWidth: 4, circumference: 180, rotation: 270 }]
+                },
+                options: { cutout: '70%', plugins: { legend: { display: false }, tooltip: { enabled: false } } },
+                plugins: [{ id: 'gaugeText', beforeDraw: (chart) => {
+                    const { width, height, ctx } = chart;
+                    ctx.restore();
+                    ctx.font = `bold ${(height / 114).toFixed(2)}rem Noto Sans TC`;
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = chartTextColor();
+                    const text = '65%';
+                    const textX = Math.round((width - ctx.measureText(text).width) / 2);
+                    const textY = height / 1.5;
+                    ctx.fillText(text, textX, textY);
+                    ctx.font = `${(height / 200).toFixed(2)}rem Noto Sans TC`;
+                    const subText = '審慎樂觀';
+                    const subTextX = Math.round((width - ctx.measureText(subText).width) / 2);
+                    ctx.fillText(subText, subTextX, textY + 30);
+                    ctx.save();
+                }}]
+            });
+        };
+        
+        const createGroupedBarChart = () => {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: housingData.map(d => d.城市),
+                    datasets: [
+                        { label: '2024年均價', data: housingData.map(d => d.y2024), backgroundColor: '#60a5fa', borderRadius: 4 },
+                        { label: '2025年預估價', data: housingData.map(d => d.y2025), backgroundColor: '#fb923c', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    plugins: { legend: { position: 'top', labels: { color: chartTextColor() } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.raw} 萬元/坪` } } },
+                    scales: { y: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }, x: { grid: { display: false }, ticks: { color: chartTextColor() } } }
+                }
+            });
+        };
+
+        const createGrowthRankChart = () => {
+            const ctx = document.getElementById('growthRankChart').getContext('2d');
+            const sortedData = [...housingData].sort((a, b) => b.漲幅 - a.漲幅);
+            growthRankChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedData.map(d => d.城市),
+                    datasets: [{
+                        label: '預估漲幅 (%)',
+                        data: sortedData.map(d => d.漲幅),
+                        backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#14b8a6', '#6366f1'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${c.raw}%` } } },
+                    scales: {
+                        y: { grid: { display: false }, ticks: { color: chartTextColor() } },
+                        x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor(), callback: v => v + '%' } }
+                    }
+                }
+            });
+        };
+        
+        const createIncomeRatioChart = () => {
+            const ctx = document.getElementById('incomeRatioChart').getContext('2d');
+            const sortedData = [...housingData].sort((a, b) => b.所得比 - a.所得比);
+            incomeRatioChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedData.map(d => d.城市),
+                    datasets: [{
+                        label: '房價所得比 (倍)',
+                        data: sortedData.map(d => d.所得比),
+                        backgroundColor: '#f43f5e',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `約 ${c.raw} 年不吃不喝` } } },
+                    scales: { y: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }, x: { grid: { display: false }, ticks: { color: chartTextColor() } } }
+                }
+            });
+        };
+
+        const createRentalYieldChart = () => {
+            const ctx = document.getElementById('rentalYieldChart').getContext('2d');
+            const sortedData = [...housingData].sort((a, b) => b.租售比 - a.租售比);
+            rentalYieldChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedData.map(d => d.城市),
+                    datasets: [{
+                        label: '租售比 (%)',
+                        data: sortedData.map(d => d.租售比),
+                        backgroundColor: '#16a34a',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${c.raw}%` } } },
+                    scales: {
+                        y: { grid: { display: false }, ticks: { color: chartTextColor() } },
+                        x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor(), callback: v => v + '%' } }
+                    }
+                }
+            });
+        };
+
+
+        const createRiskScatterChart = () => {
+            const ctx = document.getElementById('scatterChart').getContext('2d');
+            scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: '風險', data: riskOpportunityData.filter(d => d.type === '風險'), backgroundColor: '#ef4444' },
+                        { label: '機會', data: riskOpportunityData.filter(d => d.type === '機會'), backgroundColor: '#22c55e' }
+                    ]
+                },
+                options: {
+                    plugins: { 
+                        legend: { position: 'top', labels: { color: chartTextColor() } },
+                        tooltip: { callbacks: { label: (c) => `${c.raw.type}：${c.raw.label} (強度 ${c.raw.y})` } }
+                    },
+                    scales: {
+                        y: { title: { display: true, text: '影響強度', color: chartTextColor() }, min: 5, max: 10, grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } },
+                        x: { title: { display: true, text: '影響時間', color: chartTextColor() }, min: 0, max: 5, grid: { color: chartGridColor() }, ticks: { stepSize: 1, color: chartTextColor(), callback: v => ['','短期', '中期', '次長期', '長期'][v] || '' } }
+                    }
+                }
+            });
+        };
+
+        const createRegionalBubbleChart = () => {
+            const ctx = document.getElementById('bubbleChart').getContext('2d');
+            const groups = [...new Set(regionalValueData.map(d => d.group))];
+            const colors = ['#60a5fa', '#facc15', '#4ade80', '#fb7185'];
+            bubbleChart = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: groups.map((g, i) => ({
+                        label: g,
+                        data: regionalValueData.filter(d => d.group === g),
+                        backgroundColor: colors[i % colors.length]
+                    }))
+                },
+                options: {
+                    plugins: { 
+                        legend: { position: 'top', labels: { color: chartTextColor() } },
+                        tooltip: { callbacks: { label: (c) => `${c.raw.label}: 價值 ${c.raw.x}, 風險 ${c.raw.y}` } }
+                    },
+                    scales: {
+                        y: { title: { display: true, text: '風險分數 (愈低愈佳)', color: chartTextColor() }, grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } },
+                        x: { title: { display: true, text: '投資價值分數', color: chartTextColor() }, grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }
+                    }
+                }
+            });
+        };
+
+        const createRegionalRadarChart = () => {
+            const ctx = document.getElementById('regionalRadarChart').getContext('2d');
+            regionalRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['價格潛力', '人口就業', '公共建設', '剛性需求', '保值性', '供給壓力'],
+                    datasets: [{
+                        label: '城市綜合評分', data: [],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6',
+                        pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { r: {
+                        beginAtZero: true, max: 10, grid: { color: chartGridColor() },
+                        angleLines: { color: chartGridColor() },
+                        pointLabels: { color: chartTextColor(), font: { size: 10 } }
+                    }}
+                }
+            });
+        };
+
+        const createHistoricalTransactionChart = () => {
+            const ctx = document.getElementById('historicalTransactionChart').getContext('2d');
+            historicalTransactionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: historicalTransactionData.labels,
+                    datasets: [{
+                        label: '全國買賣移轉棟數(萬棟)',
+                        data: historicalTransactionData.data,
+                        borderColor: '#818cf8',
+                        backgroundColor: 'rgba(129, 140, 248, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { display: false }, ticks: { color: chartTextColor() } },
+                        x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor() } }
+                    }
+                }
+            });
+        };
+
+
+        const createTransactionChangeChart = () => {
+            const ctx = document.getElementById('transactionChangeChart').getContext('2d');
+            transactionChangeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: transactionChangeData.map(d => d.city),
+                    datasets: [{
+                        label: '年變動率 (%)',
+                        data: transactionChangeData.map(d => d.change),
+                        backgroundColor: '#f87171',
+                        borderColor: '#dc2626',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `年減 ${Math.abs(c.raw)}%` } } },
+                    scales: {
+                        y: { grid: { display: false }, ticks: { color: chartTextColor() } },
+                        x: { grid: { color: chartGridColor() }, ticks: { color: chartTextColor(), callback: v => v + '%' } }
+                    }
+                }
+            });
+        };
+
+
+        // --- 互動功能 ---
+        // 主題切換
+        const themeBtn = document.getElementById('themeBtn');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const updateThemeIcon = () => {
+            if (isDarkMode()) { lightIcon.classList.add('hidden'); darkIcon.classList.remove('hidden'); } 
+            else { lightIcon.classList.remove('hidden'); darkIcon.classList.add('hidden'); }
+        };
+        themeBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            updateThemeIcon();
+            // 重繪所有圖表以更新顏色
+            [priceTrendChart, growthCompareChart, sentimentChart, barChart, growthRankChart, scatterChart, bubbleChart, regionalRadarChart, incomeRatioChart, rentalYieldChart, historicalTransactionChart, transactionChangeChart].forEach(chart => {
+                if(chart) chart.destroy();
+            });
+            initAllCharts();
+        });
+        
+        // 全螢幕切換
+        const fsBtn = document.getElementById('fsBtn');
+        const fsEnterIcon = document.getElementById('fs-icon-enter');
+        const fsExitIcon = document.getElementById('fs-icon-exit');
+        fsBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => alert(`無法進入全螢幕模式: ${err.message}`));
+            else document.exitFullscreen();
+        });
+        document.addEventListener('fullscreenchange', () => {
+            const isFs = !!document.fullscreenElement;
+            fsEnterIcon.classList.toggle('hidden', isFs);
+            fsExitIcon.classList.toggle('hidden', !isFs);
+        });
+
+        // 機會卡片互動
+        document.querySelectorAll('.opportunity-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.opportunity-card').forEach(c => c.classList.remove('border-blue-500', 'bg-blue-100', 'dark:bg-blue-900/50'));
+                card.classList.add('border-blue-500', 'bg-blue-100', 'dark:bg-blue-900/50');
+                const data = opportunityCardData[card.dataset.topic];
+                document.getElementById('opportunity-placeholder').classList.add('hidden');
+                document.getElementById('opportunity-content').classList.remove('hidden');
+                document.getElementById('opportunity-title').textContent = data.title;
+                document.getElementById('opportunity-text').innerHTML = data.text.replace(/\n/g, '<br>'); // Use innerHTML to render line breaks
+            });
+        });
+        
+        // 區域分析互動
+        const updateRegionalData = (city) => {
+            const data = regionalRadarData[city];
+            document.getElementById('regional-title').textContent = data.title;
+            document.getElementById('regional-text').textContent = data.text;
+            regionalRadarChart.data.datasets[0].data = data.data; 
+            regionalRadarChart.update();
+            document.querySelectorAll('.btn-region').forEach(button => {
+                const isActive = button.dataset.city === city;
+                button.classList.toggle('active', isActive);
+                button.classList.toggle('bg-blue-500', isActive);
+                button.classList.toggle('text-white', isActive);
+                button.classList.toggle('dark:bg-blue-500', isActive);
+                button.classList.toggle('bg-gray-100', !isActive);
+                button.classList.toggle('dark:bg-gray-700', !isActive);
+            });
+        };
+        document.querySelectorAll('.btn-region').forEach(button => {
+            button.addEventListener('click', (e) => updateRegionalData(e.target.dataset.city));
+        });
+
+        // 導覽列滾動監測
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                    });
+                }
+            });
+        }, { rootMargin: "-40% 0px -60% 0px" });
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+        
+        // 計算機功能
+        const calculateAffordability = () => {
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value) * 10000;
+            const savings = parseFloat(document.getElementById('savings').value) * 10000;
+            const rate = parseFloat(document.getElementById('mortgageRate').value) / 100;
+            const term = parseFloat(document.getElementById('mortgageTerm').value);
+
+            if (isNaN(monthlyIncome) || isNaN(savings) || isNaN(rate) || isNaN(term) || monthlyIncome <= 0 || savings <= 0 || rate <= 0 || term <= 0) {
+                document.getElementById('resultPrice').textContent = "請輸入有效數值";
+                return;
+            }
+
+            // 專家建議: 月付金不超過月收1/3
+            const maxMonthlyPayment = Math.floor(monthlyIncome / 3);
+            
+            // 本息攤還公式計算可貸款總額
+            const monthlyRate = rate / 12;
+            const numberOfPayments = term * 12;
+            const loanAmount = Math.floor(maxMonthlyPayment * (Math.pow(1 + monthlyRate, numberOfPayments) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)));
+            
+            // 專家建議: 自備款保留10%做雜支
+            const otherFees = Math.floor(savings * 0.1);
+            const downPayment = Math.floor(savings * 0.9);
+
+            const totalAffordablePrice = Math.floor((loanAmount + downPayment) / 10000);
+
+            // 更新顯示
+            document.getElementById('resultPrice').textContent = `${totalAffordablePrice.toLocaleString()} 萬元`;
+            document.getElementById('monthlyPayment').textContent = `${maxMonthlyPayment.toLocaleString()} 元`;
+            document.getElementById('loanAmount').textContent = `${Math.floor(loanAmount / 10000).toLocaleString()} 萬元`;
+            document.getElementById('downPayment').textContent = `${Math.floor(downPayment / 10000).toLocaleString()} 萬元`;
+            document.getElementById('otherFees').textContent = `${Math.floor(otherFees / 10000).toLocaleString()} 萬元`;
+        };
+        document.getElementById('calculateBtn').addEventListener('click', calculateAffordability);
+
+        // --- 初始化 ---
+        function initAllCharts() {
+            createPriceTrendChart();
+            createGrowthCompareChart();
+            createSentimentChart();
+            createGroupedBarChart();
+            createGrowthRankChart();
+            createIncomeRatioChart();
+            createRentalYieldChart();
+            createRiskScatterChart();
+            createRegionalBubbleChart();
+            createRegionalRadarChart();
+            createHistoricalTransactionChart();
+            createTransactionChangeChart();
+            updateRegionalData('taipei'); // 預設顯示台北市
+            calculateAffordability(); // 預先計算一次
+        }
+        
+        updateThemeIcon();
+        initAllCharts();
+    });
+    </script>
+</body>
+</html>
