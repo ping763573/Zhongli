@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧資產配置互動視覺化平台 (Pro)</title>
+    <!-- 函式庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* --- 全局色彩與設計變數 --- */
+        :root {
+            --primary-bg: #f8f9fa;
+            --secondary-bg: #ffffff;
+            --primary-text: #343a40;
+            --secondary-text: #6c757d;
+            --primary-color: #1c3b57;
+            --accent-color: #3498db;
+            --accent-hover-color: #2980b9;
+            --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --card-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
+            --card-border-top: 5px solid var(--accent-color);
+        }
+        /* --- 深色模式配色 --- */
+        [data-theme="dark"] {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --primary-text: #e0e0e0;
+            --secondary-text: #a0a0a0;
+            --primary-color: #5d9cec;
+            --accent-color: #3498db;
+            --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            --card-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --card-border-top: 5px solid var(--primary-color);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding-top: 60px;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container { width: 85%; max-width: 1200px; margin: auto; overflow: hidden; padding: 20px 0; }
+
+        /* --- 導覽航 & 控制按鈕 --- */
+        .navbar { background-color: var(--secondary-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; transition: background-color 0.3s; }
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+        .nav-links a { display: block; padding: 20px 15px; text-decoration: none; color: var(--secondary-text); font-weight: 600; transition: color 0.3s, border-bottom 0.3s; border-bottom: 3px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-color); border-bottom: 3px solid var(--accent-color); }
+        .nav-controls { display: flex; align-items: center; gap: 10px; }
+        .nav-controls button { background: none; border: none; cursor: pointer; font-size: 24px; color: var(--secondary-text); padding: 10px; transition: color 0.3s; }
+        .nav-controls button:hover { color: var(--accent-color); }
+
+        /* --- 頁首 --- */
+        header { background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); color: #ffffff; padding: 3.5rem 1rem; text-align: center; }
+        header h1 { margin: 0; font-size: 2.8rem; font-weight: 700; }
+        
+        /* --- 卡片式模組 & 進場動畫 --- */
+        .module {
+            background: var(--secondary-bg); margin-bottom: 40px; padding: 30px 35px; border-radius: 12px;
+            box-shadow: var(--card-shadow); border-top: var(--card-border-top);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+            opacity: 0; transform: translateY(20px);
+        }
+        .module.is-visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .module:hover { transform: translateY(-5px); box-shadow: var(--card-shadow-hover); }
+        h2 { font-size: 2rem; color: var(--primary-text); padding-bottom: 12px; margin-top: 0; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        h4 { font-size: 1.4rem; color: var(--primary-text); margin-top: 30px; border-left: 4px solid var(--accent-color); padding-left: 15px; transition: color 0.3s; }
+        h5 { font-size: 1.1rem; color: var(--primary-text); margin-top: 20px; }
+        strong { color: var(--accent-color); }
+        .disclaimer { font-size: 0.9em; color: var(--secondary-text); background-color: rgba(128,128,128,0.05); padding: 10px; border-radius: 5px; margin-top: 5px; }
+        
+        /* --- 實戰範例模組的佈局 --- */
+        .example-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        @media (max-width: 992px) {
+            .example-container { grid-template-columns: 1fr; }
+        }
+        .example-step { border: 1px solid rgba(128,128,128,0.2); padding: 20px; border-radius: 8px; }
+        .localization-note { background-color: rgba(128,128,128,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9em; }
+        
+        /* --- PDF 報告中的輸入資訊摘要樣式 --- */
+        #user-input-summary ul { list-style-type: none; padding-left: 0; }
+        #user-input-summary li { background-color: rgba(128,128,128,0.1); margin-bottom: 8px; padding: 10px; border-radius: 5px; }
+
+        /* --- 互動提示 Tooltip --- */
+        .tooltip-container { position: relative; display: inline-block; cursor: help; }
+        .tooltip-icon { font-size: 0.8em; color: var(--accent-color); border: 1px solid var(--accent-color); border-radius: 50%; padding: 0 5px; }
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #333; color: #fff; text-align: left; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        /* --- 漸層配置比例條 --- */
+        #result-display .allocation-bar { box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
+        .stock-bar { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .bond-bar { background: linear-gradient(45deg, #3498db, #2980b9); }
+
+        /* --- 新增區塊的樣式 --- */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 20px; }
+        .asset-card { border: 1px solid rgba(128,128,128,0.2); padding: 20px; border-radius: 8px; cursor: pointer; transition: transform 0.2s; }
+        .asset-card:hover { transform: translateY(-5px); }
+        .asset-card h3 { font-size: 1.5rem; margin-top: 0; display: flex; align-items: center; gap: 15px; }
+        .asset-details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .asset-details.visible { max-height: 200px; }
+        .profile-container, .simulator-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: center; }
+        @media (max-width: 992px) { .profile-container, .simulator-container { grid-template-columns: 1fr; } }
+        .profile-controls button { display: block; width: 100%; padding: 12px; margin-bottom: 10px; cursor: pointer; border: 2px solid rgba(128,128,128,0.3); background-color: transparent; color: var(--primary-text); border-radius: 8px; text-align: left; font-size: 1rem; transition: background-color 0.3s, border-color 0.3s; }
+        .profile-controls button.active { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+        #profile-description { background-color: rgba(128,128,128,0.1); padding: 15px; border-radius: 8px; margin-top: 20px; min-height: 100px; }
+        .slider-group label { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600; }
+        .slider-group input[type="range"] { width: 100%; }
+        #total-percentage-warning { color: #e74c3c; font-weight: bold; text-align: center; margin-top: 15px; height: 1.5em; }
+        .simulator-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; text-align: center; }
+        .simulator-metrics div h5 { font-size: 1rem; color: var(--secondary-text); margin: 0 0 5px 0; }
+        .simulator-metrics div p { font-size: 1.8rem; font-weight: bold; color: var(--primary-text); margin: 0; }
+
+
+        /* --- 其他樣式 --- */
+        #backToTopBtn { display: none; position: fixed; bottom: 25px; right: 25px; z-index: 99; border: none; background-color: var(--accent-color); color: white; cursor: pointer; padding: 0; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; transition: background-color 0.3s, opacity 0.3s; opacity: 0.8; }
+        #backToTopBtn:hover { background-color: var(--accent-hover-color); opacity: 1; }
+        .button { background: var(--accent-color); color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background-color 0.3s ease; margin-top: 10px; }
+        .button:hover { background-color: var(--accent-hover-color); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--secondary-text); }
+        th { background-color: rgba(128,128,128,0.1); font-weight: 600; }
+        .interactive-chart, .radar-chart, .heatmap, .doughnut-chart-container, .chart-wrapper { width: 100%; max-width: 400px; margin: 20px auto; }
+        form div{margin-bottom:15px}form label{display:block;margin-bottom:5px;font-weight:600}form input,form select{width:100%;padding:10px;border-radius:5px;border:1px solid var(--secondary-text);font-size:16px;background-color:var(--secondary-bg);color:var(--primary-text);}
+        #result-display .allocation-bar-container{display:flex;height:30px;border-radius:5px;overflow:hidden;margin:10px 0}#result-display .allocation-bar{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9em;transition:width .5s ease-in-out}
+        .d3-tooltip { position: absolute; text-align: center; padding: 8px; font: 12px sans-serif; background: #333; color: #fff; border-radius: 8px; pointer-events: none; opacity: 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#overview" class="active">概述分析</a></li>
+            <li><a href="#asset-classes">資產類別</a></li>
+            <li><a href="#theory">理論基礎</a></li>
+            <li><a href="#strategies">配置策略</a></li>
+            <li><a href="#profiles">風險屬性</a></li>
+            <li><a href="#examples">實戰範例</a></li>
+            <li><a href="#calculator">智能計算器</a></li>
+            <li><a href="#simulator">投資組合模擬</a></li>
+            <li><a href="#rebalancing">再平衡工具</a></li>
+            <li><a href="#advanced-tools">進階分析</a></li>
+        </ul>
+        <div class="nav-controls">
+            <button id="dark-mode-toggle" title="切換深色/淺色模式">🌗</button>
+            <button id="fullscreen-toggle" title="切換全螢幕">⛶</button>
+        </div>
+    </nav>
+
+    <header><h1 id="main-title">智慧資產配置互動視覺化平台</h1></header>
+
+    <div class="container">
+        <div id="overview" class="module">
+            <h2>🎯 概述分析模組</h2>
+            <p>資產配置是根據投資目標、風險承受能力和投資期限，將資金分配到不同類型資產的過程。其核心目標是透過<strong>分散投資</strong>來平衡風險與回報。這一策略旨在降低單一資產波動對整體投資組合的影響，從而優化長期回報。</p>
+            <h4>核心功能與特性：</h4>
+            <ul>
+                <li><strong>風險分散：</strong> 透過投資於相關性低的資產，當某一資產表現不佳時，其他資產可能表現良好，從而降低整體投資組合的波動性。</li>
+                <li><strong>報酬優化：</strong> 在可接受的風險水平內，透過科學的資產組合，最大化長期潛在回報。</li>
+                <li><strong>風險平衡：</strong> 確保投資組合的風險水平與投資者的個人承受能力相匹配。</li>
+                <li><strong>動態調整：</strong> 根據市場變化和個人情況的改變，定期重新評估和調整資產配置。</li>
+            </ul>
+            <div class="interactive-chart"><canvas id="assetClassChart"></canvas></div>
+            <h4>不同投資期間的配置建議</h4>
+            <table><thead><tr><th>投資期間</th><th>風險等級</th><th>建議配置 (股/債)</th><th>目標</th></tr></thead><tbody><tr><td>短期 (1-3年)</td><td>保守型</td><td>20% / 80%</td><td>資本保值，流動性</td></tr><tr><td>中期 (3-10年)</td><td>平衡型</td><td>50% / 50%</td><td>穩定增長，風險適中</td></tr><tr><td>長期 (10年以上)</td><td>積極型</td><td>80% / 20%</td><td>資本大幅增值</td></tr></tbody></table>
+        </div>
+
+        <!-- REVISED: 資產類別模組 -->
+        <div id="asset-classes" class="module">
+            <h2>📚 認識主要資產類別</h2>
+            <p>了解不同資產的特性是建立有效投資組合的第一步。每種類別都有其獨特的風險與回報潛力。點擊下方卡片以了解更多資訊。</p>
+            <div class="grid-container">
+                <div class="asset-card">
+                    <h3><span>📈</span>股票</h3>
+                    <p>代表公司的所有權，提供較高的增長潛力，但波動性也較大。</p>
+                    <div class="asset-details">
+                        <hr style="margin: 15px 0; border-color: rgba(128,128,128,0.2);">
+                        <p><strong>優點：</strong>長期回報潛力高、對抗通膨。</p>
+                        <p><strong>缺點：</strong>市場波動大、短期風險高。</p>
+                        <p><strong>適合：</strong>能承受較高風險、追求長期資本增值的投資者。</p>
+                    </div>
+                </div>
+                <div class="asset-card">
+                    <h3><span>📜</span>債券</h3>
+                    <p>借錢給政府或企業，提供固定的利息收入，風險相對較低。</p>
+                    <div class="asset-details">
+                        <hr style="margin: 15px 0; border-color: rgba(128,128,128,0.2);">
+                        <p><strong>優點：</strong>收益穩定、風險較低、投資組合的穩定器。</p>
+                        <p><strong>缺點：</strong>增長潛力有限、受利率變化影響。</p>
+                        <p><strong>適合：</strong>尋求穩定現金流、風險承受能力較低的投資者。</p>
+                    </div>
+                </div>
+                <div class="asset-card">
+                    <h3><span>🏠</span>房地產</h3>
+                    <p>投資於實體物業或相關證券，可能提供租金收入和資本增值。</p>
+                    <div class="asset-details">
+                        <hr style="margin: 15px 0; border-color: rgba(128,128,128,0.2);">
+                        <p><strong>優點：</strong>有形資產、租金現金流、抗通膨。</p>
+                        <p><strong>缺點：</strong>流動性差、管理成本高、市場週期性強。</p>
+                        <p><strong>適合：</strong>長期投資、尋求多元化收入來源的投資者。</p>
+                    </div>
+                </div>
+                <div class="asset-card">
+                    <h3><span>💰</span>現金</h3>
+                    <p>包括存款、貨幣市場基金等，流動性最高，但回報率最低。</p>
+                    <div class="asset-details">
+                        <hr style="margin: 15px 0; border-color: rgba(128,128,128,0.2);">
+                        <p><strong>優點：</strong>高流動性、本金安全。</p>
+                        <p><strong>缺點：</strong>回報率低、易受通膨侵蝕。</p>
+                        <p><strong>適合：</strong>短期資金需求、應急儲備金。</p>
+                    </div>
+                </div>
+                <!-- NEW ASSET CLASS CARDS START -->
+                <div class="asset-card">
+                    <h3><span>💎</span>商品</h3>
+                    <p>投資於黃金、石油等原物料，常用於對抗通膨與市場避險。</p>
+                    <div class="asset-details">
+                        <hr style="margin: 15px 0; border-color: rgba(128,128,128,0.2);">
+                        <p><strong>優點：</strong>抗通膨、與股債市低相關性。</p>
+                        <p><strong>缺點：</strong>自身不產生現金流、價格波動大。</p>
+                        <p><strong>適合：</strong>尋求極致分散風險的投資者。</p>
+                    </div>
+                </div>
+                <div class="asset-card">
+                    <h3><span>🔗</span>另類投資</h3>
+                    <p>如私募股權、加密貨幣等，提供額外多元化，但風險極高。</p>
+                    <div class="asset-details">
+                        <hr style="margin: 15px 0; border-color: rgba(128,128,128,0.2);">
+                        <p><strong>優點：</strong>提供非傳統的回報來源、潛在高增長。</p>
+                        <p><strong>缺點：</strong>高風險、低流動性、高門檻、監管不確定性。</p>
+                        <p><strong>適合：</strong>專業投資者或風險承受能力極高的使用者。</p>
+                    </div>
+                </div>
+                 <!-- NEW ASSET CLASS CARDS END -->
+            </div>
+        </div>
+
+        <div id="theory" class="module">
+            <h2>📚 理論基礎模組</h2>
+            <p>本平台以諾貝爾獎得主哈利·馬可維茲 (Harry Markowitz) 的<strong>現代投資組合理論 (Modern Portfolio Theory, MPT)</strong> 為基石。MPT 提供了一個數學框架，用於構建在給定風險水平下最大化預期回報的投資組合。</p>
+            <h4>核心概念：</h4>
+            <ul>
+                <li><strong>均值-變異數模型 (Mean-Variance Model)：</strong> 使用預期回報 (均值) 和波動率 (變異數) 來量化資產的特性，並依此進行投資組合優化。</li>
+                <li><strong>效率前緣 (Efficient Frontier)：</strong> 在所有可能的投資組合中，效率前緣代表了一系列在特定風險水平下能提供最高預期回報的組合點。理性投資者應選擇位於效率前緣上的投資組合。</li>
+                <li><strong>相關係數：</strong> MPT 強調，資產之間的相關性是分散風險的關鍵。選擇低相關或負相關的資產，可以有效降低整體投資組合的波動性。</li>
+            </ul>
+            <div class="interactive-chart"><canvas id="efficientFrontierChart"></canvas></div>
+        </div>
+
+        <div id="strategies" class="module">
+            <h2>🎯 配置策略模組</h2>
+            <p>不同的市場環境和投資目標需要不同的配置策略。本模組介紹三種主流的資產配置策略。</p>
+            <ol>
+                <li><strong>策略性資產配置 (Strategic Asset Allocation):</strong> 設定一個長期的、固定的目標資產配置比例，並透過定期再平衡來維持。這是一種被動的管理方式，著重於實現長期的投資目標。</li>
+                <li><strong>風險平價策略 (Risk Parity):</strong> 此策略非按資金比例，而是按風險貢獻度來分配資產。目標是讓每個資產類別對總體投資組合風險的貢獻度相等，創造一個更平衡的風險暴露。</li>
+                <li><strong>戰術性資產配置 (Tactical Asset Allocation):</strong> 在策略性配置的基礎上，根據對市場的中短期預期進行動態調整。當預期某類資產將有較好表現時，暫時增加其權重以獲取超額收益。</li>
+            </ol>
+            <div class="radar-chart"><canvas id="strategyRadarChart"></canvas></div>
+        </div>
+
+        <!-- NEW: 風險屬性模組 -->
+        <div id="profiles" class="module">
+            <h2>👤 探索您的投資者屬性</h2>
+            <p>不同的風險承受能力對應不同的資產配置策略。選擇一個最貼近您情況的屬性，查看建議的投資組合配置。</p>
+            <div class="profile-container">
+                <div class="profile-controls">
+                    <h4>選擇您的風險屬性</h4>
+                    <button data-profile="conservative" class="profile-btn active">
+                        <strong>保守型</strong><br><small>追求本金安全，波動最小化</small>
+                    </button>
+                    <button data-profile="moderate" class="profile-btn">
+                        <strong>穩健型</strong><br><small>平衡風險與回報，追求穩定增長</small>
+                    </button>
+                    <button data-profile="aggressive" class="profile-btn">
+                        <strong>積極型</strong><br><small>追求高回報，能承受較大波動</small>
+                    </button>
+                    <div id="profile-description"></div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="profileChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- REVISED: 實戰範例模組 -->
+        <div id="examples" class="module">
+            <h2>💡 資產配置實戰範例</h2>
+            <p>了解理論後，讓我們看看如何在真實世界中應用。以下將提供一套通用的執行框架，並針對不同人生階段的使用者，給出具體的資產配置範例與 ETF 標的建議。</p>
+            <h4>資產配置通用五步驟</h4>
+            <ol>
+                <li><strong>確立投資目標：</strong> 明確您的投資是為了什麼（例如：退休、買房、子女教育），並確定投資期限。</li>
+                <li><strong>評估風險承受度：</strong> 了解您能承受多大的資產價值波動。這通常與您的年齡、收入穩定性和心理素質有關。</li>
+                <li><strong>選擇核心策略：</strong> 根據您的目標與風險偏好，選擇一個長期配置策略，例如本頁面提到的「策略性資產配置」。</li>
+                <li><strong>挑選投資工具 (ETFs)：</strong> 選擇能夠代表各大類資產、低成本且廣泛分散的指數股票型基金 (ETF) 來建立您的投資組合。</li>
+                <li><strong>執行與定期再平衡：</strong> 投入資金購買選定的 ETFs，並設定一個週期（例如：每年一次）來檢查並調整配置比例，使其回到目標水平。</li>
+            </ol>
+            <hr style="margin: 40px 0; border: 1px solid rgba(128,128,128,0.1);">
+            <h4>範例一：積極成長型</h4>
+            <table><tbody>
+                <tr><td><strong>投資者輪廓</strong></td><td>25歲，剛步入職場的年輕人，收入穩定，無家庭負擔。</td></tr>
+                <tr><td><strong>投資目標</strong></td><td>最大化長期資本增值，為30-40年後的退休做準備。</td></tr>
+                <tr><td><strong>風險承受度</strong></td><td>高。可承受較大的市場波動，以換取長期的高回報潛力。</td></tr>
+            </tbody></table>
+            <div class="example-container">
+                <div class="example-step">
+                    <h5>步驟一：初始配置 (90/10 股債比)</h5>
+                    <p>假設投入 100,000 元，配置如下：</p>
+                    <ul>
+                        <li><strong>72% (72,000元)</strong> 投入 <strong>VTI</strong> (美國整體市場ETF)</li>
+                        <li><strong>18% (18,000元)</strong> 投入 <strong>VXUS</strong> (全球(不含美國)ETF)</li>
+                        <li><strong>10% (10,000元)</strong> 投入 <strong>BND</strong> (整體債券市場ETF)</li>
+                    </ul>
+                    <div class="localization-note">
+                        <strong>台灣市場參考：</strong><br>
+                        - **VTI** 可對應 <strong>元大台灣50 (0050)</strong> 或 <strong>富邦台50 (006208)</strong>。<br>
+                        - **BND** 可對應 <strong>元大美債20年 (00679B)</strong>。
+                    </div>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart1"></canvas></div>
+                </div>
+                <div class="example-step">
+                    <h5>步驟二：5年後的情境與調整</h5>
+                    <p>如今投資者已30歲，事業進入穩定發展期，可能已組織家庭。資產累積到一定程度，建議適度降低風險。</p>
+                    <p>新目標配置：<strong>85% 股票 / 15% 債券</strong></p>
+                    <p><strong>執行動作：</strong>進行再平衡，賣出部分股票資產，買入債券資產，使投資組合達到新的 <strong>85/15</strong> 目標比例。</p>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart1_after5"></canvas></div>
+                </div>
+            </div>
+            <hr style="margin: 40px 0; border: 1px solid rgba(128,128,128,0.1);">
+            <h4>範例二：穩健平衡型</h4>
+            <table><tbody>
+                <tr><td><strong>投資者輪廓</strong></td><td>40歲，已婚有子女的家庭支柱，事業穩定。</td></tr>
+                <tr><td><strong>投資目標</strong></td><td>穩健增長資產，兼顧退休規劃與子女未來的教育基金。</td></tr>
+                <tr><td><strong>風險承受度</strong></td><td>中等。希望資產穩定增長，但不想承受過於劇烈的市場波動。</td></tr>
+            </tbody></table>
+            <div class="example-container">
+                <div class="example-step">
+                    <h5>步驟一：初始配置 (60/40 股債比)</h5>
+                    <p>假設投入 1,000,000 元，配置如下：</p>
+                    <ul>
+                        <li><strong>48% (480,000元)</strong> 投入 <strong>VTI</strong> (美國市場)</li>
+                        <li><strong>12% (120,000元)</strong> 投入 <strong>VXUS</strong> (國際市場)</li>
+                        <li><strong>40% (400,000元)</strong> 投入 <strong>BND</strong> (債券市場)</li>
+                    </ul>
+                    <div class="localization-note">
+                         <strong>台灣市場參考：</strong><br>
+                        - **VTI** 可對應 <strong>元大台灣50 (0050)</strong>，也可考慮加入 <strong>國泰永續高股息 (00878)</strong> 增加多元性。<br>
+                        - **BND** 可對應 <strong>中信高評級公司債 (00772B)</strong>。
+                    </div>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart2"></canvas></div>
+                </div>
+                <div class="example-step">
+                    <h5>步驟二：5年後的情境與調整</h5>
+                    <p>如今投資者45歲，更接近退休年齡，子女教育費用需求也更近。此時應進一步降低投資組合波動性。</p>
+                    <p>新目標配置：<strong>50% 股票 / 50% 債券</strong></p>
+                    <p><strong>執行動作：</strong>進行再平衡，將投資組合調整至新的 <strong>50/50</strong> 目標比例，以穩固資產，應對未來的現金需求。</p>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart2_after5"></canvas></div>
+                </div>
+            </div>
+            <hr style="margin: 40px 0; border: 1px solid rgba(128,128,128,0.1);">
+            <h4>範例三：保守收益型</h4>
+            <table><tbody>
+                <tr><td><strong>投資者輪廓</strong></td><td>58歲，即將退休，希望保護資產並創造穩定的現金流。</td></tr>
+                <tr><td><strong>投資目標</strong></td><td>資產保值，對抗通膨，並從投資中獲得可預測的收益。</td></tr>
+                <tr><td><strong>風險承受度</strong></td><td>低。資產的安全性遠比高成長重要。</td></tr>
+            </tbody></table>
+            <div class="example-container">
+                <div class="example-step">
+                    <h5>步驟一：初始配置 (30/70 股債比)</h5>
+                    <p>假設投入 5,000,000 元，配置如下：</p>
+                    <ul>
+                        <li><strong>24% (1,200,000元)</strong> 投入 <strong>VTI</strong> (美國市場)</li>
+                        <li><strong>6% (300,000元)</strong> 投入 <strong>VXUS</strong> (國際市場)</li>
+                        <li><strong>70% (3,500,000元)</strong> 投入 <strong>BND</strong> (債券市場)</li>
+                    </ul>
+                    <div class="localization-note">
+                        <strong>台灣市場參考：</strong><br>
+                        - 股票部位可考慮 <strong>元大台灣高股息 (0056)</strong> 獲取穩定股利。<br>
+                        - 債券部位可配置 <strong>元大AAA至A公司債 (00751B)</strong> 以追求高品質債息。
+                    </div>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart3"></canvas></div>
+                </div>
+                <div class="example-step">
+                    <h5>步驟二：5年後的情境與調整</h5>
+                    <p>如今投資者63歲，已正式退休，完全依賴資產生活。此時首要目標是極力避免本金虧損。</p>
+                    <p>新目標配置：<strong>20% 股票 / 80% 債券</strong></p>
+                    <p><strong>執行動作：</strong>將股債比調整至更為保守的 <strong>20/80</strong> 比例。高比例的債券部位能提供穩定的配息現金流，應對日常開銷。</p>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart3_after5"></canvas></div>
+                </div>
+            </div>
+             <hr style="margin: 40px 0; border: 1px solid rgba(128,128,128,0.1);">
+            <!-- NEW EXAMPLE SECTION START -->
+            <h4>更多投資策略範例</h4>
+            <div class="example-container">
+                 <div class="example-step">
+                    <h5>策略四：子女教育金規劃</h5>
+                    <p><strong>輪廓：</strong>35歲父母，為15年後子女的大學教育基金做準備。</p>
+                    <p><strong>目標：</strong>在可控風險下穩定增長，確保15年後有足夠資金。</p>
+                    <p><strong>建議配置 (70/30 股債比)：</strong></p>
+                    <ul>
+                        <li><strong>56%</strong> 全球或美國市場股票ETF (如 VTI)</li>
+                        <li><strong>14%</strong> 國際市場股票ETF (如 VXUS)</li>
+                        <li><strong>30%</strong> 綜合債券市場ETF (如 BND)</li>
+                    </ul>
+                     <p><small>策略核心是隨著時間接近(例如每3-5年)，逐步降低股票比例，增加債券比例，以鎖定獲利並降低波動。</small></p>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart4"></canvas></div>
+                </div>
+                <div class="example-step">
+                    <h5>策略五：財務獨立，提早退休 (FIRE)</h5>
+                    <p><strong>輪廓：</strong>30歲高儲蓄率年輕人，目標在45歲前達成財務獨立。</p>
+                     <p><strong>目標：</strong>在15年內最大化資產增長，願意承受高風險。</p>
+                    <p><strong>建議配置 (95/5 股債比)：</strong></p>
+                     <ul>
+                        <li><strong>75%</strong> 美國整體市場股票ETF (VTI)</li>
+                        <li><strong>20%</strong> 全球(不含美)股票ETF (VXUS)</li>
+                        <li><strong>5%</strong> 債券市場ETF (BND) 作為少量緩衝</li>
+                    </ul>
+                    <p><small>此策略成功關鍵在於長期堅持投入與高儲蓄率，而非短期擇時。心理素質要求極高，需能承受市場大幅回撤。</small></p>
+                    <div class="doughnut-chart-container"><canvas id="portfolioDonutChart5"></canvas></div>
+                </div>
+            </div>
+            <!-- NEW EXAMPLE SECTION END -->
+        </div>
+        
+        <!-- REVISED: 智能計算器模組 -->
+        <div id="calculator" class="module">
+            <h2>🧮 智能配置計算器</h2>
+            <p>基於您的個人情況，我們提供量身定制的資產配置建議。請輸入您的資訊，以獲得包含未來成長預測的專業報告。</p>
+            <p class="disclaimer">注意：本模擬器使用長期平均報酬與風險假設 (數據截至2025 Q3)，僅供教育與參考用途，不構成任何投資建議。實際市場表現可能存在極大差異。</p>
+            <form id="allocationForm">
+                <div><label for="initialInvestment">初始投資金額 (TWD):</label><input type="number" id="initialInvestment" value="1000000" step="10000"></div>
+                <div><label for="age">您的年齡:</label><input type="number" id="age" value="30" min="18" max="100"></div>
+                <div><label for="riskTolerance">您的風險承受度:</label><select id="riskTolerance"><option value="low">低 (保守)</option><option value="medium" selected>中 (穩健)</option><option value="high">高 (積極)</option></select></div>
+                <div><label for="investmentHorizon">您的投資期間 (年):</label><input type="number" id="investmentHorizon" value="10" min="1" max="50"></div>
+                <button type="button" class="button" onclick="calculateAllocation()">開始計算</button>
+            </form>
+            <div id="result-wrapper" style="margin-top: 25px; display: none;">
+                <div id="result-display">
+                     <h4>您的輸入資訊</h4>
+                     <div id="user-input-summary"></div>
+                     <h4>您的個人化配置建議</h4>
+                     <div class="allocation-bar-container">
+                         <div id="stock-bar" class="allocation-bar stock-bar"></div>
+                         <div id="bond-bar" class="allocation-bar bond-bar"></div>
+                     </div>
+                     <p id="allocation-analysis" style="margin-top:15px;"></p>
+                </div>
+                <h4>10年資產成長預測</h4>
+                <div class="interactive-chart"><canvas id="projectionChart"></canvas></div>
+                <button type="button" class="button" id="downloadPdfBtn">下載配置報告 (PDF)</button>
+            </div>
+        </div>
+
+        <!-- REVISED: 投資組合模擬器 -->
+        <div id="simulator" class="module">
+            <h2>🛠️ 互動式投資組合模擬器</h2>
+            <p>親手調整不同資產的配置比例，觀察它們如何影響您的投資組合構成、預期風險和回報潛力。</p>
+            <p class="disclaimer">注意：這是一個學習工具，所有指標均基於固定權重與歷史數據假設，不構成任何投資建議。</p>
+            <div class="simulator-container">
+                <div class="simulator-controls">
+                    <div class="slider-group">
+                        <label for="stocks-slider"><span>📈 股票</span> <span id="stocks-value">40%</span></label>
+                        <input id="stocks-slider" type="range" min="0" max="100" value="40">
+                    </div>
+                    <div class="slider-group">
+                        <label for="bonds-slider"><span>📜 債券</span> <span id="bonds-value">30%</span></label>
+                        <input id="bonds-slider" type="range" min="0" max="100" value="30">
+                    </div>
+                    <div class="slider-group">
+                        <label for="real-estate-slider"><span>🏠 房地產</span> <span id="real-estate-value">10%</span></label>
+                        <input id="real-estate-slider" type="range" min="0" max="100" value="10">
+                    </div>
+                    <!-- NEW SLIDERS START -->
+                     <div class="slider-group">
+                        <label for="commodities-slider"><span>💎 商品</span> <span id="commodities-value">5%</span></label>
+                        <input id="commodities-slider" type="range" min="0" max="100" value="5">
+                    </div>
+                     <div class="slider-group">
+                        <label for="alternatives-slider"><span>🔗 另類投資</span> <span id="alternatives-value">5%</span></label>
+                        <input id="alternatives-slider" type="range" min="0" max="100" value="5">
+                    </div>
+                    <!-- NEW SLIDERS END -->
+                    <div class="slider-group">
+                        <label for="cash-slider"><span>💰 現金</span> <span id="cash-value">10%</span></label>
+                        <input id="cash-slider" type="range" min="0" max="100" value="10">
+                    </div>
+                    <div id="total-percentage-warning"></div>
+                </div>
+                <div class="chart-and-metrics">
+                    <div class="chart-wrapper">
+                        <canvas id="simulatorChart"></canvas>
+                    </div>
+                    <div class="simulator-metrics">
+                        <div>
+                            <h5>預期風險</h5>
+                            <p id="risk-level">中等</p>
+                        </div>
+                        <div>
+                            <h5>回報潛力</h5>
+                            <p id="return-potential">中等</p>
+                        </div>
+                        <!-- NEW METRICS START -->
+                        <div>
+                            <h5>夏普比率 (估)</h5>
+                            <p id="sharpe-ratio">-</p>
+                        </div>
+                        <div>
+                            <h5>最大回撤 (估)</h5>
+                            <p id="max-drawdown">-</p>
+                        </div>
+                        <!-- NEW METRICS END -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REVISED: 再平衡工具模組 -->
+        <div id="rebalancing" class="module">
+            <h2>🔄 再平衡工具模組</h2>
+            <p>透過再平衡，可以將投資組合恢復到目標配置。您可調整下方的預期報酬率，模擬不同的市場情境。</p>
+            <form style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <div><label for="stock-return">預期股票年化報酬率 (%):</label><input type="number" id="stock-return" value="10" style="width: 100px;"></div>
+                <div><label for="bond-return">預期債券年化報酬率 (%):</label><input type="number" id="bond-return" value="3" style="width: 100px;"></div>
+                <!-- NEW REBALANCE PERIOD SELECTOR -->
+                <div>
+                    <label for="rebalance-period">再平衡週期:</label>
+                    <select id="rebalance-period" style="width: 120px;">
+                        <option value="1">每年</option>
+                        <option value="2">每兩年</option>
+                        <option value="99">不執行</option>
+                    </select>
+                </div>
+                <button type="button" class="button" id="recalculate-rebalance">重新模擬</button>
+            </form>
+            <div class="interactive-chart"><canvas id="rebalancingChart"></canvas></div>
+            <h4>再平衡成本分析</h4>
+            <table><thead><tr><th>成本類型</th><th>描述</th><th>注意事項</th></tr></thead><tbody><tr><td>交易成本</td><td>買賣資產所需的手續費和稅費。</td><td>頻繁再平衡會增加交易成本。</td></tr><tr><td>機會成本</td><td>過早賣出表現良好的資產可能錯失未來漲幅。</td><td>不進行再平衡則可能承擔過高風險。</td></tr></tbody></table>
+        </div>
+
+        <div id="advanced-tools" class="module">
+            <h2>📈 進階分析工具</h2>
+            <p>為專業投資者提供更深入的投資組合分析工具，評估風險與表現。</p>
+            <h4>關鍵風險指標：</h4>
+            <ul>
+                <li><strong>夏普比率 (Sharpe Ratio)</strong>
+                    <span class="tooltip-container">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">衡量承受每單位總風險，所獲得的超額報酬。比率越高，代表投資組合的CP值越高。</span>
+                    </span>
+                </li>
+                <li><strong>最大回撤 (Maximum Drawdown)</strong>
+                    <span class="tooltip-container">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">衡量投資組合在特定時期內，從最高點回落到最低點的最大幅度。這是評估潛在下行風險的重要指標。</span>
+                    </span>
+                </li>
+                <li><strong>波動率 (Volatility)</strong></li>
+            </ul>
+            <h4>資產相關性熱力圖</h4>
+            <div class="heatmap">
+                <p>下圖展示了不同資產類別之間的相關性。綠色表示正相關，紅色表示負相關。理想的投資組合應包含<strong>低相關或負相關</strong>的資產。</p>
+                <div id="correlationHeatmap"></div>
+                <div class="d3-tooltip"></div>
+            </div>
+            <h4>全球資產配置趨勢</h4>
+             <table><thead><tr><th>地區/主題</th><th>2025年趨勢觀察</th><th>影響因素</th></tr></thead><tbody><tr><td>美國</td><td>經濟增長高於趨勢，但需關注通膨數據。</td><td>聯準會政策、總統選舉</td></tr><tr><td>新興市場</td><td>受惠於中國經濟前景改善，但易受關稅風險影響。</td><td>全球貿易政策、美元強弱</td></tr><tr><td>固定收益</td><td>評價仍具挑戰，但基本面穩健。</td><td>全球央行利率政策</td></tr><tr><td>另類投資</td><td>黃金等避險資產在地緣政治不確定性下受關注。</td><td>地緣政治風險、市場波動性</td></tr></tbody></table>
+        </div>
+    </div>
+
+    <button onclick="scrollToTop()" id="backToTopBtn" title="返回頂部">↑</button>
+    <footer class="footer"><p>&copy; 2025 智慧資產配置互動視覺化平台. 僅供參考。</p></footer>
+
+    <script>
+    // 全局變數
+    let rebalancingChartInstance, projectionChartInstance, profileChart, simulatorChart;
+
+    // REVISED: Parameter Configuration Object
+    const financialConfig = {
+        // For projectionChart
+        stockReturn: 0.09,
+        bondReturn: 0.035,
+        stockVolatility: 0.18,
+        bondVolatility: 0.05,
+        // For simulator metrics
+        riskFreeRate: 0.015,
+        assetMetrics: {
+            stocks:     { return: 1.0, risk: 1.0, volatility: 0.20 },
+            bonds:      { return: 0.3, risk: 0.3, volatility: 0.05 },
+            realEstate: { return: 0.6, risk: 0.7, volatility: 0.12 },
+            commodities:{ return: 0.5, risk: 0.8, volatility: 0.15 },
+            alternatives:{ return: 0.8, risk: 1.2, volatility: 0.25 },
+            cash:       { return: 0.1, risk: 0.0, volatility: 0.01 }
+        }
+    };
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const darkModeToggle = document.getElementById('dark-mode-toggle'), currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        darkModeToggle.addEventListener('click', () => {
+            const theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') { document.documentElement.removeAttribute('data-theme'); localStorage.removeItem('theme'); }
+            else { document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+        });
+        const modules = document.querySelectorAll('.module'), observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+        modules.forEach(module => observer.observe(module));
+        const navLinks = document.querySelectorAll('.nav-links a'), sections = document.querySelectorAll('.module'), backToTopButton = document.getElementById("backToTopBtn"), fullscreenButton = document.getElementById('fullscreen-toggle');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) backToTopButton.style.display = "block"; else backToTopButton.style.display = "none";
+            let current = "";
+            sections.forEach(section => { if (pageYOffset >= section.offsetTop - 70) current = section.getAttribute('id'); });
+            navLinks.forEach(a => { a.classList.remove('active'); if (a.getAttribute('href').substring(1) === current) a.classList.add('active'); });
+        };
+        fullscreenButton.addEventListener('click', toggleFullScreen);
+        document.addEventListener('fullscreenchange', updateFullscreenUI); document.addEventListener('mozfullscreenchange', updateFullscreenUI); document.addEventListener('webkitfullscreenchange', updateFullscreenUI); document.addEventListener('msfullscreenchange', updateFullscreenUI);
+        
+        // 原始圖表渲染
+        renderAssetClassChart(); renderEfficientFrontierChart(); renderStrategyRadarChart();
+        renderPortfolioDonutCharts();
+        renderRebalancingChart(); renderCorrelationHeatmap();
+
+        // 新增模組功能初始化
+        initializeAssetCards();
+        initializeProfileSelector();
+        initializeSimulator();
+
+        document.getElementById('recalculate-rebalance').addEventListener('click', renderRebalancingChart);
+        document.getElementById('downloadPdfBtn').addEventListener('click', downloadResultAsPDF);
+    });
+
+    // --- 新增功能函數 ---
+    function initializeAssetCards() {
+        const assetCards = document.querySelectorAll('.asset-card');
+        assetCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const details = card.querySelector('.asset-details');
+                details.classList.toggle('visible');
+            });
+        });
+    }
+
+    function initializeProfileSelector() {
+        const profileData = {
+            conservative: { labels: ['債券', '現金', '股票'], data: [50, 30, 20], description: "<strong>保守型策略：</strong> 主要目標是保護本金，並獲得少量穩定收益。此配置以低風險的債券和現金為主，少量配置股票以追求輕微增長。" },
+            moderate: { labels: ['股票', '債券', '房地產', '現金'], data: [55, 30, 10, 5], description: "<strong>穩健型策略：</strong> 尋求風險與回報的平衡。股票佔比較高以推動增長，而債券和房地產則提供穩定性和多元化，是多數長期投資者的常見選擇。" },
+            aggressive: { labels: ['股票', '房地產', '債券'], data: [80, 15, 5], description: "<strong>積極型策略：</strong> 目標是最大化長期回報，願意為此承受顯著的市場波動。此配置絕大部分集中於高增長潛力的股票資產。" }
+        };
+        const profileChartColors = ['#2980b9', '#95a5a6', '#e74c3c', '#f1c40f'];
+        const profileCtx = document.getElementById('profileChart').getContext('2d');
+        profileChart = new Chart(profileCtx, {
+            type: 'doughnut',
+            data: { labels: [], datasets: [{ data: [], backgroundColor: profileChartColors, borderColor: 'var(--secondary-bg)', borderWidth: 4 }] },
+            options: { responsive: true, maintainAspectRatio: true, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { padding: 20, color: 'var(--primary-text)' } }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw}%` } } } }
+        });
+
+        const profileBtns = document.querySelectorAll('.profile-btn');
+        const descriptionDiv = document.getElementById('profile-description');
+
+        function updateProfile(profile) {
+            const data = profileData[profile];
+            profileChart.data.labels = data.labels;
+            profileChart.data.datasets[0].data = data.data;
+            profileChart.update();
+            descriptionDiv.innerHTML = data.description;
+            profileBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.profile === profile));
+        }
+
+        profileBtns.forEach(btn => btn.addEventListener('click', () => updateProfile(btn.dataset.profile)));
+        updateProfile('conservative'); // Initial state
+    }
+
+    // REVISED: Simulator Initialization
+    function initializeSimulator() {
+        const sliders = { 
+            stocks: document.getElementById('stocks-slider'), 
+            bonds: document.getElementById('bonds-slider'), 
+            realEstate: document.getElementById('real-estate-slider'), 
+            commodities: document.getElementById('commodities-slider'),
+            alternatives: document.getElementById('alternatives-slider'),
+            cash: document.getElementById('cash-slider') 
+        };
+        const values = { 
+            stocks: document.getElementById('stocks-value'), 
+            bonds: document.getElementById('bonds-value'), 
+            realEstate: document.getElementById('real-estate-value'),
+            commodities: document.getElementById('commodities-value'),
+            alternatives: document.getElementById('alternatives-value'),
+            cash: document.getElementById('cash-value') 
+        };
+        const warningDiv = document.getElementById('total-percentage-warning');
+        const riskLevelEl = document.getElementById('risk-level');
+        const returnPotentialEl = document.getElementById('return-potential');
+        const sharpeRatioEl = document.getElementById('sharpe-ratio');
+        const maxDrawdownEl = document.getElementById('max-drawdown');
+        const simulatorCtx = document.getElementById('simulatorChart').getContext('2d');
+        
+        simulatorChart = new Chart(simulatorCtx, {
+            type: 'pie',
+            data: {
+                labels: ['股票', '債券', '房地產', '商品', '另類投資', '現金'],
+                datasets: [{ 
+                    data: [40, 30, 10, 5, 5, 10], 
+                    backgroundColor: ['#e74c3c', '#3498db', '#f1c40f', '#f39c12', '#8e44ad', '#95a5a6'], 
+                    borderColor: 'var(--secondary-bg)', 
+                    borderWidth: 4 
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { padding: 20, color: 'var(--primary-text)' } }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw}%` } } } }
+        });
+
+        function updateSimulator() {
+            let total = 0;
+            const currentValues = {};
+            for (const key in sliders) {
+                const value = parseInt(sliders[key].value);
+                currentValues[key] = value;
+                values[key].textContent = `${value}%`;
+                total += value;
+            }
+            warningDiv.textContent = total !== 100 ? `總比例為 ${total}%, 請調整至 100%` : '';
+
+            simulatorChart.data.datasets[0].data = Object.values(currentValues);
+            simulatorChart.update();
+            
+            let riskScore = 0, returnScore = 0, portfolioVolatility = 0;
+            for (const key in currentValues) {
+                const percentage = currentValues[key] / 100;
+                riskScore += percentage * financialConfig.assetMetrics[key].risk;
+                returnScore += percentage * financialConfig.assetMetrics[key].return;
+                // Note: Simplified volatility calculation. Real formula is more complex.
+                portfolioVolatility += percentage * financialConfig.assetMetrics[key].volatility;
+            }
+
+            riskLevelEl.textContent = riskScore > 0.7 ? '高' : riskScore > 0.4 ? '中等' : '低';
+            returnPotentialEl.textContent = returnScore > 0.7 ? '高' : returnScore > 0.4 ? '中等' : '低';
+
+            // Calculate advanced metrics
+            const portfolioReturn = returnScore * financialConfig.stockReturn; // Using stockReturn as a baseline for potential
+            const sharpeRatio = portfolioVolatility > 0 ? ((portfolioReturn - financialConfig.riskFreeRate) / portfolioVolatility) : 0;
+            sharpeRatioEl.textContent = sharpeRatio.toFixed(2);
+            
+            if (riskScore > 0.8) maxDrawdownEl.textContent = '約 > -40%';
+            else if (riskScore > 0.6) maxDrawdownEl.textContent = '約 -30% ~ -40%';
+            else if (riskScore > 0.4) maxDrawdownEl.textContent = '約 -20% ~ -30%';
+            else if (riskScore > 0.2) maxDrawdownEl.textContent = '約 -10% ~ -20%';
+            else maxDrawdownEl.textContent = '約 < -10%';
+        }
+
+        for (const key in sliders) { sliders[key].addEventListener('input', updateSimulator); }
+        updateSimulator(); // Initial call
+    }
+
+
+    // --- 原始功能函數 ---
+    function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
+    async function downloadResultAsPDF() { try{const{jsPDF:e}=window.jspdf,t=document.getElementById("result-display"),a=document.getElementById("projectionChart"),[l,s]=await Promise.all([html2canvas(t,{scale:2,useCORS:!0,backgroundColor:"dark"===document.documentElement.getAttribute("data-theme")?"#1e1e1e":"#ffffff"}),html2canvas(a,{scale:2,useCORS:!0,backgroundColor:"dark"===document.documentElement.getAttribute("data-theme")?"#1e1e1e":"#ffffff"})]),o=l.toDataURL("image/png"),r=s.toDataURL("image/png"),d=new e("p","mm","a4"),n=d.internal.pageSize.getWidth(),c=15,i=n-2*c;d.setFontSize(20),d.text("Smart Asset Allocation Report",n/2,c+5,{align:"center"});const m=l.height*i/l.width;d.addImage(o,"PNG",c,c+15,i,m),d.addPage(),d.setFontSize(20),d.text("10-Year Asset Growth Projection",n/2,c+5,{align:"center"});const p=s.height*i/s.width;d.addImage(r,"PNG",c,c+15,i,p),d.save("asset-allocation-report.pdf")}catch(e){console.error("PDF generation failed:",e),alert("抱歉，生成PDF報告失敗。請稍後再試。")} }
+    function calculateAllocation() { const e=parseFloat(document.getElementById("initialInvestment").value)||0,t=parseInt(document.getElementById("age").value),a=document.getElementById("riskTolerance"),l=a.value,s=a.options[a.selectedIndex].text,o=parseInt(document.getElementById("investmentHorizon").value);document.getElementById("user-input-summary").innerHTML=`\n            <ul>\n                <li><strong>初始投資金額:</strong> ${e.toLocaleString("en-US")} TWD</li>\n                <li><strong>年齡:</strong> ${t} 歲</li>\n                <li><strong>風險承受度:</strong> ${s}</li>\n                <li><strong>投資期間:</strong> ${o} 年</li>\n            </ul>`;let r=110-t;"high"===l?r+=10:"low"===l&&(r-=15);o<5?r-=10:o>20&&(r+=5);let d=Math.max(10,Math.min(95,r)),n=100-d;const c=document.getElementById("stock-bar"),i=document.getElementById("bond-bar");c.style.width=`${d}%`,c.textContent=`股票: ${d}%`,i.style.width=`${n}%`,i.textContent=`債券: ${n}%`,document.getElementById("allocation-analysis").innerHTML=`<strong>分析：</strong>此配置基於您的年齡、風險偏好和投資期限。${"high"===l?"您較高的風險承受度使建議偏向更多股票以追求成長。":"low"===l?"您的保守偏好使建議偏向更多債券以求穩定。":"您的風險偏好適中，配置較為均衡。"} 長期投資有助於承擔較高的股票比例。`,document.getElementById("result-wrapper").style.display="block",renderProjectionChart(e,d,n); }
+    function toggleFullScreen(){if(!document.fullscreenElement&&!document.mozFullScreenElement&&!document.webkitFullscreenElement&&!document.msFullscreenElement){const e=document.documentElement;e.requestFullscreen?e.requestFullscreen():e.mozRequestFullScreen?e.mozRequestFullScreen():e.webkitRequestFullscreen?e.webkitRequestFullscreen():e.msRequestFullscreen&&e.msRequestFullscreen()}else document.exitFullscreen?document.exitFullscreen():document.mozCancelFullScreen?document.mozCancelFullScreen():document.webkitExitFullscreen?document.webkitExitFullscreen():document.msExitFullscreen&&document.msExitFullscreen()}
+    function updateFullscreenUI(){const e=document.getElementById("fullscreen-toggle");document.fullscreenElement||document.mozFullScreenElement||document.webkitFullscreenElement||document.msFullscreenElement?(e.textContent="▣",e.title="退出全螢幕"):(e.textContent="⛶",e.title="切換全螢幕")}
+    function renderPortfolioDonutCharts() {
+        const options = { responsive: true, animation: true, plugins: { legend: { position: 'top', labels: { font: { size: 10 }, color: 'var(--primary-text)' } } } };
+        new Chart(document.getElementById('portfolioDonutChart1'), { type: 'doughnut', data: { labels: ['VTI (美國) 72%', 'VXUS (國際) 18%', 'BND (債券) 10%'], datasets: [{ data: [72, 18, 10], backgroundColor: ['#2980b9', '#3498db', '#95a5a6'] }] }, options: options });
+        new Chart(document.getElementById('portfolioDonutChart1_after5'), { type: 'doughnut', data: { labels: ['股票 85%', '債券 15%'], datasets: [{ data: [85, 15], backgroundColor: ['#e74c3c', '#bdc3c7'] }] }, options: options });
+        new Chart(document.getElementById('portfolioDonutChart2'), { type: 'doughnut', data: { labels: ['VTI (美國) 48%', 'VXUS (國際) 12%', 'BND (債券) 40%'], datasets: [{ data: [48, 12, 40], backgroundColor: ['#2980b9', '#3498db', '#95a5a6'] }] }, options: options });
+        new Chart(document.getElementById('portfolioDonutChart2_after5'), { type: 'doughnut', data: { labels: ['股票 50%', '債券 50%'], datasets: [{ data: [50, 50], backgroundColor: ['#e74c3c', '#bdc3c7'] }] }, options: options });
+        new Chart(document.getElementById('portfolioDonutChart3'), { type: 'doughnut', data: { labels: ['VTI (美國) 24%', 'VXUS (國際) 6%', 'BND (債券) 70%'], datasets: [{ data: [24, 6, 70], backgroundColor: ['#2980b9', '#3498db', '#95a5a6'] }] }, options: options });
+        new Chart(document.getElementById('portfolioDonutChart3_after5'), { type: 'doughnut', data: { labels: ['股票 20%', '債券 80%'], datasets: [{ data: [20, 80], backgroundColor: ['#e74c3c', '#bdc3c7'] }] }, options: options });
+        // NEW CHARTS
+        new Chart(document.getElementById('portfolioDonutChart4'), { type: 'doughnut', data: { labels: ['全球股票 56%', '國際股票 14%', '綜合債券 30%'], datasets: [{ data: [56, 14, 30], backgroundColor: ['#2980b9', '#3498db', '#95a5a6'] }] }, options: options });
+        new Chart(document.getElementById('portfolioDonutChart5'), { type: 'doughnut', data: { labels: ['美國股票 75%', '國際股票 20%', '綜合債券 5%'], datasets: [{ data: [75, 20, 5], backgroundColor: ['#c0392b', '#e74c3c', '#bdc3c7'] }] }, options: options });
+    }
+    // REVISED: Projection Chart using config
+    function renderProjectionChart(initial, stockPct, bondPct) { const years=10,labels=Array.from({length:years+1},(_,e)=>`第${e}年`),stockReturn=financialConfig.stockReturn,bondReturn=financialConfig.bondReturn,stockVol=financialConfig.stockVolatility,bondVol=financialConfig.bondVolatility,portfolioReturn=stockPct/100*stockReturn+bondPct/100*bondReturn,portfolioVol=Math.sqrt(Math.pow(stockPct/100,2)*Math.pow(stockVol,2)+Math.pow(bondPct/100,2)*Math.pow(bondVol,2)),data={avg:[initial],best:[initial],worst:[initial]};for(let e=1;e<=years;e++)data.avg.push(Math.round(data.avg[e-1]*(1+portfolioReturn))),data.best.push(Math.round(data.best[e-1]*(1+portfolioReturn+.7*portfolioVol))),data.worst.push(Math.round(data.worst[e-1]*(1+portfolioReturn-.7*portfolioVol)));const chartData={labels:labels,datasets:[{label:"平均預測",data:data.avg,borderColor:"#3498db",tension:.1},{label:"樂觀情境",data:data.best,borderColor:"rgba(46, 204, 113, 0.5)",borderDash:[5,5]},{label:"保守情境",data:data.worst,borderColor:"rgba(231, 76, 60, 0.5)",borderDash:[5,5]}]};projectionChartInstance&&projectionChartInstance.destroy(),projectionChartInstance=new Chart(document.getElementById("projectionChart"),{type:"line",data:chartData,options:{responsive:!0,animation:{duration:1e3,easing:"easeOutQuad"},plugins:{legend:{labels:{color:'var(--primary-text)'}},tooltip:{callbacks:{label:function(e){let t=e.dataset.label||"";return t&&(t+=": "),null!==e.parsed.y&&(t+=new Intl.NumberFormat("zh-TW",{style:"currency",currency:"TWD",minimumFractionDigits:0,maximumFractionDigits:0}).format(e.parsed.y)),t}}}},scales:{x:{ticks:{color:'var(--secondary-text)'}},y:{ticks:{color:'var(--secondary-text)'}}}}}); }
+    function renderRebalancingChart() { const stockReturn=parseFloat(document.getElementById("stock-return").value)/100||.1,bondReturn=parseFloat(document.getElementById("bond-return").value)/100||.03,years=5,labels=Array.from({length:years+1},(_,e)=>`第${e}年`);let noRebalanceData_stock=[60],rebalanceData_stock=[60];for(let e=1;e<=years;e++){let t=(noRebalanceData_stock[e-1]/100)*(1+stockReturn),a=(100-noRebalanceData_stock[e-1])/100*(1+bondReturn);noRebalanceData_stock.push(t/(t+a)*100),rebalanceData_stock.push(60)}const data={labels:labels,datasets:[{label:"未再平衡 (股票 %)",data:noRebalanceData_stock,borderColor:"#e74c3c",tension:.1},{label:"目標配置 (股票 %)",data:rebalanceData_stock,borderColor:"#2ecc71",borderDash:[5,5]}]};rebalancingChartInstance&&rebalancingChartInstance.destroy(),rebalancingChartInstance=new Chart(document.getElementById("rebalancingChart"),{type:"line",data:data,options:{responsive:!0,animation:!0,plugins:{title:{display:!0,text:"股票資產佔比變化 (%)",color:'var(--primary-text)'},legend:{labels:{color:'var(--primary-text)'}}},scales:{y:{min:40,max:90,ticks:{color:'var(--secondary-text)'}},x:{ticks:{color:'var(--secondary-text)'}}}}}); }
+    function renderStrategyRadarChart() { const data={labels:["長期導向","成本效益","靈活性","風險分散","超額報酬潛力"],datasets:[{label:"策略性",data:[5,4,2,3,2],fill:!0,backgroundColor:"rgba(52, 152, 219, 0.2)",borderColor:"rgb(52, 152, 219)"},{label:"風險平價",data:[4,3,2,5,2],fill:!0,backgroundColor:"rgba(46, 204, 113, 0.2)",borderColor:"rgb(46, 204, 113)"},{label:"戰術性",data:[2,2,5,3,5],fill:!0,backgroundColor:"rgba(231, 76, 60, 0.2)",borderColor:"rgb(231, 76, 60)"}]},strategyDesc={長期導向:"策略與長期目標的契合度。",成本效益:"執行策略的交易成本與管理費用。",靈活性:"根據市場變化進行短期調整的能力。",風險分散:"策略在不同資產間分散風險的效果。",超額報酬潛力:"跑贏市場基準的潛在可能性。"};new Chart(document.getElementById("strategyRadarChart"),{type:"radar",data:data,options:{responsive:!0,animation:!0,plugins:{tooltip:{callbacks:{label:e=>{const t=e.dataset.label||"",a=e.label;return`${t}: ${e.formattedValue}分 - ${strategyDesc[a]}`}}},legend:{labels:{color:'var(--primary-text)'}}},scales:{r:{pointLabels:{color:'var(--primary-text)'},grid:{color:'rgba(128,128,128,0.2)'},angleLines:{color:'rgba(128,128,128,0.2)'}}}}}); }
+    function renderAssetClassChart() { new Chart(document.getElementById("assetClassChart"),{type:"bar",data:{labels:["現金","債券","不動產","股票","商品"],datasets:[{label:"預期報酬 (%)",data:[1.5,4,6.5,10,7.5],backgroundColor:"rgba(52, 152, 219, 0.6)",yAxisID:"y"},{label:"風險 (波動率 %)",data:[.5,4,8,15,18],backgroundColor:"rgba(231, 76, 60, 0.6)",yAxisID:"y1"}]},options:{responsive:!0,animation:!0,plugins:{legend:{labels:{color:'var(--primary-text)'}}},scales:{x:{ticks:{color:'var(--secondary-text)'}},y:{type:"linear",display:!0,position:"left",title:{text:"預期報酬 (%)",display:!0,color:'var(--primary-text)'},ticks:{color:'var(--secondary-text)'}},y1:{type:"linear",display:!0,position:"right",title:{text:"風險 (波動率 %)",display:!0,color:'var(--primary-text)'},grid:{drawOnChartArea:!1},ticks:{color:'var(--secondary-text)'}}}}}); }
+    function renderEfficientFrontierChart() { new Chart(document.getElementById("efficientFrontierChart"),{type:"scatter",data:{datasets:[{label:"效率前緣",data:[{x:5,y:4},{x:6,y:5},{x:7,y:5.8},{x:8,y:6.5},{x:10,y:7.5},{x:12,y:8.2},{x:15,y:9}],borderColor:"var(--accent-color)",backgroundColor:"var(--accent-color)",showLine:!0,tension:.4},{label:"次優投資組合",data:[{x:7,y:4},{x:8,y:5},{x:10,y:6},{x:12,y:7},{x:15,y:7.5}],borderColor:"var(--secondary-text)",backgroundColor:"var(--secondary-text)"}]},options:{responsive:!0,animation:!0,plugins:{legend:{labels:{color:'var(--primary-text)'}}},scales:{x:{title:{text:"風險 (標準差 %)",display:!0,color:'var(--primary-text)'},ticks:{color:'var(--secondary-text)'}},y:{title:{text:"預期報酬 (%)",display:!0,color:'var(--primary-text)'},ticks:{color:'var(--secondary-text)'}}}}}); }
+    function renderCorrelationHeatmap(){ const e=[{asset1:"美股",asset2:"美股",value:1},{asset1:"美股",asset2:"歐股",value:.8},{asset1:"美股",asset2:"新興市場",value:.7},{asset1:"美股",asset2:"美債",value:-.2},{asset1:"美股",asset2:"黃金",value:.1},{asset1:"歐股",asset2:"美股",value:.8},{asset1:"歐股",asset2:"歐股",value:1},{asset1:"歐股",asset2:"新興市場",value:.75},{asset1:"歐股",asset2:"美債",value:-.1},{asset1:"歐股",asset2:"黃金",value:.15},{asset1:"新興市場",asset2:"美股",value:.7},{asset1:"新興市場",asset2:"歐股",value:.75},{asset1:"新興市場",asset2:"新興市場",value:1},{asset1:"新興市場",asset2:"美債",value:.1},{asset1:"新興市場",asset2:"黃金",value:.25},{asset1:"美債",asset2:"美股",value:-.2},{asset1:"美債",asset2:"歐股",value:-.1},{asset1:"美債",asset2:"新興市場",value:.1},{asset1:"美債",asset2:"美債",value:1},{asset1:"美債",asset2:"黃金",value:.3},{asset1:"黃金",asset2:"美股",value:.1},{asset1:"黃金",asset2:"歐股",value:.15},{asset1:"黃金",asset2:"新興市場",value:.25},{asset1:"黃金",asset2:"美債",value:.3},{asset1:"黃金",asset2:"黃金",value:1}],t={top:50,right:30,bottom:80,left:80},a=450-t.left-t.right,l=450-t.top-t.bottom,s=d3.select("#correlationHeatmap").append("svg").attr("width",a+t.left+t.right).attr("height",l+t.top+t.bottom).append("g").attr("transform",`translate(${t.left}, ${t.top})`),o=Array.from(new Set(e.map(e=>e.asset1))),r=Array.from(new Set(e.map(e=>e.asset2))),d=d3.scaleBand().range([0,a]).domain(o).padding(.05);s.append("g").style("font-size",12).attr("transform",`translate(0, ${l})`).call(d3.axisBottom(d).tickSize(0)).select(".domain").remove();const n=d3.scaleBand().range([l,0]).domain(r).padding(.05);s.append("g").style("font-size",12).call(d3.axisLeft(n).tickSize(0)).select(".domain").remove();const c=d3.scaleSequential().interpolator(d3.interpolateRdYlGn).domain([-1,1]),i=d3.select(".d3-tooltip");s.selectAll().data(e).enter().append("rect").attr("x",e=>d(e.asset1)).attr("y",e=>n(e.asset2)).attr("rx",4).attr("ry",4).attr("width",d.bandwidth()).attr("height",n.bandwidth()).style("fill",e=>c(e.value)).on("mouseover",()=>{i.style("opacity",1)}).on("mousemove",(t,e)=>{i.html(`相關係數: ${e.value.toFixed(2)}`).style("left",t.pageX+15+"px").style("top",t.pageY-28+"px")}).on("mouseleave",()=>{i.style("opacity",0)});s.selectAll("text").style("fill", "var(--primary-text)"); }
+    </script>
+</body>
+</html>
