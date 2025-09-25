@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣ETF全方位互動解析儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #FDFBF8;
+            color: #383838;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .active-filter {
+            background-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+            border-color: #3B82F6 !important;
+        }
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+         .section-subtitle {
+            font-size: 1.125rem;
+            color: #4a5568;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .profile-btn.active {
+            background-color: #3B82F6;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+        .profile-content {
+            display: none;
+        }
+        .profile-content.active {
+            display: block;
+        }
+        #nav-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        .nav-menu-hidden {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#hero" class="text-xl font-bold text-blue-600">💼 ETF透視鏡</a>
+                </div>
+                <nav class="hidden md:flex items-center space-x-4">
+                    <a href="#intro" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">ETF入門</a>
+                    <a href="#explorer" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">互動探索</a>
+                    <a href="#comparison" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">比較分析</a>
+                    <a href="#deep-dive" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">深度主題</a>
+                    <a href="#calculator" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">投資計算</a>
+                    <a href="#investor-profile" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">投資策略</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="hamburger-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="nav-menu" class="md:hidden fixed top-0 right-0 h-full w-64 bg-white shadow-lg p-5 nav-menu-hidden">
+            <button id="close-menu-btn" class="absolute top-4 right-4 text-gray-600">&times;</button>
+            <nav class="flex flex-col space-y-4 mt-8">
+                <a href="#intro" class="nav-link-mobile text-gray-600 hover:bg-gray-200 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">ETF入門</a>
+                <a href="#explorer" class="nav-link-mobile text-gray-600 hover:bg-gray-200 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">互動探索</a>
+                <a href="#comparison" class="nav-link-mobile text-gray-600 hover:bg-gray-200 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">比較分析</a>
+                <a href="#deep-dive" class="nav-link-mobile text-gray-600 hover:bg-gray-200 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">深度主題</a>
+                <a href="#calculator" class="nav-link-mobile text-gray-600 hover:bg-gray-200 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">投資計算</a>
+                <a href="#investor-profile" class="nav-link-mobile text-gray-600 hover:bg-gray-200 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">投資策略</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section id="hero" class="text-center py-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
+                探索台灣ETF的世界
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-lg text-gray-600">
+                一個全方位的互動儀表板，幫助您了解、比較並選擇最適合您的指數股票型基金(ETF)。
+            </p>
+        </section>
+
+        <section id="intro" class="py-16">
+            <h2 class="section-title">ETF 入門 101</h2>
+            <p class="section-subtitle">ETF (Exchange Traded Fund) 是一種在證券交易所交易，追蹤特定指數、商品、債券或一籃子資產的基金。它結合了共同基金和股票的優點。</p>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-3 text-green-600">優點 (Pros)</h3>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>分散風險：</strong>一次投資一籃子標的，有效降低單一持股風險。</li>
+                        <li><strong>低成本：</strong>管理費用通常低於主動型基金。</li>
+                        <li><strong>高透明度：</strong>持股內容每日公布，清楚掌握投資組合。</li>
+                        <li><strong>交易方便：</strong>如同股票一樣，在盤中隨時可以買賣。</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-3 text-red-600">缺點 (Cons)</h3>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>追蹤誤差：</strong>ETF淨值表現可能與其追蹤的指數存在些微差距。</li>
+                        <li><strong>交易成本：</strong>買賣時需支付手續費與證交稅。</li>
+                        <li><strong>折溢價風險：</strong>市價可能高於(溢價)或低於(折價)其真實淨值。</li>
+                        <li><strong>無法超越大盤：</strong>目標是複製指數表現，而非擊敗市場。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="classification" class="py-16">
+            <h2 class="section-title">台灣 ETF 分類總覽</h2>
+            <p class="section-subtitle">台灣 ETF 的分類方式嚴謹且多樣，可從「法規框架」與「投資標的」兩大維度進行剖析。</p>
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h4 class="text-xl font-semibold mb-3 text-blue-600">法規框架</h4>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>證券投資信託 ETF：</strong>國內投信發行，追蹤國內外證券指數。如 0050、00878。</li>
+                        <li><strong>期貨信託 ETF：</strong>國內期信發行，追蹤期貨指數。如 00672L (元大S&P原油正2)。</li>
+                        <li><strong>跨境上市 ETF (境外ETF)：</strong>境外基金機構來台上市交易。</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h4 class="text-xl font-semibold mb-3 text-blue-600">管理模式</h4>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>被動式 ETF：</strong>核心目標是追蹤、複製特定指數的績效，不依賴經理人主觀判斷。成本低、透明度高是其主要優勢。</li>
+                        <li><strong>主動式 ETF：</strong>由基金經理人主動分析決策，目標是尋求超越大盤的超額報酬。</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h4 class="text-xl font-semibold mb-3 text-blue-600">投資標的</h4>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>股票型：</strong>主要投資股票，可再細分為市值型、高股息型、產業/主題型 (如科技、ESG)。</li>
+                        <li><strong>債券型：</strong>主要投資各類債券，提供相對穩定的收益。</li>
+                        <li><strong>槓桿/反向型：</strong>透過衍生性商品實現追蹤指數報酬的正向倍數或反向倍數，為策略性交易工具。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="py-16">
+            <h2 class="section-title">台灣ETF市場概覽</h2>
+            <p class="section-subtitle">台灣的ETF市場蓬勃發展，提供多樣化的投資選擇。以下是市場上主要ETF類型的分佈情況，涵蓋了從追蹤大盤指數到特定產業主題及債券的各種類型，滿足不同投資者的需求。</p>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80 max-w-4xl mx-auto">
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="marketDistributionChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="explorer" class="py-16">
+            <h2 class="section-title">ETF 互動探索</h2>
+             <p class="section-subtitle">在這裡，您可以依據不同類型篩選ETF，點擊任一檔ETF即可查看其詳細資訊，包括基本資料、績效走勢圖和費用結構。這是您深入研究個別ETF的最佳起點。</p>
+            <div class="flex justify-center flex-wrap gap-2 mb-8" id="etf-filters">
+            </div>
+            
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                <div class="lg:col-span-4">
+                    <div id="etf-list-container" class="space-y-4 max-h-[1000px] overflow-y-auto pr-2">
+                    </div>
+                </div>
+                <div class="lg:col-span-8 mt-8 lg:mt-0 sticky top-24">
+                    <div id="etf-details-panel" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80 transition-opacity duration-500 opacity-20">
+                        <div id="etf-details-content" class="text-center text-gray-500">
+                            <p class="text-lg">請從左側列表中選擇一檔ETF以查看詳細資訊。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="py-16">
+            <h2 class="section-title">多檔ETF比較分析</h2>
+            <p class="section-subtitle">在探索區將您感興趣的ETF加入比較清單後，您可以在此處進行並排分析。透過直觀的圖表與數據，輕鬆比較不同ETF在績效、費用和規模上的差異，幫助您做出更明智的投資決策。</p>
+            <div id="comparison-content" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80">
+                <div id="comparison-placeholder" class="text-center text-gray-500 py-12">
+                    <p class="text-lg">請在「互動探索」區塊中，點擊ETF卡片上的 "⊕ 加入比較" 按鈕來新增比較項目。</p>
+                    <p class="text-sm mt-2">(最多可比較 4 檔 ETF)</p>
+                </div>
+                <div id="comparison-data" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-center" id="comparison-summary"></div>
+                    <div class="chart-container h-96">
+                        <canvas id="comparisonPerformanceChart"></canvas>
+                    </div>
+                    <div class="mt-4 flex justify-center">
+                        <button id="clear-comparison-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                            清空比較列表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="deep-dive" class="py-16 space-y-24">
+            <div>
+                <h2 class="section-title">熱門 ETF 對決：費用與績效</h2>
+                <p class="section-subtitle">元大台灣50 (0050) 和富邦台50 (006208) 皆追蹤「臺灣50指數」，成分股高度重疊。然而，長期績效的微小差異，往往源於「內扣費用」的影響。下圖比較了兩者的總費用率與近五年累積報酬率。</p>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80">
+                        <h3 class="text-center text-xl font-semibold mb-4 text-gray-700">總費用率 (年)</h3>
+                        <div class="chart-container h-64 md:h-72"><canvas id="expenseChart"></canvas></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80">
+                         <h3 class="text-center text-xl font-semibold mb-4 text-gray-700">近五年報酬率</h3>
+                        <div class="chart-container h-64 md:h-72"><canvas id="returnChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="max-w-4xl mx-auto mt-8 text-center bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                    <p class="font-semibold text-blue-800">核心觀點：在被動式投資領域，看似微不足道的費用差異，在長期複利效應下，會對最終報酬產生巨大影響。</p>
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="section-title">槓桿/反向ETF的「波動損耗」</h2>
+                <p class="section-subtitle">槓桿與反向型 ETF 是為短期交易設計的專業工具，其報酬率「僅限於單日」。長期持有下，會因每日複利計算與重新平衡機制，產生所謂的「波動損耗」(Volatility Drag)。即使標的指數最終回到原點，這類 ETF 的淨值也可能因市場波動而永久損耗。</p>
+                 <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-200/80">
+                    <p class="text-center font-medium mb-4">互動模擬器：輸入指數在兩天內的漲跌幅，觀察其對槓桿/反向 ETF 的績效影響。</p>
+                    <div class="flex justify-center items-center flex-wrap gap-4 mb-6" id="vol-drag-controls">
+                        <label for="day1-change" class="font-medium">第一天漲跌 (%):</label>
+                        <input type="number" id="day1-change" value="10" class="w-24 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <label for="day2-change" class="font-medium">第二天漲跌 (%):</label>
+                        <input type="number" id="day2-change" value="-9.09" class="w-24 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <button id="calculate-vol-drag" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">計算損耗</button>
+                    </div>
+                    <div class="chart-container h-64 md:h-72"><canvas id="volatilityDragChart"></canvas></div>
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-center font-semibold">
+                        <div>標的指數總報酬: <span id="index-return" class="block text-lg text-gray-800"></span></div>
+                        <div class="text-green-600">2X 槓桿 ETF 總報酬: <span id="leveraged-return" class="block text-lg"></span></div>
+                        <div class="text-red-600">-1X 反向 ETF 總報酬: <span id="inverse-return" class="block text-lg"></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculator" class="py-16 bg-gray-50 rounded-xl">
+            <h2 class="section-title">投資計算器</h2>
+            <p class="section-subtitle">實用的工具，幫助您估算長期投資的費用成本與潛在的配息收益。</p>
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800 text-center">費用成本計算器</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="investment-amount" class="block text-sm font-medium text-gray-700">投資金額 (元)</label>
+                            <input type="number" id="investment-amount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="例如：1000000">
+                        </div>
+                        <div>
+                            <label for="investment-years" class="block text-sm font-medium text-gray-700">投資期間 (年)</label>
+                            <input type="number" id="investment-years" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="例如：20">
+                        </div>
+                        <div>
+                            <label for="calculator-etf" class="block text-sm font-medium text-gray-700">選擇ETF</label>
+                            <select id="calculator-etf" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">請選擇一檔ETF</option>
+                            </select>
+                        </div>
+                        <button id="calculate-fee-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">計算總費用</button>
+                    </div>
+                    <div id="calculation-result" class="hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg"></div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800 text-center">配息收益計算器</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="shares-count" class="block text-sm font-medium text-gray-700">持有股數 (股)</label>
+                            <input type="number" id="shares-count" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="例如：1000 (1張)">
+                        </div>
+                        <div>
+                            <label for="etf-price" class="block text-sm font-medium text-gray-700">ETF 當前價格</label>
+                            <input type="number" id="etf-price" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" step="0.01" placeholder="例如：25.5">
+                        </div>
+                        <div>
+                            <label for="dividend-yield" class="block text-sm font-medium text-gray-700">預估年化殖利率 (%)</label>
+                            <input type="number" id="dividend-yield" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" step="0.1" placeholder="例如：7.5">
+                        </div>
+                        <button id="dividend-calculate-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">試算配息</button>
+                    </div>
+                    <div id="dividend-result" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="investor-profile" class="py-16">
+            <h2 class="section-title">投資策略指南：您是哪一種類型的投資人？</h2>
+            <p class="section-subtitle">不同類型的 ETF 具備獨特的功能與風險特性，適合不同的投資目標。透過下面的快速問答，或點擊下方的按鈕，尋找最符合您需求的 ETF 類型。</p>
+            
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-200/80 mb-12">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 text-center">智能ETF推薦</h3>
+                <p class="text-center text-gray-600 mb-6">回答幾個簡單問題，獲得個人化的ETF推薦。</p>
+                <div class="grid md:grid-cols-3 gap-6 mb-6">
+                    <div class="quiz-question">
+                        <h4 class="font-medium mb-2">1. 您的投資目標？</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="goal" value="income" class="mr-2"> 穩定收益</label>
+                            <label class="flex items-center"><input type="radio" name="goal" value="growth" class="mr-2"> 資本增值</label>
+                            <label class="flex items-center"><input type="radio" name="goal" value="balanced" class="mr-2"> 均衡配置</label>
+                        </div>
+                    </div>
+                    <div class="quiz-question">
+                        <h4 class="font-medium mb-2">2. 您的風險承受度？</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="risk" value="low" class="mr-2"> 保守型</label>
+                            <label class="flex items-center"><input type="radio" name="risk" value="medium" class="mr-2"> 穩健型</label>
+                            <label class="flex items-center"><input type="radio" name="risk" value="high" class="mr-2"> 積極型</label>
+                        </div>
+                    </div>
+                    <div class="quiz-question">
+                        <h4 class="font-medium mb-2">3. 偏好的投資市場？</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="market" value="taiwan" class="mr-2"> 台股市場</label>
+                            <label class="flex items-center"><input type="radio" name="market" value="global" class="mr-2"> 全球市場</label>
+                            <label class="flex items-center"><input type="radio" name="market" value="mixed" class="mr-2"> 混合配置</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mb-4">
+                    <button id="get-recommendation" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">獲得推薦</button>
+                </div>
+                <div id="recommendation-result" class="hidden p-4 bg-purple-50 border border-purple-200 rounded-lg"></div>
+            </div>
+
+            <div class="flex justify-center flex-wrap gap-3 mb-8" id="profile-buttons">
+                <button class="profile-btn px-5 py-2 text-base font-medium border-2 border-blue-500 rounded-full transition-all duration-300 text-blue-500 hover:bg-blue-500 hover:text-white active" data-profile="conservative">穩健型投資人</button>
+                <button class="profile-btn px-5 py-2 text-base font-medium border-2 border-blue-500 rounded-full transition-all duration-300 text-blue-500 hover:bg-blue-500 hover:text-white" data-profile="income">收益型投資人</button>
+                <button class="profile-btn px-5 py-2 text-base font-medium border-2 border-blue-500 rounded-full transition-all duration-300 text-blue-500 hover:bg-blue-500 hover:text-white" data-profile="growth">成長型投資人</button>
+                <button class="profile-btn px-5 py-2 text-base font-medium border-2 border-blue-500 rounded-full transition-all duration-300 text-blue-500 hover:bg-blue-500 hover:text-white" data-profile="strategic">策略型交易者</button>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div id="conservative" class="profile-content active bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">穩健型投資人</h3>
+                    <p class="mb-4"><strong>目標：</strong>追求低波動與長期穩健成長。</p>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>推薦類型：</strong>市值型 ETF (如 0050, 006208)、債券型 ETF。</li>
+                        <li><strong>核心優勢：</strong>前者可分享大盤長期成長的紅利，後者能透過固定收益降低投資組合的波動性。</li>
+                        <li><strong>關鍵風險：</strong>系統性風險 (市場整體下跌)、追蹤誤差。</li>
+                        <li><strong>費用特性：</strong>普遍低廉，但費用率的微小差異會影響長期報酬。</li>
+                    </ul>
+                </div>
+                <div id="income" class="profile-content bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">收益型投資人</h3>
+                    <p class="mb-4"><strong>目標：</strong>創造穩定、持續的現金流。</p>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>推薦類型：</strong>高股息 ETF (如 0056, 00878, 00929)、債券型 ETF。</li>
+                        <li><strong>核心優勢：</strong>提供固定的被動收入。</li>
+                        <li><strong>關鍵風險：</strong>可能因追求高息而犧牲成長性、追蹤誤差、股利變動風險。</li>
+                        <li><strong>費用特性：</strong>中等，部分產品費用較低。需關注收益平準金機制是否能有效保護配息穩定性。</li>
+                    </ul>
+                </div>
+                <div id="growth" class="profile-content bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">成長型投資人</h3>
+                    <p class="mb-4"><strong>目標：</strong>看好特定產業或趨勢，願意承擔較高風險以換取超額報酬。</p>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                         <li><strong>推薦類型：</strong>產業型/主題型 ETF (如 5G、半導體、ESG)、海外市場 ETF。</li>
+                        <li><strong>核心優勢：</strong>能集中投資於高成長潛力的領域，或藉由經理人靈活選股爭取超額報酬。</li>
+                        <li><strong>關鍵風險：</strong>產業集中風險、單一市場風險。</li>
+                        <li><strong>費用特性：</strong>較高，特別是主題式與海外 ETF 的管理費用顯著高於被動式市值型。</li>
+                    </ul>
+                </div>
+                <div id="strategic" class="profile-content bg-white p-6 rounded-xl shadow-md border border-gray-200/80">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-800">策略型交易者</h3>
+                    <p class="mb-4"><strong>目標：</strong>以短期交易為主，進行避險或投機操作。</p>
+                    <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                        <li><strong>推薦類型：</strong>槓桿/反向型 ETF。</li>
+                        <li><strong>核心優勢：</strong>提供短期獲利與避險的工具。</li>
+                        <li><strong>關鍵風險：</strong>波動損耗、每日複利效果導致的長期績效偏離。</li>
+                        <li><strong>費用特性：</strong>高，且<strong>極不適合</strong>長期持有。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-blue-400 mb-2">投資風險警語</h3>
+                    <p class="text-sm text-gray-300">本平台僅提供ETF資訊參考，不構成任何投資建議。投資有賺有賠，申購前應詳閱公開說明書。所有資訊以官方公告為準，過去的績效不代表未來的表現。</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-blue-400 mb-2">相關資源</h3>
+                    <ul class="text-sm text-gray-300 space-y-1">
+                        <li><a href="https://www.twse.com.tw" target="_blank" class="hover:text-blue-400 transition-colors">台灣證券交易所</a></li>
+                        <li><a href="https://www.sitca.org.tw" target="_blank" class="hover:text-blue-400 transition-colors">投信投顧公會</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6 text-center text-sm text-gray-400">
+                <p>&copy; 2025 ETF透視鏡 - 僅供學習與展示用途</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const etfData = [
+                // 國內股票型 - 市值型
+                { id: '0050', name: '元大台灣50', type: '國內股票型-市值型', issuer: '元大投信', expenseRatio: 0.35, aum: 3200, performance: { '1y': 22.5, '3y': 45.8, '5y': 105.2 }, description: '追蹤台灣50指數，涵蓋台灣市值最大的50家上市公司。', performanceData: { '1y': [100, 102, 105, 103, 108, 110, 112, 115, 113, 118, 120, 122.5], '3y': [100, 110, 108, 115, 120, 125, 122, 130, 135, 140, 138, 145.8], '5y': [100, 115, 120, 130, 125, 140, 150, 165, 170, 185, 190, 205.2] } },
+                { id: '006208', name: '富邦台50', type: '國內股票型-市值型', issuer: '富邦投信', expenseRatio: 0.19, aum: 1800, performance: { '1y': 22.4, '3y': 45.5, '5y': 104.9 }, description: '與0050同樣追蹤台灣50指數，但總費用率更低。', performanceData: { '1y': [100, 102, 105, 103, 108, 110, 112, 115, 113, 118, 120, 122.4], '3y': [100, 110, 108, 115, 120, 125, 122, 130, 135, 140, 138, 145.5], '5y': [100, 115, 120, 130, 125, 140, 150, 165, 170, 185, 190, 204.9] } },
+                { id: '00692', name: '富邦公司治理', type: '國內股票型-市值型', issuer: '富邦投信', expenseRatio: 0.23, aum: 500, performance: { '1y': 25.1, '3y': 48.2, '5y': 110.5 }, description: '追蹤臺灣公司治理100指數，篩選注重企業社會責任的公司。', performanceData: { '1y': [100, 103, 106, 104, 109, 111, 114, 117, 115, 120, 122, 125.1], '3y': [100, 111, 109, 116, 122, 127, 124, 132, 137, 142, 140, 148.2], '5y': [100, 116, 122, 132, 127, 142, 153, 168, 173, 188, 193, 210.5] } },
+                { id: '00850', name: '元大臺灣ESG永續', type: '國內股票型-市值型', issuer: '元大投信', expenseRatio: 0.34, aum: 450, performance: { '1y': 24.8, '3y': 47.1, '5y': null }, description: '追蹤臺灣永續指數，是台股的ESG投資指標。', performanceData: { '1y': [100, 102, 105, 104, 108, 110, 113, 116, 114, 119, 121, 124.8], '3y': [100, 110, 109, 115, 121, 126, 123, 131, 136, 141, 139, 147.1], '5y': null } },
+
+                // 國內股票型 - 高股息
+                { id: '0056', name: '元大高股息', type: '國內股票型-高股息', issuer: '元大投信', expenseRatio: 0.43, aum: 2800, performance: { '1y': 40.2, '3y': 55.1, '5y': 125.6 }, description: '從台灣50與中型100指數中，預測未來一年現金殖利率最高的50檔股票。', performanceData: { '1y': [100, 104, 108, 106, 112, 116, 120, 125, 122, 130, 135, 140.2], '3y': [100, 110, 115, 120, 125, 130, 128, 135, 140, 148, 150, 155.1], '5y': [100, 118, 125, 135, 130, 145, 158, 175, 185, 200, 210, 225.6] } },
+                { id: '00878', name: '國泰永續高股息', type: '國內股票型-高股息', issuer: '國泰投信', expenseRatio: 0.50, aum: 2650, performance: { '1y': 38.1, '3y': 60.2, '5y': null }, description: '結合ESG與高股息因子，篩選出30檔優質企業股票，採季配息。', performanceData: { '1y': [100, 103, 107, 105, 111, 115, 119, 123, 121, 128, 133, 138.1], '3y': [100, 112, 118, 124, 130, 136, 133, 142, 148, 155, 158, 160.2], '5y': null } },
+                { id: '00713', name: '元大台灣高息低波', type: '國內股票型-高股息', issuer: '元大投信', expenseRatio: 0.48, aum: 1900, performance: { '1y': 42.5, '3y': 65.9, '5y': 132.3 }, description: '篩選高股息、高品質、低波動的股票，追求長期穩健報酬。', performanceData: { '1y': [100, 105, 109, 107, 114, 118, 123, 128, 125, 133, 138, 142.5], '3y': [100, 114, 120, 127, 134, 140, 137, 146, 153, 160, 162, 165.9], '5y': [100, 120, 128, 138, 133, 150, 165, 180, 190, 205, 215, 232.3] } },
+                { id: '00919', name: '群益台灣精選高息', type: '國內股票型-高股息', issuer: '群益投信', expenseRatio: 0.34, aum: 2100, performance: { '1y': 45.3, '3y': null, '5y': null }, description: '精準高息策略，宣告股利後才納入，追求高效配息。', performanceData: { '1y': [100, 106, 111, 109, 117, 122, 128, 133, 130, 138, 143, 145.3], '3y': null, '5y': null } },
+                { id: '00929', name: '復華台灣科技優息', type: '國內股票型-高股息', issuer: '復華投信', expenseRatio: 0.35, aum: 2050, performance: { '1y': 48.8, '3y': null, '5y': null }, description: '首檔台股月配息ETF，專注於高股息的科技股。', performanceData: { '1y': [100, 107, 113, 110, 119, 125, 132, 138, 134, 142, 147, 148.8], '3y': null, '5y': null } },
+                { id: '00940', name: '元大台灣價值高息', type: '國內股票型-高股息', issuer: '元大投信', expenseRatio: 0.34, aum: 1800, performance: { '1y': null, '3y': null, '5y': null }, description: '採用巴菲特價值投資邏輯，結合高股息篩選，採月配息。', performanceData: { '1y': null, '3y': null, '5y': null } },
+                { id: '00939', name: '統一台灣高息動能', type: '國內股票型-高股息', issuer: '統一投信', expenseRatio: 0.35, aum: 600, performance: { '1y': null, '3y': null, '5y': null }, description: '結合高息與動能因子，期待股息價差兼得，採月配息。', performanceData: { '1y': null, '3y': null, '5y': null } },
+
+                // 國內股票型 - 主題型
+                { id: '00881', name: '國泰台灣5G+', type: '國內股票型-主題型', issuer: '國泰投信', expenseRatio: 0.44, aum: 900, performance: { '1y': 25.1, '3y': 30.5, '5y': null }, description: '投資於台灣5G產業鏈相關的上市公司。', performanceData: { '1y': [100, 103, 106, 104, 109, 112, 115, 118, 116, 121, 123, 125.1], '3y': [100, 105, 102, 108, 115, 120, 117, 125, 128, 135, 132, 130.5], '5y': null } },
+                { id: '00891', name: '中信關鍵半導體', type: '國內股票型-主題型', issuer: '中國信託投信', expenseRatio: 0.44, aum: 1100, performance: { '1y': 30.2, '3y': 55.1, '5y': null }, description: '專注投資台灣半導體產業的龍頭企業。', performanceData: { '1y': [100, 104, 108, 106, 112, 115, 119, 122, 120, 125, 128, 130.2], '3y': [100, 112, 115, 125, 130, 138, 135, 145, 150, 160, 155, 155.1], '5y': null } },
+                { id: '00892', name: '富邦台灣半導體', type: '國內股票型-主題型', issuer: '富邦投信', expenseRatio: 0.44, aum: 300, performance: { '1y': 29.8, '3y': 54.2, '5y': null }, description: '追蹤臺灣半導體指數，全面佈局台灣護國群山。', performanceData: { '1y': [100, 104, 108, 105, 111, 114, 118, 121, 119, 124, 127, 129.8], '3y': [100, 111, 114, 124, 129, 137, 134, 144, 149, 158, 153, 154.2], '5y': null } },
+                { id: '00900', name: '富邦特選高股息30', type: '國內股票型-主題型', issuer: '富邦投信', expenseRatio: 0.53, aum: 550, performance: { '1y': 35.5, '3y': null, '5y': null }, description: '高頻換股策略，旨在捕捉每次除權息行情。', performanceData: { '1y': [100, 104, 108, 106, 113, 117, 121, 126, 123, 130, 134, 135.5], '3y': null, '5y': null } },
+                { id: '00888', name: '永豐台灣ESG', type: '國內股票型-主題型', issuer: '永豐投信', expenseRatio: 0.44, aum: 150, performance: { '1y': 26.1, '3y': 49.3, '5y': null }, description: '專注於ESG評級高的台灣企業，是00850的競爭產品。', performanceData: { '1y': [100, 103, 106, 104, 110, 112, 115, 118, 116, 121, 123, 126.1], '3y': [100, 111, 110, 117, 123, 128, 125, 133, 138, 143, 141, 149.3], '5y': null } },
+
+                // 債券型
+                { id: '00772B', name: '中信高評級公司債', type: '債券型', issuer: '中國信託投信', expenseRatio: 0.23, aum: 1200, performance: { '1y': 5.8, '3y': 1.2, '5y': 10.5 }, description: '投資於全球高信用評級的美元公司債，風險較低。', performanceData: { '1y': [100, 100.5, 101, 101.2, 101.8, 102.5, 103, 103.8, 104.2, 104.9, 105.3, 105.8], '3y': [100, 99.5, 100.2, 99.8, 100.5, 101.1, 100.8, 101.5, 101, 100.7, 100.9, 101.2], '5y': [100, 102, 103, 101.5, 102.8, 104, 105, 103.5, 104.2, 106, 107.8, 110.5] } },
+                { id: '00679B', name: '元大美債20年', type: '債券型', issuer: '元大投信', expenseRatio: 0.21, aum: 2000, performance: { '1y': -2.5, '3y': -15.8, '5y': -5.2 }, description: '追蹤美國20年期以上公債指數，對利率變動敏感。', performanceData: { '1y': [100, 99, 98.5, 99.2, 98, 97, 97.5, 96, 96.8, 95.5, 96.2, 97.5], '3y': [100, 95, 92, 88, 90, 85, 82, 86, 83, 80, 78, 84.2], '5y': [100, 105, 110, 102, 98, 95, 90, 92, 88, 85, 82, 94.8] } },
+                { id: '00720B', name: '元大投資級公司債', type: '債券型', issuer: '元大投信', expenseRatio: 0.23, aum: 900, performance: { '1y': 5.5, '3y': 1.0, '5y': 10.1 }, description: '投資A級以上美元公司債，信用評級優良。', performanceData: { '1y': [100, 100.4, 100.9, 101.1, 101.7, 102.4, 102.9, 103.7, 104.1, 104.8, 105.2, 105.5], '3y': [100, 99.6, 100.1, 99.7, 100.4, 101.0, 100.7, 101.4, 100.9, 100.6, 100.8, 101.0], '5y': [100, 101.8, 102.8, 101.3, 102.6, 103.8, 104.8, 103.3, 104.0, 105.8, 107.6, 110.1] } },
+                { id: '00725B', name: '國泰投資級公司債', type: '債券型', issuer: '國泰投信', expenseRatio: 0.19, aum: 1150, performance: { '1y': 6.1, '3y': 1.5, '5y': 11.2 }, description: '追蹤彭博美元計價全球投資級公司債券指數，分散全球。', performanceData: { '1y': [100, 100.6, 101.2, 101.4, 102.0, 102.7, 103.2, 104.0, 104.4, 105.1, 105.5, 106.1], '3y': [100, 99.8, 100.5, 100.1, 100.8, 101.4, 101.1, 101.8, 101.3, 101.0, 101.2, 101.5], '5y': [100, 102.2, 103.3, 101.8, 103.1, 104.3, 105.3, 103.8, 104.5, 106.3, 108.1, 111.2] } },
+                { id: '00937B', name: '群益ESG投等債20+', type: '債券型', issuer: '群益投信', expenseRatio: 0.22, aum: 1050, performance: { '1y': -1.5, '3y': null, '5y': null }, description: '投資20年期以上結合ESG的投資級公司債，具備高存續期間特性。', performanceData: { '1y': [100, 99.2, 98.7, 99.4, 98.2, 97.2, 97.7, 96.2, 97.0, 95.7, 96.4, 98.5], '3y': null, '5y': null } },
+                { id: '00862B', name: '中信投資級公司債', type: '債券型', issuer: '中國信託投信', expenseRatio: 0.23, aum: 400, performance: { '1y': 5.9, '3y': 1.3, '5y': null }, description: '專注於10年期以上的A級美元公司債。', performanceData: { '1y': [100, 100.5, 101.1, 101.3, 101.9, 102.6, 103.1, 103.9, 104.3, 105.0, 105.4, 105.9], '3y': [100, 99.7, 100.4, 100.0, 100.7, 101.3, 101.0, 101.7, 101.2, 100.9, 101.1, 101.3], '5y': null } },
+                { id: '00933B', name: '國泰10Y+金融債', type: '債券型', issuer: '國泰投信', expenseRatio: 0.24, aum: 980, performance: { '1y': -1.8, '3y': null, '5y': null }, description: '投資10年期以上由大型金融機構發行的投資級債券，採月配息。', performanceData: { '1y': [100, 99.1, 98.6, 99.3, 98.1, 97.1, 97.6, 96.1, 96.9, 95.6, 96.3, 98.2], '3y': null, '5y': null } },
+
+                // 海外股票型
+                { id: '00646', name: '元大S&P500', type: '海外股票型', issuer: '元大投信', expenseRatio: 0.49, aum: 450, performance: { '1y': 28.5, '3y': 50.1, '5y': 115.8 }, description: '追蹤美國S&P 500指數，一次投資美國500大企業。', performanceData: { '1y': [100, 104, 107, 105, 110, 113, 116, 120, 118, 123, 126, 128.5], '3y': [100, 110, 112, 118, 124, 130, 127, 135, 140, 148, 145, 150.1], '5y': [100, 115, 122, 130, 135, 145, 155, 170, 180, 195, 205, 215.8] } },
+                { id: '00662', name: '富邦NASDAQ', type: '海外股票型', issuer: '富邦投信', expenseRatio: 0.49, aum: 600, performance: { '1y': 35.2, '3y': 60.5, '5y': 150.3 }, description: '追蹤美國Nasdaq 100指數，聚焦科技巨頭。', performanceData: { '1y': [100, 105, 109, 107, 114, 118, 122, 128, 125, 132, 136, 135.2], '3y': [100, 115, 118, 128, 135, 145, 140, 150, 160, 170, 165, 160.5], '5y': [100, 120, 130, 145, 150, 165, 180, 200, 215, 235, 240, 250.3] } },
+                { id: '00757', name: '統一FANG+', type: '海外股票型', issuer: '統一投信', expenseRatio: 1.07, aum: 200, performance: { '1y': 45.8, '3y': 70.2, '5y': 220.1 }, description: '追蹤尖牙股指數，成分股僅10檔，高度集中於科技巨擘。', performanceData: { '1y': [100, 107, 112, 109, 118, 124, 130, 138, 132, 140, 145, 145.8], '3y': [100, 118, 122, 135, 145, 158, 150, 165, 175, 190, 180, 170.2], '5y': [100, 130, 150, 160, 180, 210, 240, 260, 280, 310, 290, 320.1] } },
+                { id: '006206', name: '元大上證50', type: '海外股票型', issuer: '元大投信', expenseRatio: 1.03, aum: 150, performance: { '1y': -5.1, '3y': -20.4, '5y': -8.2 }, description: '追蹤上證50指數，投資中國A股藍籌股。', performanceData: { '1y': [100, 98, 97, 98, 96, 95, 94, 93, 94, 92, 93, 94.9], '3y': [100, 95, 90, 88, 85, 82, 80, 83, 81, 78, 79, 79.6], '5y': [100, 105, 102, 98, 95, 92, 90, 88, 85, 82, 84, 91.8] } },
+                { id: '00700', name: '富邦H股', type: '海外股票型', issuer: '富邦投信', expenseRatio: 1.03, aum: 80, performance: { '1y': -8.2, '3y': -25.6, '5y': -15.4 }, description: '追蹤恒生中國企業指數，投資在香港上市的中國企業。', performanceData: { '1y': [100, 97, 96, 97, 95, 94, 93, 92, 93, 91, 92, 91.8], '3y': [100, 93, 88, 86, 83, 80, 78, 81, 79, 76, 77, 74.4], '5y': [100, 102, 98, 94, 91, 88, 86, 84, 81, 78, 80, 84.6] } },
+                { id: '00861', name: '元大全球AI', type: '海外股票型', issuer: '元大投信', expenseRatio: 1.05, aum: 120, performance: { '1y': 40.1, '3y': 65.7, '5y': null }, description: '投資全球AI龍頭企業，如NVIDIA、微軟等。', performanceData: { '1y': [100, 106, 110, 108, 116, 121, 126, 132, 128, 135, 140, 140.1], '3y': [100, 116, 120, 130, 140, 150, 145, 155, 165, 175, 170, 165.7], '5y': null } },
+                { id: '00645', name: '富邦日本', type: '海外股票型', issuer: '富邦投信', expenseRatio: 0.49, aum: 250, performance: { '1y': 15.3, '3y': 25.1, '5y': 60.7 }, description: '追蹤日經225指數，是投資日本市場的便捷工具。', performanceData: { '1y': [100, 102, 104, 103, 106, 108, 110, 112, 111, 113, 114, 115.3], '3y': [100, 105, 108, 112, 115, 118, 116, 120, 122, 125, 123, 125.1], '5y': [100, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160.7] } },
+
+                // 槓桿/反向型
+                { id: '00631L', name: '元大台灣50正2', type: '槓桿/反向型', issuer: '元大投信', expenseRatio: 1.03, aum: 800, performance: { '1y': 48.2, '3y': 75.1, '5y': 250.9 }, description: '追蹤台灣50指數的單日兩倍報酬，為短期交易工具。', performanceData: { '1y': [100, 104, 110, 106, 116, 120, 124, 130, 126, 136, 140, 148.2], '3y': [100, 120, 116, 130, 140, 150, 144, 160, 170, 180, 176, 175.1], '5y': [100, 130, 140, 160, 150, 180, 200, 230, 240, 270, 280, 350.9] } },
+                { id: '00632R', name: '元大台灣50反1', type: '槓桿/反向型', issuer: '元大投信', expenseRatio: 1.03, aum: 750, performance: { '1y': -20.3, '3y': -40.5, '5y': -75.2 }, description: '追蹤台灣50指數的單日反向一倍報酬，用於避險。', performanceData: { '1y': [100, 98, 95, 97, 92, 90, 88, 85, 87, 82, 80, 79.7], '3y': [100, 90, 92, 85, 80, 75, 78, 70, 65, 60, 62, 59.5], '5y': [100, 85, 80, 70, 75, 60, 50, 35, 30, 15, 10, 24.8] } },
+                { id: '00672L', name: '元大S&P原油正2', type: '槓桿/反向型', issuer: '元大投信', expenseRatio: 1.45, aum: 100, performance: { '1y': 12.1, '3y': -30.8, '5y': -90.5 }, description: '追蹤原油期貨指數的單日兩倍報酬，波動極大。', performanceData: { '1y': [100, 105, 112, 108, 100, 95, 105, 115, 110, 120, 115, 112.1], '3y': [100, 120, 90, 70, 85, 60, 50, 75, 65, 40, 50, 69.2], '5y': [100, 80, 50, 20, 30, 15, 10, 12, 8, 5, 6, 9.5] } },
+                { id: '00677U', name: '富邦VIX', type: '槓桿/反向型', issuer: '富邦投信', expenseRatio: 1.18, aum: 50, performance: { '1y': -45.2, '3y': -80.1, '5y': -98.6 }, description: '追蹤VIX期貨指數，俗稱恐慌指數，不適合長期持有。', performanceData: { '1y': [100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 54.8], '3y': [100, 80, 60, 50, 40, 30, 25, 20, 18, 15, 12, 19.9], '5y': [100, 50, 30, 20, 15, 10, 8, 6, 4, 3, 2, 1.4] } },
+
+                // 更多 ETF
+                { id: '00923', name: '群益台ESG低碳50', type: '國內股票型-市值型', issuer: '群益投信', expenseRatio: 0.36, aum: 110, performance: { '1y': 27.2, '3y': null, '5y': null }, description: '篩選台灣50檔低碳排的ESG優質企業。', performanceData: { '1y': [100, 103, 107, 105, 110, 113, 116, 119, 117, 122, 124, 127.2], '3y': null, '5y': null } },
+                { id: '00905', name: 'FT臺灣Smart', type: '國內股票型-市值型', issuer: '富蘭克林華美', expenseRatio: 0.44, aum: 40, performance: { '1y': 23.9, '3y': null, '5y': null }, description: '採用多因子策略，結合品質、價值、動能等指標。', performanceData: { '1y': [100, 102, 105, 103, 109, 111, 114, 117, 115, 120, 121, 123.9], '3y': null, '5y': null } },
+                { id: '00918', name: '大華優利高填息30', type: '國內股票型-高股息', issuer: '大華銀投信', expenseRatio: 0.34, aum: 220, performance: { '1y': 43.1, '3y': null, '5y': null }, description: '除高股息外，額外考量歷史填息紀錄。', performanceData: { '1y': [100, 105, 110, 108, 116, 121, 126, 131, 128, 136, 141, 143.1], '3y': null, '5y': null } },
+                { id: '00915', name: '凱基優選高股息30', type: '國內股票型-高股息', issuer: '凱基投信', expenseRatio: 0.34, aum: 180, performance: { '1y': 44.5, '3y': null, '5y': null }, description: '結合波動率與股息因子，追求高品質股息。', performanceData: { '1y': [100, 106, 111, 109, 117, 123, 129, 134, 131, 139, 143, 144.5], '3y': null, '5y': null } },
+                { id: '00896', name: '中信綠能及電動車', type: '國內股票型-主題型', issuer: '中國信託投信', expenseRatio: 0.44, aum: 60, performance: { '1y': 18.5, '3y': null, '5y': null }, description: '投資於台灣的綠能與電動車產業鏈。', performanceData: { '1y': [100, 101, 103, 102, 105, 107, 109, 112, 110, 114, 116, 118.5], '3y': null, '5y': null } },
+                { id: '00927', name: '群益半導體收益', type: '國內股票型-主題型', issuer: '群益投信', expenseRatio: 0.45, aum: 130, performance: { '1y': 32.1, '3y': null, '5y': null }, description: '專注於具備穩定配息能力的半導體企業。', performanceData: { '1y': [100, 104, 109, 107, 114, 117, 121, 125, 122, 127, 130, 132.1], '3y': null, '5y': null } },
+                { id: '00712', name: '復華富時不動產', type: '海外股票型', issuer: '復華投信', expenseRatio: 0.51, aum: 330, performance: { '1y': 8.2, '3y': -5.6, '5y': 2.3 }, description: '投資美國抵押權型REITs，殖利率高但波動也大。', performanceData: { '1y': [100, 101, 102, 100, 103, 105, 107, 109, 106, 108, 107, 108.2], '3y': [100, 98, 95, 92, 96, 94, 90, 88, 91, 93, 92, 94.4], '5y': [100, 105, 110, 102, 98, 95, 98, 102, 105, 103, 101, 102.3] } }
+            ];
+
+            let activeCharts = {};
+            let selectedEtfId = null;
+            let activeFilter = '全部';
+            let comparisonList = [];
+
+            const etfFiltersContainer = document.getElementById('etf-filters');
+            const etfListContainer = document.getElementById('etf-list-container');
+            const etfDetailsPanel = document.getElementById('etf-details-panel');
+            const etfDetailsContent = document.getElementById('etf-details-content');
+            
+            const comparisonPlaceholder = document.getElementById('comparison-placeholder');
+            const comparisonData = document.getElementById('comparison-data');
+            const comparisonSummary = document.getElementById('comparison-summary');
+            const clearComparisonBtn = document.getElementById('clear-comparison-btn');
+
+            function renderMarketDistributionChart() {
+                const ctx = document.getElementById('marketDistributionChart').getContext('2d');
+                const typeCounts = etfData.reduce((acc, etf) => {
+                    const baseType = etf.type.split('-')[0];
+                    acc[baseType] = (acc[baseType] || 0) + 1;
+                    return acc;
+                }, {});
+
+                if (activeCharts.market) activeCharts.market.destroy();
+
+                activeCharts.market = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(typeCounts),
+                        datasets: [{
+                            data: Object.values(typeCounts),
+                            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
+                            borderColor: '#FDFBF8',
+                            borderWidth: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { font: { size: 14, family: "'Noto Sans TC', sans-serif" } }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed !== null) {
+                                            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                            const percentage = (context.parsed / total * 100).toFixed(1);
+                                            label += `${context.raw} 檔 (${percentage}%)`;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderFilters() {
+                const types = ['全部', ...new Set(etfData.map(etf => etf.type))];
+                etfFiltersContainer.innerHTML = types.map(type => `
+                    <button class="filter-btn px-4 py-2 text-sm font-medium border-2 border-gray-300 rounded-full transition-colors duration-200 hover:bg-blue-500 hover:text-white hover:border-blue-500 ${activeFilter === type ? 'active-filter' : 'bg-white text-gray-700'}" data-type="${type}">
+                        ${type}
+                    </button>
+                `).join('');
+            }
+
+            function renderEtfList() {
+                const filteredData = activeFilter === '全部' ? etfData : etfData.filter(etf => etf.type === activeFilter);
+                etfListContainer.innerHTML = filteredData.map(etf => `
+                    <div class="etf-card bg-white p-4 rounded-lg shadow-sm border border-gray-200/60 cursor-pointer hover:shadow-md hover:border-blue-400 transition-all ${selectedEtfId === etf.id ? 'border-blue-500 ring-2 ring-blue-500' : ''}" data-id="${etf.id}">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold text-gray-800">${etf.id} ${etf.name}</p>
+                                <p class="text-sm text-gray-500">${etf.issuer}</p>
+                            </div>
+                             <button class="add-comparison-btn text-blue-500 hover:text-blue-700 text-2xl font-light leading-none ${comparisonList.includes(etf.id) ? 'hidden' : ''}" data-id="${etf.id}" title="加入比較">⊕</button>
+                             <span class="text-green-500 text-sm ${!comparisonList.includes(etf.id) ? 'hidden' : ''}">已加入</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            function renderEtfDetails(id) {
+                selectedEtfId = id;
+                const etf = etfData.find(e => e.id === id);
+                if (!etf) return;
+
+                etfDetailsPanel.classList.remove('opacity-20');
+                
+                etfDetailsContent.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                         <h3 class="text-2xl font-bold text-gray-800">${etf.id} ${etf.name}</h3>
+                    </div>
+                    <p class="text-left text-gray-600 mb-6">${etf.description}</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-6">
+                        <div>
+                            <p class="text-sm text-gray-500">發行公司</p>
+                            <p class="font-semibold text-lg">${etf.issuer}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">總管理費</p>
+                            <p class="font-semibold text-lg">${etf.expenseRatio}%</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">資產規模(億)</p>
+                            <p class="font-semibold text-lg">${etf.aum}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-center gap-2 mb-4" id="performance-timeframe">
+                             <button class="timeframe-btn px-3 py-1 text-xs font-medium border rounded-md" data-period="1y">1年</button>
+                             <button class="timeframe-btn px-3 py-1 text-xs font-medium border rounded-md" data-period="3y">3年</button>
+                             <button class="timeframe-btn px-3 py-1 text-xs font-medium border rounded-md ${etf.performanceData['5y'] ? '' : 'opacity-50 cursor-not-allowed'}" data-period="5y" ${etf.performanceData['5y'] ? '' : 'disabled'}>5年</button>
+                        </div>
+                        <div class="chart-container h-64 md:h-72">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                `;
+                
+                renderPerformanceChart(etf, '1y');
+                document.querySelector('#etf-details-content .timeframe-btn[data-period="1y"]')?.classList.add('active-filter');
+                renderEtfList(); 
+            }
+            
+            function renderPerformanceChart(etf, period) {
+                const chartData = etf.performanceData[period];
+                if (!chartData) {
+                     document.getElementById('performanceChart').getContext('2d').clearRect(0,0,300,150);
+                     if (activeCharts.performance) activeCharts.performance.destroy();
+                     return;
+                };
+
+                const labels = Array.from({ length: chartData.length }, (_, i) => `M${i + 1}`);
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                
+                if (activeCharts.performance) activeCharts.performance.destroy();
+
+                activeCharts.performance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: `${etf.name} ${period} 績效`,
+                            data: chartData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                         plugins: {
+                            legend: { display: false },
+                            tooltip: { mode: 'index', intersect: false, callbacks: { label: (context) => `累積報酬: ${(context.raw - 100).toFixed(2)}%` } }
+                        },
+                        scales: { y: { beginAtZero: false, ticks: { callback: (value) => `${(value - 100).toFixed(0)}%` } }, x: { display: false } }
+                    }
+                });
+            }
+            
+            function renderComparison() {
+                if (comparisonList.length === 0) {
+                    comparisonPlaceholder.classList.remove('hidden');
+                    comparisonData.classList.add('hidden');
+                    return;
+                }
+                
+                comparisonPlaceholder.classList.add('hidden');
+                comparisonData.classList.remove('hidden');
+
+                const comparisonEtfs = etfData.filter(etf => comparisonList.includes(etf.id));
+                const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
+                const bgColors = ['rgba(59, 130, 246, 0.1)', 'rgba(16, 185, 129, 0.1)', 'rgba(245, 158, 11, 0.1)', 'rgba(239, 68, 68, 0.1)'];
+
+                comparisonSummary.innerHTML = comparisonEtfs.map((etf, index) => `
+                    <div class="p-4 rounded-lg" style="background-color: ${bgColors[index]}; border-left: 4px solid ${colors[index]}">
+                        <h4 class="font-bold text-gray-800">${etf.id} ${etf.name}</h4>
+                        <p class="text-sm">1年績效: <span class="font-semibold">${etf.performance['1y']}%</span></p>
+                        <p class="text-sm">總管理費: <span class="font-semibold">${etf.expenseRatio}%</span></p>
+                        <p class="text-sm">規模(億): <span class="font-semibold">${etf.aum}</span></p>
+                    </div>
+                `).join('');
+
+                const datasets = comparisonEtfs.map((etf, index) => ({
+                    label: `${etf.id} ${etf.name}`,
+                    data: etf.performanceData['1y'],
+                    borderColor: colors[index],
+                    backgroundColor: 'transparent',
+                    tension: 0.3,
+                    pointRadius: 2,
+                }));
+                
+                const ctx = document.getElementById('comparisonPerformanceChart').getContext('2d');
+                if (activeCharts.comparison) activeCharts.comparison.destroy();
+
+                activeCharts.comparison = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: 12 }, (_, i) => `M${i + 1}`),
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { title: { display: true, text: '近一年累積績效比較' }, legend: { position: 'bottom' } },
+                        scales: { y: { ticks: { callback: (value) => `${(value - 100).toFixed(0)}%` } } }
+                    }
+                });
+            }
+
+            function initDeepDiveCharts() {
+                const ctxExpense = document.getElementById('expenseChart').getContext('2d');
+                if(activeCharts.expense) activeCharts.expense.destroy();
+                activeCharts.expense = new Chart(ctxExpense, {
+                    type: 'bar',
+                    data: {
+                        labels: ['0050 元大台灣50', '006208 富邦台50'],
+                        datasets: [{
+                            label: '總費用率 (%)', data: [0.35, 0.19],
+                            backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(16, 185, 129, 0.7)'],
+                            borderColor: ['rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)'], borderWidth: 1
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: (value) => value + '%' } } }, plugins: { legend: { display: false } } }
+                });
+
+                const ctxReturn = document.getElementById('returnChart').getContext('2d');
+                if(activeCharts.return) activeCharts.return.destroy();
+                activeCharts.return = new Chart(ctxReturn, {
+                    type: 'bar',
+                    data: {
+                        labels: ['0050 元大台灣50', '006208 富邦台50'],
+                        datasets: [{
+                            label: '近五年累積報酬率 (%)', data: [105.2, 104.9],
+                            backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(16, 185, 129, 0.7)'],
+                            borderColor: ['rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)'], borderWidth: 1
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: (value) => value + '%' } } }, plugins: { legend: { display: false } } }
+                });
+            }
+
+            function calculateVolatilityDrag() {
+                const day1 = parseFloat(document.getElementById('day1-change').value) / 100;
+                const day2 = parseFloat(document.getElementById('day2-change').value) / 100;
+
+                const indexReturn = ((1 + day1) * (1 + day2) - 1) * 100;
+                const leveragedReturn = ((1 + 2 * day1) * (1 + 2 * day2) - 1) * 100;
+                const inverseReturn = ((1 - day1) * (1 - day2) - 1) * 100;
+
+                document.getElementById('index-return').textContent = indexReturn.toFixed(2) + '%';
+                document.getElementById('leveraged-return').textContent = leveragedReturn.toFixed(2) + '%';
+                document.getElementById('inverse-return').textContent = inverseReturn.toFixed(2) + '%';
+                
+                const labels = ['開始', '第一天後', '第二天後'];
+                const indexData = [100, 100 * (1 + day1), 100 * (1 + day1) * (1 + day2)];
+                const leveragedData = [100, 100 * (1 + 2 * day1), 100 * (1 + 2 * day1) * (1 + 2 * day2)];
+                const inverseData = [100, 100 * (1 - day1), 100 * (1 - day1) * (1 - day2)];
+
+                if (activeCharts.volDrag) activeCharts.volDrag.destroy();
+                
+                const ctxVolDrag = document.getElementById('volatilityDragChart').getContext('2d');
+                activeCharts.volDrag = new Chart(ctxVolDrag, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: '標的指數', data: indexData, borderColor: '#3B82F6', tension: 0.1 },
+                            { label: '2X 槓桿 ETF', data: leveragedData, borderColor: '#10B981', tension: 0.1 },
+                            { label: '-1X 反向 ETF', data: inverseData, borderColor: '#EF4444', tension: 0.1 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: '績效路徑模擬' } } }
+                });
+            }
+
+            function initCalculators() {
+                const calculateFeeBtn = document.getElementById('calculate-fee-btn');
+                const dividendCalculateBtn = document.getElementById('dividend-calculate-btn');
+                const calculatorETFSelect = document.getElementById('calculator-etf');
+
+                etfData.forEach(etf => {
+                    const option = document.createElement('option');
+                    option.value = etf.id;
+                    option.textContent = `${etf.id} ${etf.name}`;
+                    calculatorETFSelect.appendChild(option);
+                });
+
+                calculateFeeBtn.addEventListener('click', calculateFee);
+                dividendCalculateBtn.addEventListener('click', calculateDividend);
+            }
+
+            function calculateFee() {
+                const amount = parseFloat(document.getElementById('investment-amount').value);
+                const years = parseFloat(document.getElementById('investment-years').value);
+                const etfId = document.getElementById('calculator-etf').value;
+                const resultDiv = document.getElementById('calculation-result');
+
+                if (isNaN(amount) || isNaN(years) || !etfId) {
+                    alert('請填寫所有欄位並選擇一檔ETF'); return;
+                }
+
+                const etf = etfData.find(e => e.id === etfId);
+                const feeRate = etf.expenseRatio / 100;
+                const totalFee = amount * feeRate * years;
+
+                resultDiv.innerHTML = `
+                    <h4 class="font-semibold text-blue-800">費用計算結果</h4>
+                    <p class="text-sm">投資標的：${etf.name}</p>
+                    <p class="text-sm">${years}年預估總費用：<strong class="text-lg">NT$ ${totalFee.toLocaleString('en-US', { maximumFractionDigits: 0 })}</strong></p>
+                `;
+                resultDiv.classList.remove('hidden');
+            }
+
+            function calculateDividend() {
+                const shares = parseFloat(document.getElementById('shares-count').value);
+                const price = parseFloat(document.getElementById('etf-price').value);
+                const yieldRate = parseFloat(document.getElementById('dividend-yield').value);
+                const resultDiv = document.getElementById('dividend-result');
+
+                if (isNaN(shares) || isNaN(price) || isNaN(yieldRate)) {
+                    alert('請填寫所有欄位'); return;
+                }
+
+                const totalValue = shares * price;
+                const annualDividend = totalValue * (yieldRate / 100);
+
+                resultDiv.innerHTML = `
+                    <h4 class="font-semibold text-green-800">配息試算結果</h4>
+                    <p class="text-sm">投資總市值：NT$ ${totalValue.toLocaleString('en-US', { maximumFractionDigits: 0 })}</p>
+                    <p class="text-sm">預估年配息：<strong class="text-lg">NT$ ${annualDividend.toLocaleString('en-US', { maximumFractionDigits: 0 })}</strong></p>
+                `;
+                resultDiv.classList.remove('hidden');
+            }
+
+            function initGuide() {
+                document.getElementById('get-recommendation').addEventListener('click', getRecommendation);
+            }
+
+            function getRecommendation() {
+                const goal = document.querySelector('input[name="goal"]:checked')?.value;
+                const risk = document.querySelector('input[name="risk"]:checked')?.value;
+                const market = document.querySelector('input[name="market"]:checked')?.value;
+                const resultDiv = document.getElementById('recommendation-result');
+
+                if (!goal || !risk || !market) {
+                    alert('請回答所有問題'); return;
+                }
+
+                let recommendations = [];
+                if (goal === 'income') {
+                    recommendations = ['00878', '00929', '00713'];
+                } else if (goal === 'growth' && market === 'taiwan') {
+                    recommendations = ['0050', '00891', '00692'];
+                } else if (goal === 'balanced') {
+                    recommendations = ['0050', '00878', '00772B'];
+                } else {
+                    recommendations = ['0050', '006208'];
+                }
+                 if (market === 'global' && !recommendations.includes('00646')) {
+                    recommendations.push('00646');
+                }
+
+                let resultHTML = '<h4 class="font-semibold text-purple-800 mb-2">為您推薦的ETF組合</h4>';
+                recommendations.forEach(id => {
+                    const etf = etfData.find(e => e.id === id);
+                    if (etf) {
+                        resultHTML += `<p class="text-sm p-2 bg-purple-100 rounded mb-1"><strong>${etf.id} ${etf.name}</strong> - ${etf.description}</p>`;
+                    }
+                });
+                resultHTML += '<p class="text-xs mt-2 text-gray-500">以上推薦僅供參考，投資前請詳閱公開說明書。</p>';
+                resultDiv.innerHTML = resultHTML;
+                resultDiv.classList.remove('hidden');
+            }
+            
+            function initNavbar() {
+                const hamburgerBtn = document.getElementById('hamburger-btn');
+                const closeMenuBtn = document.getElementById('close-menu-btn');
+                const navMenu = document.getElementById('nav-menu');
+                const navLinks = document.querySelectorAll('.nav-link-mobile');
+                hamburgerBtn.addEventListener('click', () => navMenu.classList.remove('nav-menu-hidden'));
+                const closeMenu = () => navMenu.classList.add('nav-menu-hidden');
+                closeMenuBtn.addEventListener('click', closeMenu);
+                navLinks.forEach(link => link.addEventListener('click', closeMenu));
+            }
+
+            function initInvestorProfiles() {
+                 const profileButtons = document.querySelectorAll('.profile-btn');
+                const profileContents = document.querySelectorAll('.profile-content');
+                profileButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        profileButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        profileContents.forEach(content => {
+                            content.id === button.dataset.profile ? content.classList.add('active') : content.classList.remove('active');
+                        });
+                    });
+                });
+            }
+
+            etfFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    activeFilter = e.target.dataset.type;
+                    document.querySelector('#etf-filters .active-filter')?.classList.remove('active-filter');
+                    e.target.classList.add('active-filter');
+                    renderEtfList();
+                }
+            });
+
+            etfListContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('.etf-card');
+                const button = e.target.closest('.add-comparison-btn');
+                if (button) {
+                    e.stopPropagation();
+                    const id = button.dataset.id;
+                    if (comparisonList.length < 4 && !comparisonList.includes(id)) {
+                        comparisonList.push(id);
+                        renderComparison();
+                        renderEtfList();
+                    } else if (comparisonList.length >= 4) {
+                        alert('最多只能比較 4 檔 ETF。');
+                    }
+                } else if (card) {
+                    renderEtfDetails(card.dataset.id);
+                }
+            });
+
+            etfDetailsPanel.addEventListener('click', (e) => {
+                if (e.target.classList.contains('timeframe-btn')) {
+                    const period = e.target.dataset.period;
+                    const etf = etfData.find(e => e.id === selectedEtfId);
+                    document.querySelector('#etf-details-content .active-filter')?.classList.remove('active-filter');
+                    e.target.classList.add('active-filter');
+                    renderPerformanceChart(etf, period);
+                }
+            });
+
+            clearComparisonBtn.addEventListener('click', () => {
+                comparisonList = [];
+                renderComparison();
+                renderEtfList();
+            });
+            
+            document.getElementById('calculate-vol-drag').addEventListener('click', calculateVolatilityDrag);
+
+            function init() {
+                initNavbar();
+                renderMarketDistributionChart();
+                renderFilters();
+                renderEtfList();
+                renderComparison();
+                initDeepDiveCharts();
+                calculateVolatilityDrag();
+                initCalculators();
+                initGuide();
+                initInvestorProfiles();
+            }
+
+            init();
+        });
+    </script>
+</body>
+</html>
