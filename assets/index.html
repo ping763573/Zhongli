@@ -45,16 +45,26 @@
             color: var(--primary-text);
             transition: background-color 0.3s, color 0.3s;
         }
-        .container { width: 85%; max-width: 1200px; margin: auto; overflow: hidden; padding: 20px 0; }
+        .container { width: 90%; max-width: 1200px; margin: auto; overflow: hidden; padding: 20px 0; }
 
         /* --- 導覽航 & 控制按鈕 --- */
-        .navbar { background-color: var(--secondary-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; transition: background-color 0.3s; }
+        .navbar { background-color: var(--secondary-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; transition: background-color 0.3s; min-height: 60px; }
         .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
         .nav-links a { display: block; padding: 20px 15px; text-decoration: none; color: var(--secondary-text); font-weight: 600; transition: color 0.3s, border-bottom 0.3s; border-bottom: 3px solid transparent; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent-color); border-bottom: 3px solid var(--accent-color); }
         .nav-controls { display: flex; align-items: center; gap: 10px; }
         .nav-controls button { background: none; border: none; cursor: pointer; font-size: 24px; color: var(--secondary-text); padding: 10px; transition: color 0.3s; }
         .nav-controls button:hover { color: var(--accent-color); }
+        /* RWD: 新增漢堡選單按鈕 */
+        .hamburger-menu {
+            display: none;
+            font-size: 28px;
+            background: none;
+            border: none;
+            color: var(--primary-text);
+            cursor: pointer;
+            padding: 10px;
+        }
 
         /* --- 頁首 --- */
         header { background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); color: #ffffff; padding: 3.5rem 1rem; text-align: center; }
@@ -82,9 +92,6 @@
             gap: 30px;
             margin-top: 20px;
         }
-        @media (max-width: 992px) {
-            .example-container { grid-template-columns: 1fr; }
-        }
         .example-step { border: 1px solid rgba(128,128,128,0.2); padding: 20px; border-radius: 8px; }
         .localization-note { background-color: rgba(128,128,128,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9em; }
         
@@ -111,7 +118,6 @@
         .asset-details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
         .asset-details.visible { max-height: 200px; }
         .profile-container, .simulator-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: center; }
-        @media (max-width: 992px) { .profile-container, .simulator-container { grid-template-columns: 1fr; } }
         .profile-controls button { display: block; width: 100%; padding: 12px; margin-bottom: 10px; cursor: pointer; border: 2px solid rgba(128,128,128,0.3); background-color: transparent; color: var(--primary-text); border-radius: 8px; text-align: left; font-size: 1rem; transition: background-color 0.3s, border-color 0.3s; }
         .profile-controls button.active { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
         #profile-description { background-color: rgba(128,128,128,0.1); padding: 15px; border-radius: 8px; margin-top: 20px; min-height: 100px; }
@@ -121,7 +127,6 @@
         .simulator-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; text-align: center; }
         .simulator-metrics div h5 { font-size: 1rem; color: var(--secondary-text); margin: 0 0 5px 0; }
         .simulator-metrics div p { font-size: 1.8rem; font-weight: bold; color: var(--primary-text); margin: 0; }
-
 
         /* --- 其他樣式 --- */
         #backToTopBtn { display: none; position: fixed; bottom: 25px; right: 25px; z-index: 99; border: none; background-color: var(--accent-color); color: white; cursor: pointer; padding: 0; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; transition: background-color 0.3s, opacity 0.3s; opacity: 0.8; }
@@ -135,6 +140,39 @@
         form div{margin-bottom:15px}form label{display:block;margin-bottom:5px;font-weight:600}form input,form select{width:100%;padding:10px;border-radius:5px;border:1px solid var(--secondary-text);font-size:16px;background-color:var(--secondary-bg);color:var(--primary-text);}
         #result-display .allocation-bar-container{display:flex;height:30px;border-radius:5px;overflow:hidden;margin:10px 0}#result-display .allocation-bar{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9em;transition:width .5s ease-in-out}
         .d3-tooltip { position: absolute; text-align: center; padding: 8px; font: 12px sans-serif; background: #333; color: #fff; border-radius: 8px; pointer-events: none; opacity: 0; }
+        
+        /* --- RWD 響應式設計 --- */
+        @media (max-width: 992px) {
+            .container { width: 95%; }
+            header h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            /* RWD: 漢堡選單 */
+            .hamburger-menu { display: block; }
+            .nav-links {
+                display: none; /* 預設隱藏導覽連結 */
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 60px; /* 導覽列高度 */
+                left: 0;
+                background-color: var(--secondary-bg);
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+            .nav-links.active {
+                display: flex; /* 點擊漢堡後顯示 */
+            }
+            .nav-links li { width: 100%; text-align: center; }
+            .nav-links a {
+                padding: 15px;
+                border-bottom: 1px solid rgba(128,128,128,0.1) !important;
+            }
+            .nav-links a:hover, .nav-links a.active {
+                border-bottom-color: var(--accent-color) !important;
+            }
+            /* RWD: 其他佈局調整 */
+            .example-container { grid-template-columns: 1fr; }
+            .profile-container, .simulator-container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -155,6 +193,8 @@
             <button id="dark-mode-toggle" title="切換深色/淺色模式">🌗</button>
             <button id="fullscreen-toggle" title="切換全螢幕">⛶</button>
         </div>
+        <!-- RWD: 漢堡選單按鈕 -->
+        <button class="hamburger-menu" id="hamburger-btn">☰</button>
     </nav>
 
     <header><h1 id="main-title">智慧資產配置互動視覺化平台</h1></header>
@@ -622,6 +662,21 @@
         fullscreenButton.addEventListener('click', toggleFullScreen);
         document.addEventListener('fullscreenchange', updateFullscreenUI); document.addEventListener('mozfullscreenchange', updateFullscreenUI); document.addEventListener('webkitfullscreenchange', updateFullscreenUI); document.addEventListener('msfullscreenchange', updateFullscreenUI);
         
+        // RWD: 漢堡選單功能
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mainNavLinks = document.querySelector('.nav-links');
+        hamburgerBtn.addEventListener('click', () => {
+            mainNavLinks.classList.toggle('active');
+        });
+        // RWD: 點擊連結後自動收合選單
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if(mainNavLinks.classList.contains('active')) {
+                    mainNavLinks.classList.remove('active');
+                }
+            });
+        });
+
         // 原始圖表渲染
         renderAssetClassChart(); renderEfficientFrontierChart(); renderStrategyRadarChart();
         renderPortfolioDonutCharts();
