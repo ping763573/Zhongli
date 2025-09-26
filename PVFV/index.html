@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最終版財務五大參數計算機</title>
+    <style>
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', 'Helvetica Neue', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f0f2f5; padding: 20px; box-sizing: border-box; }
+        .calculator-container { background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 100%; max-width: 650px; margin-bottom: 30px; }
+        h1 { text-align: center; color: #333; margin-bottom: 25px; }
+        .input-group { display: flex; align-items: center; margin-bottom: 18px; }
+        .input-group label { flex: 0 0 150px; font-weight: 600; color: #555; }
+        .input-group input, .input-group select { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+        .input-group select { margin-left: 10px; flex: 0 0 80px; }
+        .button-group { text-align: center; margin-top: 25px; }
+        .button-group button { padding: 12px 25px; margin: 0 5px; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: background-color 0.3s; }
+        .button-group button.main-action { background-color: #007bff; color: white; }
+        .button-group button.clear { background-color: #6c757d; color: white; }
+        .button-group button:hover { opacity: 0.9; }
+        #result, #error-message { margin-top: 25px; padding: 15px; border-radius: 6px; text-align: center; font-size: 1.1rem; font-weight: bold; display: none; }
+        #result { background-color: #e9f7ef; border: 1px solid #d4edda; color: #155724; }
+        #error-message { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        #details-container { margin-top: 25px; }
+        #details-container h2 { text-align: center; color: #444; }
+        #amortization-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        #amortization-table th, #amortization-table td { border: 1px solid #ddd; padding: 10px; text-align: right; }
+        #amortization-table th { background-color: #f8f9fa; font-weight: 600; }
+        
+        /* --- Download Button Styles --- */
+        #download-txt-btn, #download-csv-btn { display: none; margin-top: 20px; }
+        #download-csv-btn { background-color: #217346; color: white; } /* Excel Green */
+        #download-txt-btn { background-color: #555; color: white; }
+
+        /* --- Example Section Styles --- */
+        .example-section { background: #f8f9fa; padding: 30px; border-radius: 12px; width: 100%; max-width: 650px; border: 1px solid #e9ecef; }
+        .example-section h2 { text-align: center; color: #343a40; margin-top: 0; }
+        .example-case { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #dee2e6; }
+        .example-case:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+        .example-case h3 { color: #007bff; }
+        .example-case p { line-height: 1.6; }
+        .example-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .example-table th, .example-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .example-table th { background-color: #e9ecef; }
+        .example-table code { background-color: #e0e0e0; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>最終版財務五大參數計算機</h1>
+        <div class="input-group"> <label for="pv">現值 (PV) (萬元):</label> <input type="number" id="pv" placeholder="貸款收到的錢為正, 投資付出的錢為負"> </div>
+        <div class="input-group"> <label for="fv">終值 (FV) (萬元):</label> <input type="number" id="fv" placeholder="還清為0, 投資目標為正"> </div>
+        <div class="input-group"> <label for="nper">期數:</label> <input type="number" id="nper" placeholder="例如: 240"> <select id="nper-unit" onchange="updateNperPlaceholder()"> <option value="year">年</option> <option value="month" selected>月</option> </select> </div>
+        <div class="input-group"> <label for="pmt">每期金流 (PMT) (萬元):</label> <input type="number" id="pmt" placeholder="還款或投資為負, 收款為正"> </div>
+        <div class="input-group"> <label for="rate">年利率 (%):</label> <input type="number" id="rate" placeholder="例如: 3.5"> </div>
+        <div class="button-group"> <button class="main-action" onclick="calculate()">計算</button> <button class="clear" onclick="clearInputs()">清除</button> </div>
+        <div id="result"></div> <div id="error-message"></div>
+        <div id="details-container" style="display: none;">
+            <h2>每期數據明細</h2>
+            <div style="max-height: 300px; overflow-y: auto;"> <table id="amortization-table"> <thead></thead> <tbody></tbody> </table> </div>
+            <div class="button-group">
+                <button id="download-txt-btn" onclick="downloadTxt()">下載 TXT 檔案</button>
+                <button id="download-csv-btn" onclick="downloadCsv()">下載 CSV (Excel)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="example-section">
+        <h2>實例教學</h2>
+        <div class="example-case">
+            <h3>【實例一】計算房屋貸款的每月應繳金額 (月付金)</h3>
+            <p><strong>情境：</strong>小明買了一間房子，向銀行貸款 <strong>1000 萬元</strong>，貸款期限為 <strong>30 年</strong>，年利率為 <strong>3.5%</strong>。他希望在 30 年後能將貸款完全還清。<br><strong>目標：</strong>計算出小明「<strong>每月應繳的本息</strong>」是多少？</p>
+            <h4>參數填寫教學：</h4>
+            <table class="example-table">
+                <tr><th>參數</th><th>應填入值</th><th>原因說明</th></tr>
+                <tr><td>現值 (PV)</td><td><code>1000</code></td><td>銀行給了你 1000 萬，這是現金**流入**，所以是**正數**。</td></tr>
+                <tr><td>終值 (FV)</td><td><code>0</code></td><td>目標是 30 年後將貸款完全還清，所以未來價值為 0。</td></tr>
+                <tr><td>期數 (NPER)</td><td><code>360</code> / 單位選 <code>月</code></td><td>30 年總共是 30 * 12 = 360 個月。</td></tr>
+                <tr><td><strong>每期金流 (PMT)</strong></td><td><strong>留空</strong></td><td><strong>這是我們要計算的目標。</strong></td></tr>
+                <tr><td>年利率 (Rate)</td><td><code>3.5</code></td><td>直接填入銀行提供的年利率 3.5%。</td></tr>
+            </table>
+        </div>
+        <div class="example-case">
+            <h3>【實例二】計算定期定額投資的未來總資產 (終值)</h3>
+            <p><strong>情境：</strong>小華計畫每個月**定期定額投資 2 萬元**到一個年化報酬率約為 <strong>8%</strong> 的 ETF，並打算持續投資 <strong>20 年</strong>。<br><strong>目標：</strong>計算 20 年後，小華的這筆投資總資產會變成多少錢？</p>
+            <h4>參數填寫教學：</h4>
+            <table class="example-table">
+                <tr><th>參數</th><th>應填入值</th><th>原因說明</th></tr>
+                <tr><td>現值 (PV)</td><td><code>0</code></td><td>他是從 0 元開始投資的，一開始沒有任何本金。</td></tr>
+                <tr><td><strong>終值 (FV)</strong></td><td><strong>留空</strong></td><td><strong>這是我們要計算的目標。</strong></td></tr>
+                <tr><td>期數 (NPER)</td><td><code>240</code> / 單位選 <code>月</code></td><td>20 年總共是 20 * 12 = 240 個月。</td></tr>
+                <tr><td>每期金流 (PMT)</td><td><code>-2</code></td><td>每個月從口袋**拿出** 2 萬元去投資，這是現金**流出**，所以是**負數**。</td></tr>
+                <tr><td>年利率 (Rate)</td><td><code>8</code></td><td>預期的年化報酬率為 8%。</td></tr>
+            </table>
+        </div>
+        <div class="example-case">
+            <h3>【實例三】計算投資計畫的年化報酬率</h3>
+            <p><strong>情境：</strong>小陳在 <strong>10 年前**單筆投入了 **100 萬元**買了一檔基金，中途沒有再投入或取出。如今，他發現這筆基金的總價值已經成長到了 **250 萬元**。<br><strong>目標：</strong>計算這筆投資的「</strong>年化報酬率**」是多少？</p>
+            <h4>參數填寫教學：</h4>
+            <table class="example-table">
+                <tr><th>參數</th><th>應填入值</th><th>原因說明</th></tr>
+                <tr><td>現值 (PV)</td><td><code>-100</code></td><td>10 年前，他**拿出** 100 萬去投資，這是現金**流出**，所以是**負數**。</td></tr>
+                <tr><td>終值 (FV)</td><td><code>250</code></td><td>現在這筆錢的價值是 250 萬，如果賣掉就是現金**流入**，所以是**正數**。</td></tr>
+                <tr><td>期數 (NPER)</td><td><code>10</code> / 單位選 <code>年</code></td><td>總共經過了 10 年。</td></tr>
+                <tr><td>每期金流 (PMT)</td><td><code>0</code></td><td>這是一筆單筆投資，期間沒有任何額外的投入或取出。</td></tr>
+                <tr><td><strong>年利率 (Rate)</strong></td><td><strong>留空</strong></td><td><strong>這是我們要計算的目標。</strong></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function getPV(r,n,p,f){f=f||0;if(r===0)return-(f+p*n);return-(p*(1-Math.pow(1+r,-n))/r+f/Math.pow(1+r,n))}
+        function getFV(r,n,p,v){v=v||0;if(r===0)return-(v+p*n);return-(v*Math.pow(1+r,n)+p*(Math.pow(1+r,n)-1)/r)}
+        function getPMT(r,n,v,f){f=f||0;if(r===0)return-(v+f)/n;return-(r*(f+v*Math.pow(1+r,n)))/(Math.pow(1+r,n)-1)}
+        function getNPER(r,p,v,f){f=f||0;if(r===0)return-(v+f)/p;const a=(p-f*r)/(p+v*r);if(a<=0)throw new Error("NPER_INVALID_ARG");return Math.log(a)/Math.log(1+r)}
+        function getRATE(n,p,v,f){f=f||0;const P=1e-7;const M=100;let r=0.1;for(let i=0;i<M;i++){const g=Math.pow(1+r,n);const func=v*g+p*(g-1)/r+f;if(Math.abs(func)<P)return r;const deriv=n*v*Math.pow(1+r,n-1)+p*((n*r*g-(g-1))/(r*r));const new_r=r-func/deriv;if(isNaN(new_r)||!isFinite(new_r))throw new Error("RATE_CONVERGENCE_FAIL");if(Math.abs(new_r-r)<P)return new_r;r=new_r}throw new Error("RATE_CONVERGENCE_FAIL")}
+        function calculate(){document.getElementById('result').style.display='none';document.getElementById('error-message').style.display='none';document.getElementById('details-container').style.display='none';const i={pv:document.getElementById('pv').value,fv:document.getElementById('fv').value,nper:document.getElementById('nper').value,pmt:document.getElementById('pmt').value,rate:document.getElementById('rate').value};const e=Object.keys(i).filter(k=>i[k]==='');if(e.length!==1){displayError(null,"請剛好留一個欄位空白以進行計算！");return}const t=e[0];const u=document.getElementById('nper-unit').value;const v={pv:parseFloat(i.pv),fv:parseFloat(i.fv),nper_in:parseFloat(i.nper),pmt:parseFloat(i.pmt),rate_in:parseFloat(i.rate)};let pr=(v.rate_in/100)/(u==='year'?1:12);let n=v.nper_in;if(u==='year'&&t!=='nper'&&t!=='rate'){n=v.nper_in}let res;let txt='';try{switch(t){case 'pv':res=getPV(pr,n,v.pmt,v.fv);txt=`計算出現值 (PV) 為: ${res.toFixed(2)} 萬元`;break;case 'fv':res=getFV(pr,n,v.pmt,v.pv);txt=`計算出終值 (FV) 為: ${res.toFixed(2)} 萬元`;break;case 'nper':let rateForNper=u==='year'?(v.rate_in/100):pr;res=getNPER(rateForNper,v.pmt,v.pv,v.fv);txt=`計算出期數為: ${res.toFixed(2)} ${u==='year'?'年':'月'}`;break;case 'pmt':res=getPMT(pr,n,v.pv,v.fv);txt=`計算出每期金流 (PMT) 為: ${res.toFixed(2)} 萬元`;break;case 'rate':let nperForRate=u==='year'?v.nper_in:n;let cr=getRATE(nperForRate,v.pmt,v.pv,v.fv);res=cr*(u==='year'?1:12)*100;txt=`計算出年利率 (Rate) 為: ${res.toFixed(4)} %`;break}if(isNaN(res)||!isFinite(res)){throw new Error("CALCULATION_ERROR")}document.getElementById(t).value=res.toFixed(t==='rate'?4:2);document.getElementById('result').textContent=txt;document.getElementById('result').style.display='block';generateAmortizationTable()}catch(err){displayError(t,err.message)}}
+        function displayError(f,m){let u='';switch(m){case "NPER_INVALID_ARG":u=`無法計算出【期數】。<strong>原因：</strong>您輸入的參數組合不合 logique。最常見的情況是「每期金流(PMT)」金額過小，不足以支付利息，導致本金永遠無法還清。請檢查並調整「現值(PV)」、「每期金流(PMT)」或「年利率(Rate)」。`;break;case "RATE_CONVERGENCE_FAIL":case "CALCULATION_ERROR":u=`無法計算出【${f?f.toUpperCase():''}】。<strong>原因：</strong>輸入的參數可能互相矛盾，導致無法找到合理的解。請檢查所有輸入值是否正確，特別是正負號。`;break;default:u=m}const e=document.getElementById('error-message');e.innerHTML=u;e.style.display='block'}
+        function generateAmortizationTable(){const pv=parseFloat(document.getElementById('pv').value);const fv=parseFloat(document.getElementById('fv').value);const nper=Math.round(parseFloat(document.getElementById('nper').value));const pmt=parseFloat(document.getElementById('pmt').value);const annual_rate=parseFloat(document.getElementById('rate').value);const nperUnit=document.getElementById('nper-unit').value;if(isNaN(pv)||isNaN(nper)||isNaN(pmt)||isNaN(annual_rate)||nper<=0||nper>1200){document.getElementById('details-container').style.display='none';return}const periodic_rate=nperUnit==='year'?(annual_rate/100):((annual_rate/100)/12);const tableHead=document.querySelector('#amortization-table thead');const tableBody=document.querySelector('#amortization-table tbody');tableBody.innerHTML='';const isLoan=(pv>0&&pmt<0);let balance=pv;if(isLoan){tableHead.innerHTML=`<tr><th>期數</th><th>期初本金(萬)</th><th>支付金額(萬)</th><th>支付利息(萬)</th><th>償還本金(萬)</th><th>期末本金(萬)</th></tr>`;for(let i=1;i<=nper;i++){const interest=balance*periodic_rate;const principal=-pmt-interest;const endBalance=balance-principal;const row=`<tr><td>${i}</td><td>${balance.toFixed(2)}</td><td>${(-pmt).toFixed(2)}</td><td>${interest.toFixed(2)}</td><td>${principal.toFixed(2)}</td><td>${endBalance.toFixed(2)}</td></tr>`;tableBody.innerHTML+=row;balance=endBalance}}else{tableHead.innerHTML=`<tr><th>期數</th><th>期初餘額(萬)</th><th>本期金流(萬)</th><th>本期利息(萬)</th><th>期末餘額(萬)</th></tr>`;for(let i=1;i<=nper;i++){const interest=balance*periodic_rate;const endBalance=balance+interest+pmt;const row=`<tr><td>${i}</td><td>${balance.toFixed(2)}</td><td>${pmt.toFixed(2)}</td><td>${interest.toFixed(2)}</td><td>${endBalance.toFixed(2)}</td></tr>`;tableBody.innerHTML+=row;balance=endBalance}}document.getElementById('details-container').style.display='block';document.getElementById('download-txt-btn').style.display='inline-block';document.getElementById('download-csv-btn').style.display='inline-block'}
+        
+        function downloadTxt(){const t=document.getElementById('amortization-table');let c='';const h=Array.from(t.querySelectorAll('thead th')).map(th=>th.innerText);c+=h.join('\t\t')+'\r\n';c+=''.padEnd(h.join('\t\t').length*2,'-')+'\r\n';const r=t.querySelectorAll('tbody tr');r.forEach(row=>{const d=Array.from(row.querySelectorAll('td')).map(td=>td.innerText);c+=d.join('\t\t')+'\r\n'});const b=new Blob([c],{type:'text/plain;charset=utf-8'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='財務計算每期明細.txt';document.body.appendChild(l);l.click();document.body.removeChild(l)}
+
+        // ========== New CSV Download Function ==========
+        function downloadCsv() {
+            // Add BOM for UTF-8 to ensure Excel displays Chinese characters correctly
+            const BOM = "\uFEFF";
+            const table = document.getElementById('amortization-table');
+            let csvContent = BOM;
+
+            // Get headers and join with commas
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => `"${th.innerText}"`); // Quote headers
+            csvContent += headers.join(',') + '\r\n';
+
+            // Get rows
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const rowData = Array.from(row.querySelectorAll('td')).map(td => `"${td.innerText}"`); // Quote each cell
+                csvContent += rowData.join(',') + '\r\n';
+            });
+
+            // Create Blob and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '財務計算每期明細.csv';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearInputs(){document.getElementById('pv').value='';document.getElementById('fv').value='';document.getElementById('nper').value='';document.getElementById('pmt').value='';document.getElementById('rate').value='';document.getElementById('nper-unit').value='month';updateNperPlaceholder();document.getElementById('result').style.display='none';document.getElementById('error-message').style.display='none';document.getElementById('details-container').style.display='none';document.getElementById('download-txt-btn').style.display='none';document.getElementById('download-csv-btn').style.display='none';}
+        function updateNperPlaceholder(){const u=document.getElementById('nper-unit').value;const n=document.getElementById('nper');if(u==='year'){n.placeholder="例如: 20"}else{n.placeholder="例如: 240"}}
+        window.onload=function(){updateNperPlaceholder()};
+    </script>
+</body>
+</html>
