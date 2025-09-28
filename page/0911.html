@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式理財規劃羅盤 (完整最終版)</title>
+    <style>
+        /* --- 全局樣式 --- */
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #00AEEF;
+            --accent-color: #FFD700;
+            --bg-color: #f4f8fa;
+            --text-color: #333;
+            --light-gray: #e9ecef;
+            --success-green: #4CAF50;
+            --danger-red: #f44336;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.8; scroll-behavior: smooth; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        h1, h2, h3 { color: var(--primary-color); margin-bottom: 20px; text-align: center; }
+        h2 { font-size: 2.2rem; }
+        h3 { font-size: 1.5rem; color: var(--secondary-color); }
+        p { margin-bottom: 15px; }
+        .card { background: #fff; border-radius: 15px; padding: 30px; box-shadow: var(--card-shadow); margin-bottom: 30px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .button { display: inline-block; background-color: var(--secondary-color); color: #fff; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.3s; margin: 5px; }
+        .button:hover { background-color: var(--primary-color); transform: scale(1.05); }
+        .button.active { background-color: var(--primary-color); }
+        
+        /* --- 導覽列 & 控制按鈕 --- */
+        nav { position: sticky; top: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; padding: 10px 0; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+        nav a { padding: 10px 15px; text-decoration: none; color: var(--primary-color); font-weight: bold; }
+        .fullscreen-btn { position: fixed; bottom: 20px; right: 20px; background: var(--primary-color); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 1001; }
+
+        /* --- 1. 首頁 --- */
+        #home { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, rgba(0, 90, 156, 0.8), rgba(0, 174, 239, 0.7)), url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover; color: #fff; }
+        #home h1 { font-size: 3.5rem; color: #fff; } #main-slogan { font-size: 2.5rem; font-weight: bold; margin: 30px 0; padding: 10px 20px; border: 2px solid var(--accent-color); color: var(--accent-color); display: inline-block; }
+        
+        /* --- 2. 核心模組 --- */
+        .module-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        @media (min-width: 992px) { .module-grid { grid-template-columns: 1fr 1fr; } }
+        #soccer-field { width: 100%; height: 400px; background-color: var(--success-green); border: 2px solid #fff; position: relative; margin-top: 20px; border-radius: 10px; user-select: none; }
+        .drop-zone { position: absolute; width: 30%; height: 100%; top: 0; border: 2px dashed rgba(255,255,255,0.5); display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: white; font-weight: bold; }
+        #goalkeeper-zone { left: 0; } #midfielder-zone { left: 35%; width: 30%; } #forward-zone { right: 0; }
+        .money-ball { padding: 10px 20px; margin: 10px; background: var(--accent-color); border-radius: 20px; cursor: grab; display: inline-block; border: 2px solid #b38600; }
+        #reservoir-sim { display: flex; justify-content: space-around; align-items: flex-end; height: 300px; margin-top: 20px; gap: 20px; }
+        .reservoir-container { width: 45%; height: 100%; border: 5px solid var(--primary-color); border-top: none; position: relative; background: #e0f7fa; }
+        .water { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--secondary-color); transition: height 1s ease-in-out; }
+        #flow-water { background: linear-gradient(45deg, rgba(0,174,239,0.8) 25%, transparent 25%, transparent 50%, rgba(0,174,239,0.8) 50%, rgba(0,174,239,0.8) 75%, transparent 75%, transparent 100%); background-size: 60px 60px; animation: flow-animation 2s linear infinite; }
+        @keyframes flow-animation { from { background-position: 0 0; } to { background-position: 60px 0; } }
+
+        /* --- 3. 試算工具 --- */
+        .calculator-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        @media (min-width: 992px) { .calculator-grid { grid-template-columns: 1fr 1fr; } }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        .result-chart { display: flex; justify-content: space-around; align-items: flex-end; height: 250px; border-left: 2px solid #ccc; border-bottom: 2px solid #ccc; padding-top: 20px; }
+        .bar-container { width: 40%; text-align: center; } .bar { background-color: var(--primary-color); transition: height 1s ease-out; }
+        #bar-planned { background-color: var(--secondary-color); }
+        .timeline { position: relative; width: 100%; padding: 20px 0; } .timeline::after { content: ''; position: absolute; width: 4px; background-color: var(--secondary-color); top: 0; bottom: 0; left: 50%; margin-left: -2px; }
+        .timeline-item { padding: 10px 40px; position: relative; width: 50%; } .timeline-item:nth-child(odd) { left: 0; } .timeline-item:nth-child(even) { left: 50%; }
+        .timeline-item::after { content: ''; position: absolute; width: 20px; height: 20px; background-color: #fff; border: 4px solid var(--secondary-color); top: 25px; border-radius: 50%; z-index: 1; }
+        .timeline-item:nth-child(odd)::after { right: -12px; }
+        .timeline-item:nth-child(even)::after { left: -12px; }
+        .timeline-content { padding: 20px; background-color: #fff; border-radius: 10px; cursor: pointer; border-left: 5px solid var(--primary-color); }
+        @media (max-width: 768px) { .timeline::after { left: 15px; } .timeline-item { width: 100%; padding-left: 60px; padding-right: 15px; } .timeline-item:nth-child(even) { left: 0; } .timeline-item::after { left: 6px; } }
+        
+        /* --- 5. 理財測驗 --- */
+        .quiz-question { margin-bottom: 25px; padding: 15px; border-radius: 8px; border: 2px solid transparent; transition: border-color 0.3s; }
+        .quiz-question.wrong { border-color: var(--danger-red); }
+        .quiz-options label { display: block; background: var(--light-gray); padding: 10px; margin: 5px 0; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; border: 2px solid transparent; }
+        .quiz-options input[type="radio"]:checked + label { background-color: var(--secondary-color); color: white; }
+        .quiz-explanation { background-color: #e8f5e9; border-left: 4px solid var(--success-green); padding: 10px; margin-top: 10px; text-align: left; font-size: 0.9em; }
+        .quiz-options label.correct-answer { border-color: var(--success-green); font-weight: bold; }
+        
+        /* --- 6. 個人儀表板 --- */
+        .pie-legend li::before { content: ''; width: 12px; height: 12px; border-radius: 50%; position: absolute; left: 0; top: 6px; }
+        #legend-lifesaving::before { background: var(--success-green); }
+        #legend-investment::before { background: var(--accent-color); }
+        #legend-speculation::before { background: var(--danger-red); }
+        
+        /* --- Modal --- */
+        .modal { display: none; position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 30px; border: 1px solid #888; width: 90%; max-width: 700px; border-radius: 15px; }
+        .modal-content h4 { color: var(--primary-color); margin-top: 15px; border-left: 4px solid var(--secondary-color); padding-left: 10px; }
+        .modal-content ul { list-style-type: none; padding-left: 0; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav><div class="nav-container"><a href="#home">首頁</a><a href="#core-concepts">核心知識</a><a href="#calculators">個人試算</a><a href="#cases">案例教學</a><a href="#quiz">理財測驗</a><a href="#dashboard">個人儀表板</a><a href="#resources">延伸資源</a></div></nav>
+    <button class="fullscreen-btn" id="fullscreenToggle">⛶</button>
+    <header id="home"><h1>互動式理財規劃羅盤</h1><p>守護你的財富，實現安穩的未來</p><div id="main-slogan">理財不是追求「最多」，而是準備「夠用」</div></header>
+    <main>
+        <section id="core-concepts" class="container">
+            <h2>理財知識核心</h2>
+            <div class="module-grid">
+                <div class="card"><h3>(A) 三錢法則：你的財富足球隊</h3><p>將資產想像成一支足球隊，各司其職，才能立於不敗之地。請將下方的「錢球」拖曳到對應的球員位置！</p><div id="money-options" style="text-align:center;"><div class="money-ball" draggable="true" id="life-saving">保命錢</div><div class="money-ball" draggable="true" id="investment">投資錢</div><div class="money-ball" draggable="true" id="speculation">投機錢</div></div><div id="soccer-field"><div class="drop-zone" id="goalkeeper-zone" data-correct="life-saving">後場 (守門員)</div><div class="drop-zone" id="midfielder-zone" data-correct="investment">中場 (控制節奏)</div><div class="drop-zone" id="forward-zone" data-correct="speculation">前鋒 (進攻)</div></div><p id="soccer-feedback" style="text-align:center; margin-top:15px; font-weight:bold;"></p></div>
+                <div class="card"><h3>(B) 流量 vs 存量：你的財務水庫</h3><p>你的錢是應付日常開銷的「活水(流量)」，還是應對突發狀況的「池水(存量)」？點擊下方工具看看水庫變化。</p><div id="reservoir-sim"><div class="reservoir-container"><div class="water" id="flow-water" style="height: 20%;"></div><div class="reservoir-label">活水 (流量)</div></div><div class="reservoir-container"><div class="water" id="stock-water" style="height: 40%;"></div><div class="reservoir-label">池水 (存量)</div></div></div><div id="reservoir-controls" style="text-align:center;"><button class="button" onclick="updateReservoir('annuity')">年金/配息</button><button class="button" onclick="updateReservoir('insurance')">保險/定存</button><button class="button" onclick="updateReservoir('reset')">重設</button></div></div>
+            </div>
+        </section>
+        <section id="calculators" class="container" style="background-color: var(--light-gray);">
+            <h2>個人化試算工具</h2>
+            <div class="calculator-grid">
+                <div class="card"><h3>(A) 退休金互動試算 (4倍效益)</h3><p>輸入您的預估開銷，看看「只看總量」和「經過規劃」的巨大差異！</p><div class="form-group"><label for="monthly-expense">預估退休後每月生活費 (萬)</label><input type="number" id="monthly-expense" value="6" oninput="calculateRetirement()"></div><div class="form-group"><label for="retirement-years">預計退休生活年數</label><input type="number" id="retirement-years" value="40" oninput="calculateRetirement()"></div><div class="result-chart"><div class="bar-container"><div class="bar-value" id="total-value">4180萬</div><div class="bar" id="bar-total" style="height: 100%;"></div><div>只看總量</div></div><div class="bar-container"><div class="bar-value" id="planned-value">1000萬</div><div class="bar" id="bar-planned" style="height: 23.9%;"></div><div>經過規劃</div></div></div></div>
+                <div class="card"><h3>(B) 人生四關挑戰</h3><p>點擊人生不同階段的里程碑，看看需要考慮的理財重點。</p><div class="timeline"><div class="timeline-item"><div class="timeline-content" onclick="showInfoModal('第一關：結婚成家', '這時重點是建立緊急預備金，並開始整合雙方財務。保險規劃也應提上日程。')"><h4>第一關：結婚成家</h4><p>雙人世界的開始</p></div></div><div class="timeline-item"><div class="timeline-content" onclick="showInfoModal('第二關：孩子出世', '子女教育基金需要長期規劃，愈早開始愈輕鬆。同時，家庭責任加重，保障型保險額度需要檢視。')"><h4>第二關：孩子出世</h4><p>甜蜜的負擔</p></div></div><div class="timeline-item"><div class="timeline-content" onclick="showInfoModal('第三關：買房買車', '這是大額的「存量」支出。需要明確的儲蓄計畫，並評估貸款對現金「流量」的影響。')"><h4>第三關：買房買車</h4><p>建立安樂窩</p></div></div><div class="timeline-item"><div class="timeline-content" onclick="showInfoModal('第四關：規劃退休', '退休規劃是「流量」與「存量」的集大成。需要穩定的現金流來支付生活，也需要足夠的存量應對醫療與長照。')"><h4>第四關：規劃退休</h4><p>迎接樂活人生</p></div></div></div></div>
+            </div>
+        </section>
+        <section id="cases" class="container">
+            <h2>案例教學 / 情境互動</h2>
+            <div class="case-grid">
+                <div class="card"><h3>案例：我的退休金規劃 <button class="info-btn" onclick="showCase1Calc()">i</button></h3><div class="form-group"><label for="shortfall-input">我退休後每月生活費缺口 (萬)</label><input type="number" id="shortfall-input" value="1.5" oninput="calculateAndSuggest(null)"></div><p>選擇您期望的<strong class="highlight">實質年化報酬率</strong> (已預扣2%通膨)，看看需要多少「投資錢」來產生穩定現金流，並獲取專家建議。</p><div id="case1-controls" style="text-align: center; margin: 10px 0;"><button class="button" data-rate="2" onclick="calculateAndSuggest(2)">2%</button><button class="button" data-rate="4" onclick="calculateAndSuggest(4)">4%</button><button class="button" data-rate="6" onclick="calculateAndSuggest(6)">6%</button><button class="button" data-rate="8" onclick="calculateAndSuggest(8)">8%</button></div><div class="case1-result-display" id="case1-result"></div></div>
+                <div class="card"><h3>案例二：夫妻能否安心退休？</h3><p>比較「無規劃」和「有規劃」的天壤之別。</p><div class="case2-comparison"><div class="comparison-col" id="unplanned-col"><h4>❌ 無規劃</h4><ul><li>生活費：2880萬</li><li>醫藥費：500萬</li><li>長照費：800萬</li></ul><hr><p style="font-weight: bold; font-size: 1.5rem; text-align: right;">總計: 4180萬</p></div><div class="comparison-col" id="planned-col"><h4>✅ 有規劃</h4><ul><li><strong>流量</strong>：勞保年金 + 500萬投資</li><li><strong>存量(醫療)</strong>：保險轉嫁 / 500萬預備</li><li><strong>存量(長照)</strong>：保險支出轉嫁</li></ul><hr><p style="font-weight: bold; font-size: 1.5rem; text-align: right;">總計: 約 1000萬</p></div></div></div>
+            </div>
+        </section>
+        <section id="quiz" class="container" style="background-color: var(--light-gray);"><h2>理財真相小測驗</h2><div class="card"><form id="financial-quiz-form"></form><div style="text-align:center;"><button class="button" type="button" onclick="calculateQuiz()">提交答案</button><button class="button" type="button" onclick="generateQuizQuestions()">換一批題目</button></div><div id="quiz-result"><h3 id="quiz-score"></h3><p id="quiz-feedback"></p></div></div></section>
+        <section id="dashboard" class="container"><h2>我的財務儀表板</h2><div class="card"><div class="dashboard-grid"><div class="dashboard-inputs"><h3>輸入您的財務數據 (單位: 萬)</h3><div class="form-group"><label>每月穩定現金流 (流量)</label><input type="number" id="flow-input" value="5" oninput="updateDashboard()"></div><div class="form-group"><label>應急/保障總資產 (存量)</label><input type="number" id="stock-input" value="200" oninput="updateDashboard()"></div><hr style="margin: 20px 0;"><p><strong>三錢分配：</strong></p><div class="form-group"><label>保命錢 (綠)</label><input type="number" id="lifesaving-input" value="100" oninput="updateDashboard()"></div><div class="form-group"><label>投資錢 (黃)</label><input type="number" id="investment-input" value="300" oninput="updateDashboard()"></div><div class="form-group"><label>投機錢 (紅)</label><input type="number" id="speculation-input" value="50" oninput="updateDashboard()"></div></div><div class="dashboard-viz"><div class="gauge-container"><h4>流量 & 存量</h4><p><span class="gauge-value" id="flow-display">5萬</span>/月 | <span class="gauge-value" id="stock-display">200萬</span></p></div><div class="pie-chart-container"><h4>三錢比例</h4><canvas id="pie-chart-canvas" width="200" height="200"></canvas></div><ul class="pie-legend"><li id="legend-lifesaving">保命錢 (<span id="lifesaving-percent">0</span>%)</li><li id="legend-investment">投資錢 (<span id="investment-percent">0</span>%)</li><li id="legend-speculation">投機錢 (<span id="speculation-percent">0</span>%)</li></ul></div></div></div></section>
+        <section id="resources" class="container" style="background-color: var(--light-gray);"><h2>延伸資源 & 學習社群</h2><div class="module-grid"><div class="card"><h3>推薦閱讀與工具</h3><div class="resource-list"><a href="https://www.tdcc.com.tw/portal/zh/page/show/402897967d73089e017d73113c4c0002" target="_blank">TISA基金 - 台灣個人投資儲蓄帳戶介紹</a><a href="#" target="_blank">書籍：《心安理財》- 建立正確的理財心態</a><a href="#" target="_blank">書籍：《快思慢想》- 了解影響決策的心理學</a></div></div><div class="card"><h3>學習社群</h3><div class="community-prompt"><h4>分享你的三錢配置圖！</h4><p>與其他學員分享您的儀表板截圖與理財心得，透過交流讓彼此的規劃更完善。</p><button class="button">前往討論區 (模擬)</button></div></div></div></section>
+    </main>
+    <div id="info-modal" class="modal"><div class="modal-content"><span class="close-btn">&times;</span><h3 id="modal-title"></h3><div id="modal-text" style="white-space: pre-wrap;"></div></div></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fullscreenBtn = document.getElementById('fullscreenToggle');
+    fullscreenBtn.addEventListener('click', () => { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else if (document.exitFullscreen) { document.exitFullscreen(); } });
+    const modal = document.getElementById('info-modal');
+    const closeBtn = modal.querySelector('.close-btn');
+    closeBtn.onclick = () => { modal.style.display = "none"; }
+    window.onclick = (event) => { if (event.target == modal) { modal.style.display = "none"; } }
+    document.querySelectorAll('.money-ball').forEach(ball => { ball.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', e.target.id)); });
+    document.querySelectorAll('.drop-zone').forEach(zone => { zone.addEventListener('dragover', (e) => e.preventDefault()); zone.addEventListener('drop', (e) => { e.preventDefault(); const id = e.dataTransfer.getData('text/plain'); const ball = document.getElementById(id); const feedback = document.getElementById('soccer-feedback'); if (zone.dataset.correct === id) { zone.appendChild(ball); feedback.textContent = '配置正確！'; feedback.style.color='green'; } else { feedback.textContent = '位置錯誤！再想想看。'; feedback.style.color='red'; } }); });
+    generateQuizQuestions();
+    updateDashboard();
+    calculateAndSuggest(4, false);
+});
+
+function showInfoModal(title, text) { document.getElementById('modal-title').innerText = title; document.getElementById('modal-text').innerHTML = text.replace(/\n/g, '<br>'); document.getElementById('info-modal').style.display = 'block'; }
+function updateReservoir(type) { const flow = document.getElementById('flow-water'), stock = document.getElementById('stock-water'); if (type === 'annuity') { flow.style.height = '70%'; stock.style.height = '30%'; } else if (type === 'insurance') { flow.style.height = '10%'; stock.style.height = '80%'; } else { flow.style.height = '20%'; stock.style.height = '40%'; } }
+function calculateRetirement() { const m = parseFloat(document.getElementById('monthly-expense').value)||0, y = parseFloat(document.getElementById('retirement-years').value)||0, total = (m*12*y)+500+800, planned=1000; document.getElementById('total-value').textContent = Math.round(total) + '萬'; if(total>0){document.getElementById('bar-planned').style.height = `${Math.max(5, (planned/total)*100)}%`;} }
+
+const investmentSuggestions = { /* 資料庫內容與前次相同 */
+    2: { title: "專家建議：保守穩健型資產 (實質報酬率 2%)", nominalReturn: 4, strategy: "此策略核心為「資本保值」，目標是溫和地超越通膨，適合風險承受度極低、或接近退休年齡的投資人。", products: [ { name: "投資等級公司債/ETF", characteristics: "提供相對穩定的利息收入，違約風險較低。", risks: "利率風險（升息時債券價格下跌）、通膨高於預期的風險。" }, { name: "儲蓄險/年金險", characteristics: "透過保險機制強迫儲蓄，提供預定利率的穩定增值。", risks: "長期資金閉鎖，流動性差，提前解約會產生虧損。" } ] },
+    4: { title: "專家建議：均衡配置型資產 (實質報酬率 4%)", nominalReturn: 6, strategy: "這是最經典的「股債平衡」策略，目標是在可控風險下，追求長期的穩健增長，適合大多數尋求退休規劃的投資人。", products: [ { name: "全球股票型ETF (如 VT)", characteristics: "極度分散投資於全球數千家公司，有效降低單一國家或產業的風險。", risks: "仍受全球股市系統性風險影響，淨值會隨市場波動。" }, { name: "不動產投資信託 (REITs)", characteristics: "投資於商辦、購物中心等不動產，提供穩定的租金收益。", risks: "對利率變動敏感，且受房地產景氣循環影響。" } ] },
+    6: { title: "專家建議：成長導向型資產 (實質報酬率 6%)", nominalReturn: 8, strategy: "此策略承擔較高的市場波動，以換取更高的長期資本增值潛力。適合距離退休時間長、風險承受度較高的投資人。", products: [ { name: "大型市場指數ETF (如 S&P 500)", characteristics: "追蹤美國前500大企業，長期歷史報酬率優異。", risks: "風險集中於美國單一市場，短期波動較大。" }, { name: "成長型股票/基金", characteristics: "專注於科技、醫療等高成長潛力產業的公司。", risks: "估值通常較高，對市場情緒敏感，個股風險更高。" } ] },
+    8: { title: "專家建議：積極增長型資產 (實質報酬率 8%)", nominalReturn: 10, strategy: "追求最大化的資本增長，通常被歸類於「投資錢」中的前緣或部分「投機錢」。這需要投資人有極高的風險承受能力和專業知識。", products: [ { name: "產業主題式ETF (如科技、潔淨能源)", characteristics: "押注於特定趨勢產業，若趨勢正確，爆發力強。", risks: "產業風險極度集中，趨勢反轉時跌幅也相當驚人。" }, { name: "新興市場股票/ETF", characteristics: "投資於經濟高成長潛力的開發中國家，成長天花板高。", risks: "政治、匯率風險高，市場透明度較低，波動性極大。" } ] }
+};
+let lastSelectedRate = 4;
+function calculateAndSuggest(realReturnRate, showSuggestion = true) { if (realReturnRate !== null) { lastSelectedRate = realReturnRate; } const shortfall = parseFloat(document.getElementById('shortfall-input').value) || 0; const resultDisplay = document.getElementById('case1-result'); if (shortfall <= 0) { resultDisplay.textContent = "0 萬"; return; } let requiredCapital = (shortfall * 12) / (lastSelectedRate / 100); resultDisplay.textContent = Math.round(requiredCapital) + ' 萬'; document.querySelectorAll('#case1-controls .button').forEach(btn => { btn.classList.remove('active'); if (parseInt(btn.dataset.rate) === lastSelectedRate) { btn.classList.add('active'); } }); if (showSuggestion && investmentSuggestions[lastSelectedRate]) { const suggestion = investmentSuggestions[lastSelectedRate]; let modalText = `為了達到 <strong class="highlight">${lastSelectedRate}%</strong> 的實質報酬率 (即名目報酬約 ${suggestion.nominalReturn}%)，您可以考慮以下資產配置：\n\n`; modalText += `<h4>投資策略</h4><p>${suggestion.strategy}</p>\n`; suggestion.products.forEach(p => { modalText += `<h4>- ${p.name}</h4><ul><li><strong>特性：</strong>${p.characteristics}</li><li><strong>主要風險：</strong>${p.risks}</li></ul>\n`; }); showInfoModal(suggestion.title, modalText); } }
+function showCase1Calc() { const title = "所需「投資錢」如何計算？", text = `這個計算的目標是「不動用本金，單純用投資產生的利息來支付生活開銷」。\n\n核心概念：\n<strong class="highlight">實質報酬率 = 名目報酬率 - 通貨膨脹率</strong>\n\n為了維持購買力，我們必須用扣除通膨後「實質」為正的報酬率來計算。本工具預設通膨為 <strong class="highlight">2%</strong>。\n\n計算公式：\n<strong class="highlight">所需本金 = (每年所需金額) / (實質年化報酬率)</strong>\n\n範例：每月缺口 1.5 萬，期望實質報酬率 4%\n- 每年所需金額 = 1.5萬 * 12 = 18萬\n- 所需本金 = 18萬 / 4% = 450萬`; showInfoModal(title, text); }
+
+const questionBank = [
+    { q: "專業理財規劃的終極目標是？", o: ["賺到「最多」的錢", "準備「夠用」的錢"], a: 1, exp: "理財的核心是達成人生目標，而非無止境地追求最大化財富，『夠用』才是更健康、可達成的目標。" },
+    { q: "「三錢法則」中，應最優先建立的是？", o: ["保命錢", "投機錢", "投資錢"], a: 0, exp: "『保命錢』是財務地基，應最優先準備，確保在任何風險下生活無虞，做到『立於不敗』。" },
+    { q: "保險在理財中的核心角色是？", o: ["高報酬投資工具", "轉嫁風險的防守工具"], a: 1, exp: "保險的主要功能是風險轉移，用較小的保費去保障可能造成重大損失的風險，是保護『存量』資產的守門員。" },
+    { q: "應對日常持續性開銷的資金，屬於？", o: ["流量 (Flow)", "存量 (Stock)"], a: 0, exp: "『流量』指的是持續性的現金流入，用來支應如生活費等持續性的開銷，如薪水或租金收入。" },
+    { q: "應對一次性大額支出的資金，屬於？", o: ["流量 (Flow)", "存量 (Stock)"], a: 1, exp: "『存量』是一筆備用的資金池，用來應對如醫療、買房頭期款等非經常性的大額支出。" },
+    { q: "「先求有，再求好」原則適用於？", o: ["先投機，再保命", "先保命，再投資"], a: 1, exp: "應先建立穩固的『保命錢』基礎(求有)，再逐步配置『投資錢』來追求成長(求好)。" },
+    { q: "「投資錢」的主要目標是？", o: ["追求最高利潤", "產生夠用的合理報酬"], a: 1, exp: "『投資錢』的目標是為了達成人生各階段的財務目標（如退休），因此追求長期穩健、夠用的報酬比追求短期最高利潤更重要。" },
+    { q: "哪種資產最適合做為「保命錢」？", o: ["高風險股票", "現金、定存、保險"], a: 1, exp: "『保命錢』首重安全與流動性，因此現金、定存和保障型保險是最適合的工具。" },
+    { q: "何時是考慮「投機錢」的適當時機？", o: ["一有閒錢就投入", "保命與投資錢都穩固後"], a: 1, exp: "『投機錢』風險最高，必須在生活保障與長期目標都已有妥善安排後，才能用『閒錢』進行。" },
+    { q: "理財SOP的第一步是？", o: ["買熱門基金", "現況分析"], a: 1, exp: "任何規劃都始於了解現狀。徹底盤點收支、資產與負債，才能制定出切實可行的計畫。" },
+    { q: "「4倍效益」案例說明了？", o: ["存到1000萬就夠了", "善用工具能提升理財效率"], a: 1, exp: "『4倍效益』的關鍵在於區分流量與存量需求，並用對應的工具（如投資創造流量、保險轉嫁存量風險）來有效達成目標。" },
+    { q: "退休規劃中的「醫療/長照帳戶」，主要屬於？", o: ["流量需求", "存量需求"], a: 1, exp: "醫療與長照通常是一次性或階段性的大額支出，屬於需要預先準備一筆錢的『存量』需求。" },
+    { q: "「投資」而非「投機」的特徵是？", o: ["高獲勝機會 x 合理報酬", "低獲勝機會 x 高利潤"], a: 0, exp: "投資是基於分析，追求在較高成功率下獲得合理回報；投機則更像博弈，期望在極低成功率下獲得暴利。" },
+    { q: "「勞保年金」屬於？", o: ["創造現金流的「流量」", "一次性給付的「存量」"], a: 0, exp: "勞保年金是按月給付，提供持續性的現金收入，是典型的『流量』來源。" },
+    { q: "理財規劃的檢視應該是？", o: ["規劃一次就夠了", "定期動態調整"], a: 1, exp: "人生階段、收入和市場狀況都會改變，理財規劃必須是動態的，建議至少每年檢視一次。" },
+    { q: "「儲蓄險」不適合短期投資的原因是？", o: ["報酬率太低", "短期流動性不佳"], a: 1, exp: "儲蓄險的設計是為長期儲蓄與保障，若短期內解約通常會有本金損失，因此流動性不佳是其主要特性。" },
+    { q: "人生四關不包含？", o: ["孩子", "房子", "環遊世界", "退休金"], a: 2, exp: "人生四關通常指多數人會遇到的重大財務關卡：孩子、房子、車子、退休金。『環遊世界』則屬於個人化的夢想目標。" },
+    { q: "「以終為始」在理財中的意思是？", o: ["先存錢再想怎麼用", "先確立目標再制定策略"], a: 1, exp: "『以終為始』是先確定最終的財務目標（例如：65歲擁有2000萬退休金），再反推回來制定現在該如何執行的策略。" },
+    { q: "用保險預留遺產稅源，主要目的是？", o: ["節稅", "提供流動現金避免賣資產"], a: 1, exp: "雖然保險給付免計入遺產，但其在稅務規劃上更重要的功能是提供一筆『現金』，讓繼承人有錢繳納遺產稅，而無需變賣繼承的房產或股票。" },
+    { q: "TISA基金帳戶的優勢之一是？", o: ["保證獲利", "投資門檻低"], a: 1, exp: "TISA是政府推動的普惠金融方案，其特點是投資門檻低（如1000元即可）、手續費優惠，鼓勵民眾小額長期投資。" },
+    { q: "夫妻剩餘財產差額分配請求權是為了？", o: ["懲罰過錯方", "保障婚姻中經濟弱勢一方的貢獻"], a: 1, exp: "此法規是為了肯定家務勞動等無償貢獻的價值，保障在婚姻中財產較少一方的權益，與誰對誰錯無關。" },
+    { q: "「被動投資」通常指的是？", o: ["頻繁買賣追求超額報酬", "追蹤市場大盤指數的投資方式"], a: 1, exp: "被動投資是透過持有追蹤整體市場指數的ETF等工具，獲取市場的平均報酬，而非試圖打敗市場。" },
+    { q: "通貨膨脹對「定存」的影響是？", o: ["增加購買力", "侵蝕實際購買力"], a: 1, exp: "通貨膨脹代表物價上漲，如果定存利率低於通膨率，代表你的錢雖然數字變多，但能買到的東西變少了，即購買力被侵蝕。" },
+    { q: "「資產配置」的核心概念是？", o: ["集中所有資金在最強的股票", "分散投資於不同資產以降低風險"], a: 1, exp: "資產配置是理財的免費午餐，透過將資金分散在股票、債券等不同風險特性的資產中，可以有效降低整體投資組合的波動風險。" },
+    { q: "面對市場波動，理財規劃師通常建議？", o: ["恐慌性賣出", "堅持長期規劃，避免情緒化決策"], a: 1, exp: "市場短期無法預測，但長期趨勢向上。成功的投資是遵守紀律，堅持原有的長期規劃，避免因恐慌或貪婪做出錯誤決策。" },
+    { q: "哪一項不是理財規劃書應有的注意事項？", o: ["現況分析要詳盡", "目標設定要不切實際", "定期檢視與調整"], a: 1, exp: "理財目標必須是明確、可衡量、可達成、相關且有時限的（SMART原則）。不切實際的目標容易導致失敗與挫折。" },
+    { q: "「特留分」是民法中保障誰的權利？", o: ["所有親戚", "法定繼承人"], a: 1, exp: "『特留分』是法律為保障法定繼承人（如子女、配偶、父母）能繼承到最低限度遺產的規定，避免遺囑完全排除其繼承權。" },
+    { q: "複利效果在哪種情況下最顯著？", o: ["短期頻繁交易", "長期持續投資"], a: 1, exp: "複利是『利滾利』的效果，需要『時間』這個要素來發揮威力。投資時間越長，複利效果越驚人。" },
+    { q: "規劃退休金時，最大的風險之一是？", o: ["活得比預期久，錢不夠用", "太早開始規劃"], a: 0, exp: "醫療進步使人類壽命延長，『長壽風險』成為退休規劃的最大挑戰。太早開始規劃反而是優點，絕非風險。" },
+    { q: "理財規劃中，負債管理的重要性？", o: ["非常重要，高利率負債會拖垮資產累積", "不重要，只要資產夠多就好"], a: 0, exp: "高利率的負債（如卡債、信貸）會像滾雪球一樣侵蝕你的資產，有效的理財必須將償還高利率負債列為優先事項。" },
+    { q: "「緊急預備金」通常建議準備多少？", o: ["一個月生活費", "3到6個月生活費"], a: 1, exp: "緊急預備金是用來應對突發失業或意外，一般建議準備3到6個月的必要生活開銷，以提供足夠的緩衝。" },
+    { q: "夏普指數(Sharpe Ratio)是用來衡量？", o: ["基金規模大小", "每一單位風險所能換得的超額報酬"], a: 1, exp: "夏普指數是衡量基金績效的重要指標，指數越高，代表基金在承受相同風險下，能創造出更高的超額報酬。" },
+    { q: "投資組合的「再平衡」是指？", o: ["賣掉所有虧損的部位", "定期調整資產比例回到初始設定"], a: 1, exp: "再平衡是賣掉漲多的資產、買進跌多的資產，讓投資組合回到最初設定的股債比例，有助於控制風險並實現『買低賣高』。" },
+    { q: "哪種情況下，資產的「流動性」最重要？", o: ["長期退休規劃", "緊急預備金"], a: 1, exp: "緊急預備金的核心價值在於能隨時、無減損地變現，因此流動性是最高考量。" },
+    { q: "「風險承受度」評估不包含？", o: ["投資者的年齡", "投資者的星座", "投資者的財務狀況"], a: 1, exp: "風險承受度是根據年齡、財務狀況、投資經驗、心理素質等客觀與主觀因素綜合評估，與星座無關。" },
+    { q: "將財產集中在單一國家貨幣（如台幣）可能面臨？", o: ["匯率風險", "沒有任何風險"], a: 0, exp: "若所有資產皆為單一貨幣，當該國發生重大事件導致貨幣劇烈貶值時，資產將面臨巨大的匯率風險。" },
+    { q: "ETF（指數股票型基金）的優點之一是？", o: ["管理費用通常較低", "保證每年配息10%"], a: 0, exp: "ETF因為是被動追蹤指數，不需基金經理人頻繁操作，所以管理費用通常遠低於主動型基金。任何ETF都不保證獲利或配息。" },
+    { q: "在理財規劃中，成立「信託」的目的之一是？", o: ["追求最高報酬", "依委託人意願管理及分配財產"], a: 1, exp: "信託是一種法律安排，可以確保財產在未來能按照委託人（例如父母）的意願被妥善管理與分配給受益人（例如子女）。" },
+    { q: "「停損點」設定的目的是？", o: ["確保每次都獲利", "控制單筆投資的最大虧損"], a: 1, exp: "停損是風險控管的一環，目的是在判斷錯誤時，將虧損控制在一個可承受的範圍內，避免單次重傷。" },
+    { q: "何者是「開源」而非「節流」？", o: ["減少不必要的娛樂開銷", "利用下班時間兼職增加收入"], a: 1, exp: "『節流』是減少支出，『開源』是增加收入來源。兼職屬於開源。" }
+];
+let currentQuestions = [];
+function generateQuizQuestions() {
+    const quizForm = document.getElementById('financial-quiz-form');
+    document.getElementById('quiz-result').style.display = 'none';
+    document.querySelectorAll('.quiz-question').forEach(el => el.remove());
+    const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+    currentQuestions = shuffled.slice(0, 10);
+    let formHTML = '';
+    currentQuestions.forEach((item, index) => { formHTML += `<div class="quiz-question" id="quiz-q-${index}"><p>${index + 1}. ${item.q}</p><div class="quiz-options">`; item.o.forEach((option, optionIndex) => { formHTML += `<input type="radio" id="q${index}o${optionIndex}" name="q${index}" value="${optionIndex}"><label for="q${index}o${optionIndex}">${String.fromCharCode(65 + optionIndex)}. ${option}</label>`; }); formHTML += `</div></div>`; });
+    quizForm.innerHTML = formHTML;
+}
+function calculateQuiz() {
+    document.querySelectorAll('.quiz-explanation, .wrong, .correct-answer').forEach(el => { if(el.classList.contains('quiz-explanation')) el.remove(); else el.classList.remove('wrong', 'correct-answer'); });
+    let score = 0;
+    currentQuestions.forEach((question, index) => {
+        const questionContainer = document.getElementById(`quiz-q-${index}`);
+        const userAnswerNode = document.querySelector(`input[name="q${index}"]:checked`);
+        const isCorrect = userAnswerNode && parseInt(userAnswerNode.value) === question.a;
+        if (isCorrect) { score++; } else {
+            questionContainer.classList.add('wrong');
+            const correctLabel = questionContainer.querySelector(`label[for="q${index}o${question.a}"]`);
+            if (correctLabel) { correctLabel.classList.add('correct-answer'); }
+            if (question.exp) { const explanationDiv = document.createElement('div'); explanationDiv.className = 'quiz-explanation'; explanationDiv.innerHTML = `<strong>說明：</strong>${question.exp}`; questionContainer.appendChild(explanationDiv); }
+        }
+    });
+    const resultDiv = document.getElementById('quiz-result'); document.getElementById('quiz-score').textContent = `你答對了 ${score} / 10 題！`; const feedbackEl = document.getElementById('quiz-feedback'); if (score >= 8) { feedbackEl.textContent = '你的理財人格：【穩健規劃師】！觀念清晰，基礎紮實！'; } else if (score >= 5) { feedbackEl.textContent = '你的理財人格：【潛力探索家】！請參考上方錯題詳解，補強觀念！'; } else { feedbackEl.textContent = '你的理財人格：【自由夢想家】！別灰心，詳讀上方說明，重新建立你的財富羅盤！'; } resultDiv.style.display = 'block';
+}
+
+// --- 個人儀表板 ---
+let animationFrameId;
+function updateDashboard() { const flow = parseFloat(document.getElementById('flow-input').value)||0, stock = parseFloat(document.getElementById('stock-input').value)||0; document.getElementById('flow-display').textContent = `${flow}萬`; document.getElementById('stock-display').textContent = `${stock}萬`; const life = parseFloat(document.getElementById('lifesaving-input').value)||0, invest = parseFloat(document.getElementById('investment-input').value)||0, speculate = parseFloat(document.getElementById('speculation-input').value)||0, total = life + invest + speculate; let p_life=0, p_invest=0, p_speculate=0; if (total > 0) { p_life = life/total; p_invest = invest/total; p_speculate = speculate/total; } document.getElementById('lifesaving-percent').textContent = Math.round(p_life*100); document.getElementById('investment-percent').textContent = Math.round(p_invest*100); document.getElementById('speculation-percent').textContent = Math.round(p_speculate*100); drawAnimatedPieChart(p_life, p_invest, p_speculate); }
+function drawAnimatedPieChart(p_life, p_invest, p_speculate) {
+    const canvas = document.getElementById('pie-chart-canvas'); if (!canvas.getContext) return;
+    const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height, R = W/2 - 10, center = { x: W/2, y: H/2 };
+    // **修正點**：使用具體色碼而非CSS變數
+    const data = [
+        { v: p_life, c: '#4CAF50' },          // 綠色 (保命錢)
+        { v: p_invest, c: '#FFD700' },        // 黃色 (投資錢)
+        { v: p_speculate, c: '#f44336' }      // 紅色 (投機錢)
+    ];
+    let progress = 0; if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    function animate() {
+        progress += 0.05; if (progress > 1) progress = 1;
+        ctx.clearRect(0, 0, W, H);
+        let currentAngle = -0.5 * Math.PI;
+        data.forEach(s => {
+            const angle = s.v * 2 * Math.PI * progress;
+            if (angle > 0.001) { // 避免繪製過小的切片
+                ctx.beginPath();
+                ctx.moveTo(center.x, center.y);
+                ctx.arc(center.x, center.y, R, currentAngle, currentAngle + angle);
+                ctx.closePath();
+                ctx.fillStyle = s.c;
+                ctx.fill();
+                currentAngle += angle;
+            }
+        });
+        if (progress < 1) animationFrameId = requestAnimationFrame(animate);
+    }
+    animate();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>整合式退休理財規劃平台</title>
+
+    <!-- 外部資源整合 (CSS, Fonts) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js 函式庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- 全域與導覽列樣式 --- */
+        body {
+            font-family: 'Noto Sans TC', sans-serif; /* 統一主要字體 */
+            background-color: #f8f9fa; /* 設定一個中性的背景色 */
+            margin: 0;
+            padding-top: 60px; /* 為固定導覽列預留空間 */
+        }
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: #005A9C;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+        .nav-button {
+            padding: 18px 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-button:hover {
+            background-color: #004a80;
+        }
+        .nav-button.active {
+            color: #FFB81C;
+            border-bottom-color: #FFB81C;
+        }
+        .page-content {
+            display: none; /* 預設隱藏所有頁面內容 */
+        }
+        .page-content.active {
+            display: block; /* 只顯示被啟動的頁面 */
+        }
+        
+        /* --- 測試01.html 的樣式 --- */
+        #page1 {
+            padding: 20px;
+            background: #f7f9fc;
+        }
+        #page1 h1, #page1 h2 { color: #005288; }
+        #page1 section { background: #fff; border-radius: 8px; padding: 15px; margin-bottom: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
+        #page1 canvas { max-width: 100%; height: 300px !important; }
+        #page1 label { display: block; margin: 10px 0 5px; font-weight: 600; }
+        #page1 input[type=range] { width: 100%; }
+        #page1 .flex-row { display: flex; gap: 15px; flex-wrap: wrap; }
+        #page1 .flex-item { flex: 1 1 300px; }
+        #page1 button { background-color: #005288; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+        #page1 button:hover { background-color: #003c5a; }
+
+        /* --- 測試02.html 的樣式 --- */
+        #page2 {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f0f2f5;
+            padding: 8px;
+        }
+        #page2 .card { background-color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); padding: 24px; transition: all 0.3s ease; }
+        #page2 .card:hover { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); transform: translateY(-4px); }
+        #page2 .input-group { margin-bottom: 16px; }
+        #page2 .input-group label { display: block; color: #4b5563; margin-bottom: 8px; font-weight: 500; }
+        #page2 .input-group input, #page2 .input-group select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; transition: border-color 0.2s, box-shadow 0.2s; }
+        #page2 .input-group input:focus, #page2 .input-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        #page2 .btn-primary { background-color: #3b82f6; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; width: 100%; }
+        #page2 .btn-primary:hover { background-color: #2563eb; }
+        #page2 .result-box { background-color: #f3f4f6; border-radius: 8px; padding: 20px; text-align: center; margin-top: 20px; }
+        #page2 .result-box .amount { font-size: 2.5rem; font-weight: 700; color: #1d4ed8; line-height: 1.2; }
+        #page2 .result-box .label { font-size: 0.9rem; color: #6b7280; margin-top: 4px; }
+        #page2 .tab-button { padding: 10px 20px; cursor: pointer; border-radius: 8px; font-weight: 500; color: #374151; transition: background-color 0.3s, color 0.3s; }
+        #page2 .tab-button.active { background-color: #3b82f6; color: white; }
+        #page2 h1, #page2 h2, #page2 h3 { font-family: 'Noto Sans TC', sans-serif; }
+        
+        /* --- 測試03.html 的樣式 --- */
+        /* 【修正】將CSS變數直接定義在 #page3 選擇器下，而不是錯誤的 :root 偽類中 */
+        #page3 {
+            --primary-color: #005A9C;
+            --secondary-color: #00AEEF;
+            --accent-color: #FFB81C;
+            --text-color: #333;
+            --light-gray: #f4f4f4;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #555;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+        #page3 * { box-sizing: border-box; }
+        #page3 .container { max-width: 1200px; margin: auto; padding: 2rem 1.5rem; overflow: hidden; }
+        #page3 h1, #page3 h2, #page3 h3 { margin-bottom: 1.5rem; color: var(--primary-color); font-weight: 700; }
+        #page3 h2 { text-align: center; font-size: 2.2rem; }
+        #page3 h3 { font-size: 1.6rem; color: var(--secondary-color); }
+        #page3 .section { padding: 4rem 0; }
+        #page3 .section:nth-child(even) { background-color: white; }
+        #page3 #hero { background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.imgur.com/8Qpgy6a.jpeg') no-repeat center center/cover; color: white; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 1rem; }
+        #page3 #hero h1 { font-size: 3rem; margin-bottom: 1rem; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+        #page3 #hero p { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        #page3 .card { background: white; padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        #page3 .card:hover { transform: translateY(-5px); }
+        #page3 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        #page3 .btn { display: inline-block; background: var(--secondary-color); color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 25px; cursor: pointer; text-decoration: none; font-size: 1rem; font-weight: 500; transition: background-color 0.3s ease, transform 0.2s ease; }
+        #page3 .btn:hover { background: var(--primary-color); transform: translateY(-2px); }
+        #page3 .btn-group { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        #page3 .input-group { margin-bottom: 1.5rem; }
+        #page3 .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--dark-gray); }
+        #page3 .input-group input, #page3 .input-group select { width: 100%; padding: 0.8rem; border: 1px solid var(--medium-gray); border-radius: 8px; font-size: 1rem; }
+        #page3 .result-box { background-color: var(--light-gray); padding: 1.5rem; margin-top: 1.5rem; border-radius: 8px; border-left: 5px solid var(--accent-color); }
+        #page3 .result-box h4 { color: var(--primary-color); }
+        #page3 .result-box p { font-size: 1.1rem; font-weight: bold; }
+        #page3 #marital-property .card { text-align: center; }
+        #page3 #marital-property-details { margin-top: 2rem; display: none; }
+        #page3 #marital-property-details .grid { gap: 2rem; }
+        #page3 #marital-property-details .detail-card { padding: 1.5rem; background: var(--light-gray); }
+        #page3 #marital-property-details h4 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; }
+        #page3 #marital-property-details ul { list-style: none; padding-top: 1rem; padding-left: 0; }
+        #page3 #marital-property-details li { margin-bottom: 0.5rem; text-align: left; }
+        #page3 #marital-property-details li .fa-check { color: green; margin-right: 8px; }
+        #page3 #marital-property-details li .fa-times { color: red; margin-right: 8px; }
+        #page3 #pension-pyramid-container { display: flex; justify-content: center; align-items: center; margin: 2rem 0; flex-wrap: wrap; }
+        #page3 .pyramid { display: flex; flex-direction: column; width: 400px; }
+        #page3 .pyramid-level { background-color: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1rem; margin: 2px auto; cursor: pointer; transition: background-color 0.3s, transform 0.3s; clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%); }
+        #page3 .pyramid-level:hover { background-color: var(--secondary-color); transform: scale(1.05); }
+        #page3 #level-4 { width: 100%; }
+        #page3 #level-3 { width: 85%; }
+        #page3 #level-2 { width: 70%; }
+        #page3 #level-1 { width: 55%; clip-path: polygon(20% 0, 80% 0, 100% 100%, 0% 100%); }
+        #page3 #pension-details { margin-top: 2rem; }
+        #page3 .calculator { max-width: 600px; margin: 2rem auto; }
+        #page3 .calculator .grid { grid-template-columns: 1fr 1fr; }
+        #page3 .chart-container { position: relative; height: 400px; width: 100%; margin-top: 2rem; }
+        #page3 #timeline-container { position: relative; width: 100%; margin: 3rem 0; }
+        #page3 .timeline { position: relative; width: 100%; height: 4px; background: var(--medium-gray); border-radius: 2px; }
+        #page3 .timeline-point { position: absolute; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background: var(--primary-color); border-radius: 50%; cursor: pointer; }
+        #page3 .timeline-point:hover .tooltip { visibility: visible; opacity: 1; }
+        #page3 .tooltip { visibility: hidden; opacity: 0; position: absolute; bottom: 150%; left: 50%; transform: translateX(-50%); background: var(--dark-gray); color: white; padding: 0.5rem 1rem; border-radius: 6px; white-space: nowrap; transition: opacity 0.3s; z-index: 10; }
+        #page3 #point-1993 { left: 10%; }
+        #page3 #point-2018 { left: 50%; }
+        #page3 #point-2025 { left: 80%; background: #c00; }
+        #page3 .timeline-label { position: absolute; top: 30px; transform: translateX(-50%); font-size: 0.9rem; }
+        #page3 #housing-explorer { margin-top: 3rem; }
+        #page3 #housing-filters { background: var(--light-gray); padding: 1.5rem; border-radius: var(--border-radius); }
+        #page3 #housing-results { margin-top: 2rem; }
+        #page3 .housing-item { border: 1px solid var(--medium-gray); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        #page3 .housing-item h4 { margin-bottom: 0.5rem; color: var(--primary-color);}
+        #page3 .tab-buttons { display: flex; justify-content: center; margin-bottom: 2rem; border-bottom: 1px solid var(--medium-gray); flex-wrap: wrap; }
+        #page3 .tab-btn { padding: 1rem 2rem; border: none; background: none; cursor: pointer; font-size: 1.1rem; position: relative; }
+        #page3 .tab-btn.active { color: var(--primary-color); font-weight: bold; }
+        #page3 .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: var(--primary-color); }
+        #page3 .tab-content { display: none; }
+        #page3 .tab-content.active { display: block; }
+        #page3 #fraud-quiz .question { background: var(--light-gray); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
+        #page3 #fraud-quiz .options { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+        #page3 .option-btn { width: 100%; padding: 0.8rem; background: white; border: 1px solid var(--medium-gray); border-radius: 8px; text-align: left; cursor: pointer; transition: background-color 0.2s; }
+        #page3 .option-btn:hover { background-color: #eef; }
+        #page3 .feedback { padding: 1rem; margin-top: 1rem; border-radius: 8px; display: none; }
+        #page3 .feedback.correct { border: 2px solid green; background: #eaffea; }
+        #page3 .feedback.incorrect { border: 2px solid red; background: #ffeaea; }
+        #page3 footer { background: var(--dark-gray); color: white; text-align: center; padding: 2rem 1rem; }
+        @media (max-width: 768px) {
+            .nav-button { padding: 15px 10px; font-size: 14px; }
+            #page3 h1 { font-size: 2.5rem; }
+            #page3 h2 { font-size: 1.8rem; }
+            #page3 .grid { grid-template-columns: 1fr; }
+            #page3 .btn-group { flex-direction: column; }
+            #page3 .pyramid { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部導覽列 -->
+    <nav class="main-nav">
+        <button class="nav-button active" data-target="page1">互動視覺化</button>
+        <button class="nav-button" data-target="page2">理財儀表板</button>
+        <button class="nav-button" data-target="page3">智慧儀表板</button>
+    </nav>
+
+    <!-- 頁面內容容器 -->
+    <main>
+        <!-- 來自 測試01.html 的內容 -->
+        <div id="page1" class="page-content active">
+            <h1>台灣退休生活規劃互動視覺化</h1>
+            <section>
+              <h2>1. 台灣人口老化趨勢</h2>
+              <canvas id="populationChart"></canvas>
+            </section>
+            <section>
+              <h2>2. 退休生活成本組成</h2>
+              <select id="costYear" aria-label="選擇年份">
+                <option value="2025">2025年</option>
+                <option value="2030">2030年</option>
+                <option value="2040">2040年</option>
+              </select>
+              <canvas id="costPieChart"></canvas>
+            </section>
+            <section>
+              <h2>3. 退休金來源與準備現況</h2>
+              <canvas id="incomeStackChart"></canvas>
+            </section>
+            <section>
+              <h2>4. 退休投資策略模擬器</h2>
+              <div>
+                <label for="startAge">開始投資年齡: <span id="startAgeValue">35</span> 歲</label>
+                <input type="range" id="startAge" min="20" max="60" value="35" step="1" />
+              </div>
+              <div>
+                <label for="retireAge">退休年齡: <span id="retireAgeValue">65</span> 歲</label>
+                <input type="range" id="retireAge" min="50" max="75" value="65" step="1" />
+              </div>
+              <div>
+                <label for="monthlySaving">每月儲蓄金額 (NTD): <span id="monthlySavingValue">10000</span></label>
+                <input type="range" id="monthlySaving" min="1000" max="50000" value="10000" step="1000" />
+              </div>
+              <div>
+                <label for="annualReturn">年均報酬率 (%): <span id="annualReturnValue">5</span></label>
+                <input type="range" id="annualReturn" min="1" max="12" value="5" step="0.1" />
+              </div>
+              <button id="simulateBtn">模擬累積退休資產</button>
+              <canvas id="investmentChart"></canvas>
+            </section>
+        </div>
+
+        <!-- 來自 測試02.html 的內容 -->
+        <div id="page2" class="page-content">
+            <div class="max-w-7xl mx-auto">
+                <header class="text-center mb-10 pt-8">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800">互動式退休理財規劃儀表板</h1>
+                    <p class="mt-4 text-lg text-gray-600">根據您提供的「中壢社大第四週_退休生活規劃」簡報內容建立</p>
+                </header>
+                <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="card">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">退休金試算器</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                                <div class="input-group"><label for="avg-salary">最高60個月平均投保薪資 (元)</label><input type="number" id="avg-salary" placeholder="例如: 45800" value="45800"></div>
+                                <div class="input-group"><label for="laobao-years">勞保年資 (年)</label><input type="number" id="laobao-years" placeholder="例如: 30" value="30"></div>
+                                <div class="input-group"><label for="guobao-years">國保年資 (年)</label><input type="number" id="guobao-years" placeholder="例如: 10" value="10"></div>
+                                <div class="input-group"><label for="pension-timing">請領時間</label><select id="pension-timing"><option value="0">正常年齡</option><option value="-1">提前一年 (-4%)</option><option value="-2">提前二年 (-8%)</option><option value="-3">提前三年 (-12%)</option><option value="-4">提前四年 (-16%)</option><option value="-5">提前五年 (-20%)</option><option value="1">延後一年 (+4%)</option><option value="2">延後二年 (+8%)</option><option value="3">延後三年 (+12%)</option><option value="4">延後四年 (+16%)</option><option value="5">延後五年 (+20%)</option></select></div>
+                            </div>
+                            <button id="calculate-pension" class="btn-primary mt-4">開始計算</button>
+                            <div id="pension-result" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6" style="display: none;">
+                                <div class="result-box bg-blue-50 border border-blue-200"><div id="monthly-pension" class="amount text-blue-600"></div><div class="label">預估每月總年金</div></div>
+                                <div class="result-box bg-green-50 border border-green-200"><div id="yearly-pension" class="amount text-green-600"></div><div class="label">預估每年總年金</div></div>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-500"><p><strong>計算公式備註：</strong></p><p>勞保老年年金 = 平均月投保薪資 × 勞保年資 × 1.55%。</p><p>國保老年給付(B式) = 月投保金額(目前為19,761元) × 國保年資 × 1.3%。</p><p>本試算僅為估算值，實際金額以勞保局核發為準。</p></div>
+                        </div>
+                        <div class="card">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6">退休目標分析</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                                <div class="input-group"><label for="monthly-expense">期望退休後每月花費 (萬元)</label><input type="number" id="monthly-expense" placeholder="例如: 5" value="5"></div>
+                                <div class="input-group"><label for="investment-return">預期投資年化報酬率 (%)</label><input type="number" id="investment-return" placeholder="例如: 5" value="5"></div>
+                            </div>
+                            <button id="calculate-goal" class="btn-primary mt-4">分析資金缺口</button>
+                            <div id="goal-result-container" class="mt-6" style="display: none;">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="result-box"><div id="required-nest-egg" class="amount"></div><div class="label">所需退休金總額</div></div>
+                                    <div class="result-box bg-red-50 border border-red-200"><div id="funding-gap" class="amount text-red-600"></div><div class="label">預估資金缺口</div></div>
+                                </div>
+                                <div class="mt-6"><canvas id="goal-chart"></canvas></div>
+                                <p class="mt-4 text-xs text-gray-500 text-center">此計算假設您的退休金總額能產生穩定現金流，以支應扣除政府年金後的生活費缺口。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="card">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">退休基金績效</h2>
+                            <p class="text-sm text-gray-500 mb-4">資料來源：簡報第33、34頁</p>
+                            <div class="flex justify-center mb-4 space-x-2">
+                                <button class="tab-button active" data-chart="longterm">近十年平均</button>
+                                <button class="tab-button" data-chart="2024">2024年</button>
+                            </div>
+                            <div><canvas id="performance-chart"></canvas></div>
+                        </div>
+                        <div class="card">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">退休居所成本比較</h2>
+                            <p class="text-sm text-gray-500 mb-4">資料來源：簡報第57、60頁</p>
+                            <div class="space-y-4"><div id="housing-info" class="overflow-x-auto"></div></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- 來自 測試03.html 的內容 -->
+        <div id="page3" class="page-content">
+            <header id="hero">
+                <h1>智慧退休理財規劃儀表板</h1>
+                <p>中壢社區大學 - 理財規劃實務與案例</p>
+                <p>第四週 退休生活規劃 by 劉威澤</p>
+            </header>
+            <main>
+                <section id="marital-property" class="section">
+                    <div class="container">
+                        <h2>夫妻財產，集中還是分開？</h2>
+                        <div class="card"><p>夫妻的財務管理模式 profoundly 影響家庭和諧與退休規劃。請選擇一個模式來查看其優缺點。</p><div class="btn-group" style="margin-top: 2rem;"><button class="btn" onclick="p3_showPropertyDetails('concentrated')">集中管理</button><button class="btn" onclick="p3_showPropertyDetails('separate')">各自獨立</button></div></div>
+                        <div id="marital-property-details"><div class="grid"><div id="concentrated-card" class="detail-card"><h4><i class="fas fa-users"></i> 集中管理</h4><ul><li><i class="fas fa-check"></i> 優點：方便管理，可能因規模效應獲得更好理財成效。</li><li><i class="fas fa-times"></i> 缺點：若一方不善理財，風險集中；價值觀不同易摩擦。</li></ul></div><div id="separate-card" class="detail-card"><h4><i class="fas fa-user"></i> <i class="fas fa-user"></i> 各自獨立</h4><ul><li><i class="fas fa-check"></i> 優點：財務界線清晰，一方負債不影響對方。</li><li><i class="fas fa-times"></i> 缺點：家庭共同開銷需頻繁溝通，缺乏共同財務目標。</li></ul></div></div><p style="text-align:center; margin-top: 2rem; font-weight: bold; color: var(--primary-color);">結論：無論選擇何種方式，充分溝通與尋求專業協助都是關鍵。</p></div>
+                    </div>
+                </section>
+                <section id="pension-blueprint" class="section">
+                    <div class="container">
+                        <h2>您的退休金藍圖</h2>
+                        <div id="pension-pyramid-container"><div class="pyramid"><div id="level-1" class="pyramid-level">家族供養</div><div id="level-2" class="pyramid-level">個人準備</div><div id="level-3" class="pyramid-level">勞工退休金 (勞退)</div><div id="level-4" class="pyramid-level">社會保險老年給付 (勞保/國保)</div></div></div>
+                        <p style="text-align:center;">點擊金字塔的每一層，可以深入了解對應的規劃工具。</p>
+                        <div id="pension-details">
+                            <div class="card calculator"><h3><i class="fas fa-calculator"></i> 勞保老年給付 快速試算</h3><div class="input-group"><label for="p3-labao-seniority">勞保總年資 (年)</label><input type="number" id="p3-labao-seniority" placeholder="例如：30"></div><div class="input-group"><label for="p3-labao-salary">最高60個月平均投保薪資 (元)</label><input type="number" id="p3-labao-salary" placeholder="最高為 45,800"></div><button class="btn" style="width:100%" onclick="p3_calculateLabao()">開始試算</button><div id="p3-labao-result" class="result-box" style="display:none;"></div></div>
+                            <div class="card calculator"><h3><i class="fas fa-file-invoice-dollar"></i> 勞退新制(退職所得)稅務試算</h3><div class="input-group"><label for="p3-l退-type">領取方式</label><select id="p3-l退-type"><option value="lump">一次領</option><option value="annual">分期領 (年領)</option></select></div><div class="grid"><div class="input-group"><label for="p3-l退-seniority">工作年資 (年)</label><input type="number" id="p3-l退-seniority" placeholder="例如：30"></div><div class="input-group"><label for="p3-l退-amount">領取總額 (元)</label><input type="number" id="p3-l退-amount" placeholder="例如：8000000"></div></div><button class="btn" style="width:100%" onclick="p3_calculateL退Tax()">計算課稅所得</button><div id="p3-l退-result" class="result-box" style="display:none;"></div></div>
+                        </div>
+                    </div>
+                </section>
+                <section id="fund-performance" class="section">
+                    <div class="container">
+                        <h2>退休基金投資績效儀表板</h2>
+                        <div class="grid">
+                            <div class="card"><h3>近十年平均年化報酬率</h3><div class="chart-container"><canvas id="longTermChart"></canvas></div><p style="font-size: 0.8rem; text-align: center; margin-top: 1rem;">資料來源：簡報第33頁，數據為示意</p></div>
+                            <div class="card"><h3>近期績效表現 (示意)</h3><div class="chart-container"><canvas id="recentPerfChart"></canvas></div><p style="font-size: 0.8rem; text-align: center; margin-top: 1rem;">資料來源：簡報第36頁，數據為示意</p></div>
+                        </div>
+                    </div>
+                </section>
+                <section id="future-trends" class="section">
+                    <div class="container">
+                        <h2>洞悉未來：超高齡社會的趨勢與安居選擇</h2>
+                        <div class="card">
+                            <h3>台灣高齡化時程</h3>
+                            <div id="timeline-container"><div class="timeline"><div class="timeline-point" id="point-1993"><span class="tooltip">1993年: 高齡化社會 (7%)</span></div><div class="timeline-point" id="point-2018"><span class="tooltip">2018年: 高齡社會 (14%)</span></div><div class="timeline-point" id="point-2025"><span class="tooltip">2025年: 超高齡社會 (20%)</span></div></div><div class="timeline-label" style="left: 10%;">1993</div><div class="timeline-label" style="left: 50%;">2018</div><div class="timeline-label" style="left: 80%; font-weight: bold; color: #c00;">2025</div></div>
+                            <p style="text-align:center; margin-top: 2rem;">台灣從高齡社會進入超高齡社會僅花7年，速度全球最快，突顯退休規劃的急迫性。</p>
+                        </div>
+                        <div id="housing-explorer" class="card" style="margin-top: 2rem;">
+                            <h3>退休安居探索</h3>
+                            <div class="grid" style="align-items: flex-start;">
+                                <div id="housing-filters"><h4>篩選條件</h4><div class="input-group"><label for="housing-type">居住類型</label><select id="housing-type"><option value="all">所有類型</option><option value="village">頂級養生村</option><option value="apartment">老人公寓</option></select></div><div class="input-group"><label for="monthly-fee">月費預算 (元/月)</label><input type="range" id="monthly-fee" min="10000" max="100000" step="5000" value="50000"><span id="monthly-fee-value">50,000 元</span></div><button class="btn" onclick="p3_filterHousing()">搜尋</button></div>
+                                <div id="housing-results"><h4>符合條件的選項</h4></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="asset-fortress" class="section">
+                    <div class="container">
+                        <h2>資產堡壘：進階法律與金融工具</h2>
+                        <div class="card">
+                            <div class="tab-buttons"><button class="tab-btn active" onclick="p3_openTab(event, 'guardianship')">監護制度</button><button class="tab-btn" onclick="p3_openTab(event, 'trust')">信託規劃</button><button class="tab-btn" onclick="p3_openTab(event, 'fraud-quiz')">金融防詐</button></div>
+                            <div id="guardianship" class="tab-content active"><h3>監護制度：晚年的主導權在您手中嗎？</h3><p style="text-align:center;">當有一天您無法為自己做決定時，您希望由誰來管理您的財產與照護事宜？</p><div class="btn-group" style="margin-top: 2rem;"><button class="btn" onclick="p3_showGuardianshipResult('legal')">由法律決定 (未預先規劃)</button><button class="btn" onclick="p3_showGuardianshipResult('intended')">由自己決定 (意定監護)</button></div><div id="guardianship-result" class="result-box" style="display:none; text-align:center;"></div></div>
+                            <div id="trust" class="tab-content"><h3>信託故事：保護您想保護的人</h3><p><i class="fas fa-quote-left"></i> 信託就像一座橋梁，將委託人的意願，安全地傳遞到未來。</p><div class="grid" style="margin-top:2rem;"><div class="detail-card" style="background: white; border: 1px solid var(--medium-gray);"><h4><i class="fas fa-file-invoice"></i> 遺囑信託</h4><p><strong>案例：</strong>已故藝人沈殿霞為確保女兒不過度揮霍，將遺產成立信託，約定其需滿35歲才能動用。此舉確保了女兒的長遠未來。</p></div><div class="detail-card" style="background: white; border: 1px solid var(--medium-gray);"><h4><i class="fas fa-shield-alt"></i> 安養信託</h4><p><strong>規劃：</strong>將資產交付信託，約定銀行每月支付生活費、醫療費。即使未來失智，也能確保資產專款專用，避免被他人挪用。</p></div></div></div>
+                            <div id="fraud-quiz" class="tab-content">
+                                <h3>金融防詐模擬挑戰</h3>
+                                <div id="quiz-q1" class="question"><p><strong>情境一：</strong>您收到一則LINE訊息：「恭喜您抽中加入『股市內線操盤群』，保證月獲利30%，點擊連結加入！」您該怎麼做？</p><div class="options"><button class="option-btn" onclick="p3_checkAnswer('q1', false)">A. 太棒了！馬上點擊連結加入！</button><button class="option-btn" onclick="p3_checkAnswer('q1', true)">B. 這是詐騙，立刻封鎖並刪除。</button></div><div id="feedback-q1" class="feedback"></div></div>
+                                <div id="quiz-q2" class="question"><p><strong>情境二：</strong>一位久未連絡的親戚來電：「我最近生意周轉不靈，你退休金那麼多，先借我50萬。」您該怎麼做？</p><div class="options"><button class="option-btn" onclick="p3_checkAnswer('q2', false)">A. 都是親戚，當然要幫！馬上匯款。</button><button class="option-btn" onclick="p3_checkAnswer('q2', true)">B. 保持冷靜，表示需要時間考慮並與家人商量。</button></div><div id="feedback-q2" class="feedback"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <footer>
+                <p>&copy; 2025 智慧退休理財規劃儀表板 - 根據中壢社區大學課程內容生成</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+    // --- 全域導覽列功能 ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const navButtons = document.querySelectorAll('.nav-button');
+        const pageContents = document.querySelectorAll('.page-content');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+
+                // 更新按鈕的 active 狀態
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // 顯示對應的內容頁面
+                pageContents.forEach(content => {
+                    if (content.id === targetId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // --- 初始化所有頁面的JS ---
+        initPage1JS();
+        initPage2JS();
+        initPage3JS();
+    });
+
+    // --- 測試01.html 的 JS ---
+    function initPage1JS() {
+      const populationData = { labels: ['2025', '2030', '2040', '2050'], datasets: [{ label: '65歲以上人口比率(%)', data: [18.4, 22.7, 28.3, 34.9], fill: false, borderColor: '#005288', backgroundColor: '#007acc', tension: 0.3 }] };
+      const populationConfig = { type: 'line', data: populationData, options: { responsive: true, scales: { y: { beginAtZero: true, max: 40, ticks: { stepSize: 5 }}}, plugins: { legend: { position: 'top'} } } };
+      new Chart(document.getElementById('populationChart'), populationConfig);
+
+      const costsByYear = { 2025: { '醫療費用': 30, '生活費用': 40, '娛樂及社交': 15, '其他': 15 }, 2030: { '醫療費用': 35, '生活費用': 38, '娛樂及社交': 14, '其他': 13 }, 2040: { '醫療費用': 40, '生活費用': 35, '娛樂及社交': 15, '其他': 10 } };
+      let costPieChart;
+      function renderCostPieChart(year) {
+        const labels = Object.keys(costsByYear[year]); const data = Object.values(costsByYear[year]);
+        if(costPieChart) costPieChart.destroy();
+        costPieChart = new Chart(document.getElementById('costPieChart'), { type: 'pie', data: { labels, datasets: [{ data, backgroundColor: ['#005288','#3399ff','#66b2ff','#99c2ff'] }] }, options: { plugins: { legend: { position: 'right' } } } });
+      }
+      document.getElementById('costYear').addEventListener('change', e => { renderCostPieChart(e.target.value); });
+      renderCostPieChart('2025');
+
+      const incomeSources = ['社會保險', '個人退休金', '投資收入', '工作收入', '其他'];
+      const incomeData = { labels: ['2025', '2030', '2040'], datasets: incomeSources.map((source, i) => ({ label: source, data: [20, 22, 24].map(x => x - i*3), backgroundColor: ['#005288','#007acc','#3399ff','#66b2ff','#99c2ff'][i] })) };
+      const incomeConfig = { type: 'bar', data: incomeData, options: { responsive:true, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, max: 40, title: { display: true, text: '退休收入比率(%)'} } } } };
+      new Chart(document.getElementById('incomeStackChart'), incomeConfig);
+
+      function simulateInvestment(startAge, retireAge, monthlySaving, annualReturn) {
+        const months = (retireAge - startAge) * 12; const monthlyReturn = Math.pow(1 + annualReturn/100, 1/12) - 1; let balance = 0; const balances = [];
+        for(let m=0; m<= months; m++) { balances.push(balance); balance = balance * (1 + monthlyReturn) + monthlySaving; }
+        const labels = []; for(let a=startAge; a<=retireAge; a++) { labels.push(a + '歲'); }
+        const yearBalances = balances.filter((_,i) => i%12===0); return {labels, yearBalances};
+      }
+      const startAgeInput = document.getElementById('startAge'); const retireAgeInput = document.getElementById('retireAge'); const monthlySavingInput = document.getElementById('monthlySaving'); const annualReturnInput = document.getElementById('annualReturn');
+      const startAgeValue = document.getElementById('startAgeValue'); const retireAgeValue = document.getElementById('retireAgeValue'); const monthlySavingValue = document.getElementById('monthlySavingValue'); const annualReturnValue = document.getElementById('annualReturnValue');
+      const simulateBtn = document.getElementById('simulateBtn');
+      startAgeInput.oninput = () => startAgeValue.textContent = startAgeInput.value; retireAgeInput.oninput = () => retireAgeValue.textContent = retireAgeInput.value; monthlySavingInput.oninput = () => monthlySavingValue.textContent = monthlySavingInput.value; annualReturnInput.oninput = () => annualReturnValue.textContent = annualReturnInput.value;
+      let investmentChart;
+      simulateBtn.onclick = () => {
+        const startAge = parseInt(startAgeInput.value); const retireAge = parseInt(retireAgeInput.value);
+        if(retireAge <= startAge) { alert('退休年齡必須大於開始投資年齡'); return; }
+        const monthlySaving = parseInt(monthlySavingInput.value); const annualReturn = parseFloat(annualReturnInput.value); const result = simulateInvestment(startAge, retireAge, monthlySaving, annualReturn);
+        if(investmentChart) investmentChart.destroy();
+        investmentChart = new Chart(document.getElementById('investmentChart'), { type: 'line', data: { labels: result.labels, datasets: [{ label: '累積退休資產 (NTD)', data: result.yearBalances, borderColor: '#007acc', backgroundColor: 'rgba(0,122,204,0.3)', fill: true, tension: 0.3, pointRadius: 3, }] }, options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: '資產淨值 (新台幣)' } } } } });
+      };
+    }
+
+    // --- 測試02.html 的 JS ---
+    function initPage2JS() {
+        const calculatePensionBtn = document.getElementById('calculate-pension');
+        calculatePensionBtn.addEventListener('click', () => {
+            const avgSalary = parseFloat(document.getElementById('avg-salary').value) || 0; const laobaoYears = parseFloat(document.getElementById('laobao-years').value) || 0; const guobaoYears = parseFloat(document.getElementById('guobao-years').value) || 0; const pensionTiming = parseFloat(document.getElementById('pension-timing').value) || 0;
+            let laobaoPension = avgSalary * laobaoYears * 0.0155;
+            const guobaoInsuredAmount = 19761; let guobaoPension = guobaoInsuredAmount * guobaoYears * 0.013;
+            let totalMonthlyPension = laobaoPension + guobaoPension;
+            const adjustmentFactor = 1 + (pensionTiming * 0.04); totalMonthlyPension *= adjustmentFactor;
+            const totalYearlyPension = totalMonthlyPension * 12;
+            document.getElementById('monthly-pension').textContent = p2_formatCurrency(totalMonthlyPension, 0, '元'); document.getElementById('yearly-pension').textContent = p2_formatCurrency(totalYearlyPension, 0, '元'); document.getElementById('pension-result').style.display = 'grid';
+            if (document.getElementById('goal-result-container').style.display !== 'none') { calculateGoalBtn.click(); }
+        });
+        const calculateGoalBtn = document.getElementById('calculate-goal'); let goalChartInstance = null;
+        calculateGoalBtn.addEventListener('click', () => {
+            const monthlyExpense = (parseFloat(document.getElementById('monthly-expense').value) || 0) * 10000; const investmentReturn = (parseFloat(document.getElementById('investment-return').value) || 0) / 100;
+            const monthlyPension = parseFloat(document.getElementById('monthly-pension').textContent.replace(/[^0-9]/g, '')) || 0;
+            const monthlyGap = monthlyExpense - monthlyPension; const yearlyGap = monthlyGap > 0 ? monthlyGap * 12 : 0;
+            let requiredNestEgg = 0; if (investmentReturn > 0 && yearlyGap > 0) { requiredNestEgg = yearlyGap / investmentReturn; }
+            const fundingGap = requiredNestEgg;
+            document.getElementById('required-nest-egg').textContent = p2_formatCurrency(requiredNestEgg, 2, '萬元'); document.getElementById('funding-gap').textContent = p2_formatCurrency(fundingGap, 2, '萬元'); document.getElementById('goal-result-container').style.display = 'block';
+            const ctx = document.getElementById('goal-chart').getContext('2d');
+            const chartData = { labels: ['資金來源'], datasets: [ { label: '政府年金（年）', data: [monthlyPension * 12], backgroundColor: '#60a5fa', borderColor: '#3b82f6', borderWidth: 1 }, { label: '資金缺口（年）', data: [yearlyGap], backgroundColor: '#fca5a5', borderColor: '#ef4444', borderWidth: 1 } ] };
+            if (goalChartInstance) { goalChartInstance.destroy(); }
+            goalChartInstance = new Chart(ctx, { type: 'bar', data: chartData, options: { indexAxis: 'y', scales: { x: { stacked: true, title: { display: true, text: '年支出 (元)' } }, y: { stacked: true } }, plugins: { tooltip: { callbacks: { label: function(context) { return `${context.dataset.label}: ${p2_formatCurrency(context.raw, 0, '元')}`; } } }, title: { display: true, text: '年度退休生活費來源分析' } }, responsive: true, maintainAspectRatio: false } });
+        });
+        const performanceData = { longterm: { labels: ['保守型', '穩健型', '積極型', '目標日期2030', '目標日期2040', '目標日期2050', '人生週期'], datasets: [{ label: '近十年(103-112年)平均投資報酬率 (%)', data: [3.19, 5.22, 5.77, 5.17, 4.67, 5.78, 1.76], backgroundColor: ['#fde047', '#fb923c', '#f87171', '#a78bfa', '#7dd3fc', '#34d399', '#9ca3af'] }] }, '2024': { labels: ['勞動基金', '國保基金', '退撫基金'], datasets: [{ label: '2024年收益率 (%)', data: [16.48, 17.21, 16.55], backgroundColor: ['#3b82f6', '#16a34a', '#f97316'] }] } };
+        let performanceChartInstance = null; const performanceChartCanvas = document.getElementById('performance-chart').getContext('2d');
+        function renderPerformanceChart(period) {
+            if (performanceChartInstance) { performanceChartInstance.destroy(); }
+            performanceChartInstance = new Chart(performanceChartCanvas, { type: 'bar', data: performanceData[period], options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => `${context.raw.toFixed(2)}%` } } }, scales: { x: { beginAtZero: true, title: { display: true, text: '收益率 (%)' } } } } });
+        }
+        const perfTabs = document.querySelectorAll('#page2 .tab-button');
+        perfTabs.forEach(tab => {
+            tab.addEventListener('click', () => { perfTabs.forEach(t => t.classList.remove('active')); tab.classList.add('active'); renderPerformanceChart(tab.dataset.chart); });
+        });
+        renderPerformanceChart('longterm');
+        const housingData = [ { name: "潤福養生村", deposit: "700-1,600萬", rent: "單人:15,000 / 二人:25,500" }, { name: "新板傑仕堡", deposit: "致電洽詢", rent: "和匯居:10萬元 / 晶悅居:12萬元" }, { name: "長庚養生文化村", deposit: "單人:25-34萬", rent: "單人:2-3.4萬 / 雙人:加收0.5萬" }, { name: "聖恩西湖莊園", deposit: "99.8萬", rent: "18,600 (含水電費)" }, { name: "亞洲健康智慧園區", deposit: "600萬", rent: "6萬 (水電費另計)" }, { name: "合勤共生宅", deposit: "500-700萬", rent: "4.7-8.7萬 (水電費另計)"}, { name: "朱崙老人公寓", deposit: "36,000 (保證金)", rent: "18,000 (8坪單人)"}, { name: "大龍老人公寓", deposit: "38,000 (保證金)", rent: "19,000 (單人)"}, { name: "中山老人公寓", deposit: "26,000 (保證金)", rent: "13,000-14,000 (單人)"}, ];
+        const housingContainer = document.getElementById('housing-info'); let tableHTML = `<table class="w-full text-sm text-left text-gray-600"><thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="px-4 py-3">機構名稱</th><th scope="col" class="px-4 py-3">保證金/押金</th><th scope="col" class="px-4 py-3">月租/管理費 (元)</th></tr></thead><tbody>`;
+        housingData.forEach(item => { tableHTML += `<tr class="border-b hover:bg-gray-50"><td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">${item.name}</td><td class="px-4 py-3">${item.deposit}</td><td class="px-4 py-3">${item.rent}</td></tr>`; });
+        tableHTML += `</tbody></table>`; housingContainer.innerHTML = tableHTML;
+        function p2_formatCurrency(value, decimals = 2, unit = '萬元') {
+            let displayValue = value; if (unit === '萬元') { displayValue /= 10000; }
+            return displayValue.toLocaleString('zh-TW', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + ` ${unit}`;
+        }
+        calculatePensionBtn.click();
+    }
+    
+    // --- 測試03.html 的 JS (函式已加上 p3_ 前綴以避免衝突) ---
+    function initPage3JS() {
+        // Chart 1: Long Term Performance
+        const longTermCtx = document.getElementById('longTermChart').getContext('2d');
+        new Chart(longTermCtx, { type: 'bar', data: { labels: ['勞保基金', '國保基金', '勞退新制', '公保基金', '退撫基金'], datasets: [{ label: '近十年年化報酬率 (%)', data: [5.14, 5.22, 4.76, 6.05, 5.03], backgroundColor: [ 'rgba(0, 90, 156, 0.7)', 'rgba(0, 174, 239, 0.7)', 'rgba(255, 184, 28, 0.7)', 'rgba(0, 150, 136, 0.7)', 'rgba(100, 100, 100, 0.7)', ], borderColor: 'rgba(0, 90, 156, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: value => value + '%' } } }, plugins: { legend: { display: false } } } });
+        // Chart 2: Recent Performance
+        const recentPerfCtx = document.getElementById('recentPerfChart').getContext('2d');
+        new Chart(recentPerfCtx, { type: 'bar', data: { labels: ['勞動基金', '國保基金', '退撫基金'], datasets: [{ label: '2025上半年收益率 (%)', data: [-1.22, -1.92, -2.83], backgroundColor: (context) => { const value = context.raw; return value < 0 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(75, 192, 192, 0.7)'; }, borderColor: 'rgba(85, 85, 85, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: value => value + '%' } } }, plugins: { legend: { display: false } } } });
+        document.getElementById('monthly-fee').addEventListener('input', (e) => { document.getElementById('monthly-fee-value').textContent = `${parseInt(e.target.value).toLocaleString()} 元`; });
+        p3_filterHousing(); // Initialize housing results
+    }
+    function p3_showPropertyDetails(type) {
+        const detailsDiv = document.querySelector('#page3 #marital-property-details');
+        detailsDiv.style.display = 'block';
+        const concentratedCard = document.querySelector('#page3 #concentrated-card');
+        const separateCard = document.querySelector('#page3 #separate-card');
+        if (type === 'concentrated') {
+            concentratedCard.style.border = '2px solid var(--accent-color)';
+            separateCard.style.border = 'none';
+        } else {
+            separateCard.style.border = '2px solid var(--accent-color)';
+            concentratedCard.style.border = 'none';
+        }
+    }
+    function p3_calculateLabao() {
+        const seniority = parseFloat(document.getElementById('p3-labao-seniority').value);
+        const salary = parseFloat(document.getElementById('p3-labao-salary').value) || 45800;
+        const resultDiv = document.getElementById('p3-labao-result');
+        if (isNaN(seniority) || seniority <= 0) {
+            resultDiv.innerHTML = '<h4>錯誤</h4><p>請輸入有效的勞保年資。</p>';
+            resultDiv.style.display = 'block';
+            return;
+        }
+        let resultHTML = '';
+        if (seniority >= 15) {
+            const monthlyAnnuity = Math.round(salary * seniority * 0.0155);
+            resultHTML += `<h4>老年年金 (月領)</h4><p>${monthlyAnnuity.toLocaleString()} 元 / 月</p><hr style="margin: 1rem 0;">`;
+        }
+        let months = 0;
+        if (seniority <= 15) {
+            months = seniority;
+        } else {
+            months = 15 * 1 + (seniority - 15) * 2;
+        }
+        months = Math.min(months, 45);
+        const lumpSum = Math.round(salary * months);
+        const title = seniority < 15 ? '老年一次金' : '一次請領老年給付';
+        resultHTML += `<h4>${title} (一次領)</h4><p>${lumpSum.toLocaleString()} 元</p>`;
+        resultDiv.innerHTML = resultHTML;
+        resultDiv.style.display = 'block';
+    }
+    function p3_calculateL退Tax() {
+        const type = document.getElementById('p3-l退-type').value;
+        const seniority = parseFloat(document.getElementById('p3-l退-seniority').value);
+        const amount = parseFloat(document.getElementById('p3-l退-amount').value);
+        const resultDiv = document.getElementById('p3-l退-result');
+        if (isNaN(seniority) || isNaN(amount) || seniority <= 0 || amount <= 0) {
+            resultDiv.innerHTML = '<h4>錯誤</h4><p>請輸入有效的年資與金額。</p>';
+            resultDiv.style.display = 'block';
+            return;
+        }
+        let taxableAmount = 0;
+        let calculationText = '';
+        if (type === 'lump') {
+            const tier1 = 198000 * seniority;
+            const tier2 = 398000 * seniority;
+            if (amount <= tier1) {
+                taxableAmount = 0;
+                calculationText = `領取金額未超過 ${tier1.toLocaleString()} 元的免稅額，故課稅所得為 0。`;
+            } else if (amount <= tier2) {
+                taxableAmount = (amount - tier1) / 2;
+                calculationText = `超過免稅額部分的一半需計入所得：(${amount.toLocaleString()} - ${tier1.toLocaleString()}) / 2 = ${taxableAmount.toLocaleString()}`;
+            } else {
+                taxableAmount = ((tier2 - tier1) / 2) + (amount - tier2);
+                calculationText = `中層級距半數課稅 + 高層級距全額課稅。`;
+            }
+        } else {
+            const exemption = 859000;
+            if (amount > exemption) {
+                taxableAmount = amount - exemption;
+                calculationText = `年領金額超過免稅額 ${exemption.toLocaleString()} 元，超過部分需課稅。`;
+            } else {
+                taxableAmount = 0;
+                calculationText = `年領金額未超過免稅額 ${exemption.toLocaleString()} 元，故課稅所得為 0。`;
+            }
+        }
+        resultDiv.innerHTML = `<h4>應計入綜合所得稅金額</h4><p>${Math.round(taxableAmount).toLocaleString()} 元</p><p style="font-size:0.9rem; font-weight:normal; margin-top:0.5rem;">${calculationText}</p>`;
+        resultDiv.style.display = 'block';
+    }
+    const p3_housingData = [ { name: '潤福養生村', type: 'village', fee: 25500, guarantee: '700-1500萬' }, { name: '長庚養生文化村', type: 'village', fee: 34000, guarantee: '25-34萬' }, { name: '新板傑仕堡', type: 'village', fee: 100000, guarantee: '洽詢' }, { name: '朱崙老人公寓', type: 'apartment', fee: 18000, guarantee: '3.6萬' }, { name: '大龍老人公寓', type: 'apartment', fee: 19000, guarantee: '3.8萬' }, { name: '中山老人公寓', type: 'apartment', fee: 13000, guarantee: '2.6萬' }, ];
+    function p3_filterHousing() {
+        const type = document.getElementById('housing-type').value; const maxFee = parseInt(document.getElementById('monthly-fee').value); const resultsContainer = document.getElementById('housing-results');
+        const filteredData = p3_housingData.filter(item => { const typeMatch = (type === 'all') || (item.type === type); const feeMatch = item.fee <= maxFee; return typeMatch && feeMatch; });
+        if (filteredData.length > 0) { resultsContainer.innerHTML = '<h4>符合條件的選項</h4>' + filteredData.map(item => ` <div class="housing-item"> <h4>${item.name}</h4> <p>類型: ${item.type === 'village' ? '養生村' : '老人公寓'} | 月費約: ${item.fee.toLocaleString()}元 | 保證金: ${item.guarantee}</p> </div> `).join(''); } else { resultsContainer.innerHTML = '<h4>符合條件的選項</h4><p>抱歉，沒有找到符合條件的選項。</p>'; }
+    }
+    function p3_openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.querySelectorAll("#page3 .tab-content"); for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
+        tablinks = document.querySelectorAll("#page3 .tab-btn"); for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
+        document.getElementById(tabName).style.display = "block"; evt.currentTarget.className += " active";
+    }
+    function p3_showGuardianshipResult(type) {
+        const resultDiv = document.getElementById('guardianship-result');
+        if (type === 'legal') { resultDiv.innerHTML = '<h4>法定監護</h4><p>法院將依民法順位(配偶、親屬等)為您指定監護人，您將無法選擇是誰，可能不符您的意願。</p>'; } else { resultDiv.innerHTML = '<h4>意定監護</h4><p>恭喜您！透過預先公證指定監護人，您的晚年照護與財產管理將由您最信任的人執行，主導權在您手中。</p>'; }
+        resultDiv.style.display = 'block';
+    }
+    function p3_checkAnswer(questionId, isCorrect) {
+        const feedbackDiv = document.getElementById('feedback-' + questionId);
+        if (isCorrect) { feedbackDiv.innerHTML = '<p><strong><i class="fas fa-check-circle"></i> 正確！</strong>保持警覺是保護資產的最佳方式。</p>'; feedbackDiv.className = 'feedback correct'; } else { feedbackDiv.innerHTML = '<p><strong><i class="fas fa-times-circle"></i> 錯誤！</strong>這個選項可能會讓您落入詐騙陷阱。高報酬通常伴隨高風險，甚至是騙局。</p>'; feedbackDiv.className = 'feedback incorrect'; }
+        feedbackDiv.style.display = 'block';
+    }
+    </script>
+</body>
+</html>
