@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融商品投資比較分析平台</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar__brand">
+                <h1>金融投資分析平台</h1>
+            </div>
+            <div class="navbar__menu">
+                <button class="menu-toggle" aria-label="切換選單">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="navbar__nav">
+                    <li><a href="#" data-page="home" class="nav-link active">首頁</a></li>
+                    <li><a href="#" data-page="comparison" class="nav-link">商品比較</a></li>
+                    <li><a href="#" data-page="risk-analysis" class="nav-link">風險分析</a></li>
+                    <li><a href="#" data-page="investor-matching" class="nav-link">投資人匹配</a></li>
+                    <li><a href="#" data-page="education" class="nav-link">教育中心</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Home Page -->
+        <section id="home" class="page active">
+            <div class="hero">
+                <div class="container">
+                    <div class="hero__content">
+                        <h2>智慧投資決策，從這裡開始</h2>
+                        <p>深入比較股票、基金、ETF、期貨、選擇權等金融商品，找到最適合您的投資策略</p>
+                        <button class="btn btn--primary btn--lg" data-page="comparison">開始比較</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="container">
+                    <h3>平台功能</h3>
+                    <div class="features__grid">
+                        <div class="feature-card" data-page="comparison">
+                            <div class="feature-card__icon">📊</div>
+                            <h4>商品比較</h4>
+                            <p>並排比較多種金融商品的優缺點、風險與報酬特性</p>
+                        </div>
+                        <div class="feature-card" data-page="risk-analysis">
+                            <div class="feature-card__icon">📈</div>
+                            <h4>風險分析</h4>
+                            <p>視覺化圖表展示風險報酬關係與投資特性分析</p>
+                        </div>
+                        <div class="feature-card" data-page="investor-matching">
+                            <div class="feature-card__icon">🎯</div>
+                            <h4>投資人匹配</h4>
+                            <p>根據風險承受度推薦最適合的投資組合建議</p>
+                        </div>
+                        <div class="feature-card" data-page="education">
+                            <div class="feature-card__icon">📚</div>
+                            <h4>教育中心</h4>
+                            <p>豐富的投資知識庫，提升您的投資理財專業能力</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Page -->
+        <section id="comparison" class="page hidden">
+            <div class="container">
+                <div class="page-header">
+                    <h2>金融商品比較</h2>
+                    <p>選擇您想要比較的金融商品，深入了解各項投資特性</p>
+                </div>
+
+                <div class="comparison-controls">
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="form-label">風險等級篩選：</label>
+                            <select id="risk-filter" class="form-control">
+                                <option value="">全部</option>
+                                <option value="極低">極低風險</option>
+                                <option value="低">低風險</option>
+                                <option value="中等">中等風險</option>
+                                <option value="高">高風險</option>
+                                <option value="極高">極高風險</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">投資期間：</label>
+                            <select id="period-filter" class="form-control">
+                                <option value="">全部</option>
+                                <option value="短期">短期</option>
+                                <option value="中期">中期</option>
+                                <option value="長期">長期</option>
+                                <option value="中長期">中長期</option>
+                            </select>
+                        </div>
+                        <button id="clear-filters" class="btn btn--secondary">清除篩選</button>
+                    </div>
+                </div>
+
+                <div class="product-selection">
+                    <h3>選擇比較商品 (最多4個)</h3>
+                    <div class="product-grid" id="product-grid">
+                        <!-- Product cards will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="comparison-table-container" id="comparison-container" style="display: none;">
+                    <h3>比較結果</h3>
+                    <div class="comparison-table" id="comparison-table">
+                        <!-- Comparison table will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Analysis Page -->
+        <section id="risk-analysis" class="page hidden">
+            <div class="container">
+                <div class="page-header">
+                    <h2>風險分析</h2>
+                    <p>透過視覺化圖表深入了解各金融商品的風險報酬特性</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>風險報酬散點圖</h3>
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="risk-return-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>風險等級排序 (由低至高)</h3>
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="risk-ranking-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>報酬潛力排序 (由低至高)</h3>
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="return-ranking-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>流動性分析</h3>
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="liquidity-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>投資複雜度比較</h3>
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="complexity-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>最低投資門檻</h3>
+                        <div class="chart-container" style="position: relative; height: 400px;">
+                            <canvas id="investment-threshold-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Investor Matching Page -->
+        <section id="investor-matching" class="page hidden">
+            <div class="container">
+                <div class="page-header">
+                    <h2>投資人匹配測驗</h2>
+                    <p>回答以下問題，我們將為您推薦最適合的投資組合</p>
+                </div>
+
+                <div class="questionnaire" id="questionnaire">
+                    <div class="question-card active" data-question="1">
+                        <h3>問題 1 / 5</h3>
+                        <h4>您的年齡範圍？</h4>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="age" value="young">
+                                <span>30歲以下</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="age" value="middle">
+                                <span>30-50歲</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="age" value="senior">
+                                <span>50歲以上</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-card" data-question="2">
+                        <h3>問題 2 / 5</h3>
+                        <h4>您的投資經驗如何？</h4>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="experience" value="beginner">
+                                <span>新手，很少或沒有投資經驗</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="experience" value="intermediate">
+                                <span>中等，有一些投資經驗</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="experience" value="advanced">
+                                <span>豐富，有多年投資經驗</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-card" data-question="3">
+                        <h3>問題 3 / 5</h3>
+                        <h4>您的風險承受度如何？</h4>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="risk" value="low">
+                                <span>保守，不能接受本金損失</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="risk" value="medium">
+                                <span>穩健，可接受小幅波動</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="risk" value="high">
+                                <span>積極，可承受較大波動以追求高報酬</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-card" data-question="4">
+                        <h3>問題 4 / 5</h3>
+                        <h4>您的投資目標是什麼？</h4>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="goal" value="preservation">
+                                <span>資本保值，穩定收益</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="goal" value="growth">
+                                <span>資本增值，長期成長</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="goal" value="speculation">
+                                <span>短期獲利，高回報</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-card" data-question="5">
+                        <h3>問題 5 / 5</h3>
+                        <h4>您預計的投資期間？</h4>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="period" value="short">
+                                <span>1年以內</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="period" value="medium">
+                                <span>1-5年</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="period" value="long">
+                                <span>5年以上</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-nav">
+                        <button id="prev-question" class="btn btn--secondary" disabled>上一題</button>
+                        <button id="next-question" class="btn btn--primary">下一題</button>
+                        <button id="submit-questionnaire" class="btn btn--primary" style="display: none;">查看結果</button>
+                    </div>
+                </div>
+
+                <div class="results" id="matching-results" style="display: none;">
+                    <h3>您的投資人類型分析結果</h3>
+                    <div class="investor-type-result" id="investor-type-display">
+                        <!-- Results will be populated by JavaScript -->
+                    </div>
+                    <div class="recommended-products">
+                        <h4>推薦的投資商品</h4>
+                        <div class="recommendations-grid" id="recommendations-grid">
+                            <!-- Recommendations will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <button class="btn btn--secondary" onclick="resetQuestionnaire()">重新測驗</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Center Page -->
+        <section id="education" class="page hidden">
+            <div class="container">
+                <div class="page-header">
+                    <h2>投資教育中心</h2>
+                    <p>提升您的投資知識，做出更明智的投資決策</p>
+                </div>
+
+                <div class="education-content">
+                    <div class="education-nav">
+                        <button class="education-tab active" data-tab="products">商品介紹</button>
+                        <button class="education-tab" data-tab="terms">投資術語</button>
+                        <button class="education-tab" data-tab="risk">風險管理</button>
+                        <button class="education-tab" data-tab="strategies">投資策略</button>
+                    </div>
+
+                    <div class="education-tabs">
+                        <div id="products-tab" class="tab-content active">
+                            <h3>金融商品詳細介紹</h3>
+                            <div class="products-education" id="products-education">
+                                <!-- Product education content will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div id="terms-tab" class="tab-content">
+                            <h3>重要投資術語</h3>
+                            <div class="terms-grid">
+                                <div class="term-card">
+                                    <h4>風險報酬比</h4>
+                                    <p>衡量投資收益與承擔風險之間關係的指標，通常風險越高，期望報酬也越高。</p>
+                                </div>
+                                <div class="term-card">
+                                    <h4>流動性</h4>
+                                    <p>資產轉換為現金的難易程度，流動性高的資產可以快速變現，但可能犧牲部分收益。</p>
+                                </div>
+                                <div class="term-card">
+                                    <h4>分散投資</h4>
+                                    <p>將投資分配到不同類型的資產上，以降低整體投資組合的風險。</p>
+                                </div>
+                                <div class="term-card">
+                                    <h4>複利效應</h4>
+                                    <p>投資收益再投資產生的累積效果，時間越長，複利效應越顯著。</p>
+                                </div>
+                                <div class="term-card">
+                                    <h4>通膨風險</h4>
+                                    <p>由於通貨膨脹導致貨幣購買力下降，影響投資實質報酬的風險。</p>
+                                </div>
+                                <div class="term-card">
+                                    <h4>波動度</h4>
+                                    <p>衡量投資價格變動幅度的指標，波動度越高表示價格變化越劇烈。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="risk-tab" class="tab-content">
+                            <h3>風險管理技巧</h3>
+                            <div class="risk-management">
+                                <div class="risk-tip">
+                                    <h4>1. 不要把所有雞蛋放在同一個籃子裡</h4>
+                                    <p>分散投資是降低風險最基本的方法，投資不同類型的資產可以降低單一投資失利對整體投資組合的影響。</p>
+                                </div>
+                                <div class="risk-tip">
+                                    <h4>2. 設定停損點</h4>
+                                    <p>事先設定可承受的最大損失，當投資損失達到停損點時果斷出場，避免更大的損失。</p>
+                                </div>
+                                <div class="risk-tip">
+                                    <h4>3. 定期檢視投資組合</h4>
+                                    <p>市場環境會變化，定期檢視並調整投資組合，確保投資策略符合當前的市場狀況和個人目標。</p>
+                                </div>
+                                <div class="risk-tip">
+                                    <h4>4. 了解自己的風險承受度</h4>
+                                    <p>誠實評估自己的財務狀況和心理承受能力，選擇適合的投資商品，不要貿然投資超出能力範圍的商品。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="strategies-tab" class="tab-content">
+                            <h3>投資策略指南</h3>
+                            <div class="strategies-grid">
+                                <div class="strategy-card">
+                                    <h4>價值投資</h4>
+                                    <p>尋找被市場低估的優質企業，長期持有等待價值回歸。適合有耐心、注重基本面分析的投資者。</p>
+                                </div>
+                                <div class="strategy-card">
+                                    <h4>成長投資</h4>
+                                    <p>投資於高成長潛力的企業，雖然估值可能較高，但期待未來業績快速成長帶來的報酬。</p>
+                                </div>
+                                <div class="strategy-card">
+                                    <h4>定期定額投資</h4>
+                                    <p>固定時間投入固定金額，平均投資成本，降低市場波動對投資的影響，適合長期投資。</p>
+                                </div>
+                                <div class="strategy-card">
+                                    <h4>指數投資</h4>
+                                    <p>投資追蹤市場指數的基金或ETF，獲得市場平均報酬，適合不想花太多時間研究個股的投資者。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 金融投資分析平台. 此平台僅供教育和資訊參考用途，不構成投資建議。</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
