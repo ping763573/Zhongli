@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>財務幸福自我養成計畫 - 終極整合版</title>
+    <!-- Google Fonts for Traditional Chinese -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #D9534F;
+            --primary-dark: #BF4C48;
+            --secondary-color: #f0ad4e;
+            --accent-color: #5bc0de;
+            --bg-light: #FDFBFA;
+            --bg-medium: #F7F1F0;
+            --text-color: #333;
+            --text-light: #555;
+            --nav-bg: #fff;
+            --nav-width: 260px;
+            --border-radius: 12px;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+            --color-success: #5cb85c;
+            --color-error: #d9534f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-light);
+            background-image: linear-gradient(180deg, var(--bg-light) 0%, var(--bg-medium) 100%);
+            color: var(--text-color);
+            line-height: 1.8;
+            display: flex;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-medium); }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+        /* --- Navigation Sidebar --- */
+        .navbar {
+            width: var(--nav-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--nav-bg);
+            box-shadow: var(--shadow-medium);
+            padding-top: 20px;
+            overflow-y: auto;
+            transition: transform var(--transition-speed) ease-in-out;
+            z-index: 1000;
+        }
+
+        .navbar-header {
+            padding: 20px 20px 30px 20px;
+            text-align: center;
+        }
+
+        .navbar-header h3 {
+            color: var(--primary-dark);
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .navbar-header h3 .fa-feather-alt {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        .nav-links { list-style: none; padding: 20px 0; }
+        .nav-links li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
+            border-left: 4px solid transparent;
+        }
+        .nav-links li a i { margin-right: 15px; width: 20px; text-align: center; }
+        .nav-links li a:hover { background-color: var(--bg-medium); color: var(--primary-color); }
+        .nav-links li a.active {
+            color: var(--primary-dark);
+            background-image: linear-gradient(to right, #fff, #fff2f2);
+            border-left-color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        /* --- Main Content --- */
+        .main-content {
+            margin-left: var(--nav-width);
+            width: calc(100% - var(--nav-width));
+            padding: 30px 40px;
+        }
+        
+        .content-section { background-color: #fff; padding: 40px; margin-bottom: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow-light); }
+        .content-section h2 { font-size: 2em; color: var(--primary-dark); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid var(--bg-medium); display: flex; align-items: center; }
+        .content-section h2 i { margin-right: 15px; color: var(--primary-color); }
+        .content-section h3 { font-size: 1.5em; color: var(--primary-dark); margin-top: 30px; margin-bottom: 15px; }
+
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
+        .card { background: white; padding: 25px; border-radius: var(--border-radius); border-top: 4px solid var(--primary-color); box-shadow: var(--shadow-light); transition: all var(--transition-speed) ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-medium); }
+        .card h4 { font-size: 1.2em; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; }
+        .card h4 i { margin-right: 10px; color: var(--primary-color); }
+        .card ul { padding-left: 20px; } .card li { margin-bottom: 8px; }
+        a.external-link { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        a.external-link:hover { text-decoration: underline; }
+
+        .quote { text-align: center; margin: 25px 0; padding: 20px; background-color: var(--bg-medium); border-left: 5px solid var(--secondary-color); font-style: italic; font-weight: 500; font-size: 1.1em; border-radius: var(--border-radius); }
+        
+        /* --- Visualizations --- */
+        .pyramid-container { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
+        .pyramid-level { position: relative; width: 80%; max-width: 500px; background: var(--primary-color); padding: 15px; color: white; text-align: center; margin-bottom: 5px; clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%); transition: all var(--transition-speed) ease; }
+        .pyramid-level:hover { transform: scale(1.05); z-index: 10;}
+        .pyramid-level:nth-child(1) { width: 60%; max-width: 300px; background: #E7726D; clip-path: polygon(20% 0, 80% 0, 100% 100%, 0% 100%); }
+        .pyramid-level:nth-child(2) { background: #D9534F; }
+        .pyramid-level:nth-child(3) { width: 100%; max-width: 700px; background: #BF4C48; clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+        .pyramid-level h4 { font-size: 1.1em; margin: 0 0 5px 0; }
+        
+        .risk-pyramid .pyramid-level:nth-child(1) { width: 40%; max-width: 200px; }
+        .risk-pyramid .pyramid-level:nth-child(2) { width: 60%; max-width: 400px; }
+        .risk-pyramid .pyramid-level:nth-child(3) { width: 80%; max-width: 600px; }
+        .risk-pyramid .pyramid-level:nth-child(4) { width: 100%; max-width: 800px; }
+
+        .accordion-item { border-bottom: 1px solid #eee; }
+        .accordion-header { background: none; border: none; width: 100%; text-align: left; padding: 20px; font-size: 1.1em; font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color var(--transition-speed); }
+        .accordion-header:hover { background-color: var(--bg-medium); }
+        .accordion-header .icon { transition: transform var(--transition-speed); }
+        .accordion-header.active .icon { transform: rotate(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: var(--bg-medium); }
+        .accordion-content-inner { padding: 0 20px 20px 20px; }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- Financial Compass (Solar System) --- */
+        #compass-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        .orbit {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            flex-shrink: 0;
+        }
+        .sun {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffecb3, #ffd54f, #ffb300);
+            box-shadow: 0 0 30px #ffc107, 0 0 60px #ff9800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #4e4a4a;
+            font-weight: bold;
+            font-size: 1.1rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .planet {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease, transform 1s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 0.85rem;
+            padding: 5px;
+        }
+        .planet:hover { transform: scale(1.15) !important; box-shadow: 0 0 25px rgba(255, 255, 255, 0.8); }
+        #p1 { background-color: #4CAF50; } #p2 { background-color: #2196F3; }
+        #p3 { background-color: #f44336; } #p4 { background-color: #FF9800; }
+        #p5 { background-color: #9C27B0; } #p6 { background-color: #00BCD4; }
+        .compass-info { max-width: 400px; }
+        
+        /* --- Live Data Display --- */
+        #external-data {
+            margin: 20px 0 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            border-left: 5px solid var(--accent-color);
+        }
+        #external-data h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-dark); }
+        
+        /* --- Embedded Tools --- */
+        .tool-container {
+            background: var(--bg-medium);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            border: 1px solid #eee;
+        }
+        .tool-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { margin-bottom: 8px; font-weight: 500; }
+        .input-group input, .input-group select {
+            padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;
+        }
+        .tool-container button {
+            grid-column: 1 / -1;
+            padding: 12px 20px; background-color: var(--primary-color); color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;
+            font-weight: 500; transition: background-color var(--transition-speed);
+        }
+        .tool-container button:hover { background-color: var(--primary-dark); }
+        .result-card { margin-top: 20px; padding: 20px; background: white; border-radius: 8px; border: 1px solid #ddd; }
+        .result-title { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .result-item { display: flex; justify-content: space-between; padding: 8px 0; }
+        .result-label { color: var(--text-light); }
+        .result-value { font-weight: bold; color: var(--text-color); }
+        .chart-container { position: relative; height: 300px; margin-top: 20px; }
+
+        @media (max-width: 768px) {
+            .tool-form { grid-template-columns: 1fr; }
+        }
+
+        /* --- Responsive Design --- */
+        .menu-toggle { display: none; position: fixed; top: 15px; left: 15px; font-size: 1.8rem; background: white; border: none; padding: 5px 10px; border-radius: 5px; box-shadow: var(--shadow-medium); z-index: 1001; cursor: pointer; }
+        @media (max-width: 1200px) {
+            .navbar { transform: translateX(-100%); }
+            .navbar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            .menu-toggle { display: block; }
+            #compass-section { flex-direction: column; }
+            .orbit { width: 320px; height: 320px; }
+            .sun { width: 100px; height: 100px; font-size: 0.9rem; }
+            .planet { width: 80px; height: 80px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+
+    <nav class="navbar" id="navbar">
+        <div class="navbar-header">
+            <h3><i class="fas fa-feather-alt"></i>財務幸福計畫</h3>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#section-1" class="nav-link"><i class="fas fa-compass"></i>理財羅盤</a></li>
+            <li><a href="#section-2" class="nav-link"><i class="fas fa-clipboard-list"></i>理財規劃基礎</a></li>
+            <li><a href="#section-3" class="nav-link"><i class="fas fa-piggy-bank"></i>退休金與詐騙預防</a></li>
+            <li><a href="#section-4" class="nav-link"><i class="fas fa-briefcase"></i>職涯規劃與借貸</a></li>
+            <li><a href="#section-5" class="nav-link"><i class="fas fa-chart-line"></i>投資報酬與風險</a></li>
+            <li><a href="#section-6" class="nav-link"><i class="fas fa-shield-heart"></i>人生風險與保險</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="external-data">
+            <h3><i class="fas fa-chart-simple"></i> 即時財經資訊</h3>
+            <div id="data-container"><p>正在加載數據...</p></div>
+        </div>
+
+        <!-- Section 1: 理財羅盤 -->
+        <section id="section-1" class="content-section reveal">
+            <h2><i class="fas fa-compass"></i>一、理財羅盤</h2>
+            <div id="compass-section">
+                <div class="orbit" id="orbit-container">
+                    <div class="sun">財務幸福<br>核心</div>
+                    <div id="p1" class="planet" data-target="#section-2">理財規劃<br>流程</div>
+                    <div id="p2" class="planet" data-target="#section-3">退休金<br>制度</div>
+                    <div id="p3" class="planet" data-target="#section-4">職涯規劃<br>與借貸</div>
+                    <div id="p4" class="planet" data-target="#section-5">投資報酬<br>與風險</div>
+                    <div id="p5" class="planet" data-target="#section-6">人生風險<br>與保險</div>
+                    <div id="p6" class="planet" data-target="#section-3">金融詐騙<br>預防</div>
+                </div>
+                <div class="compass-info">
+                    <h3>歡迎來到您的個人理財宇宙！</h3>
+                    <p>這裡是基於陳彥行教授的「財務幸福自我養成計畫」講義內容，結合即時金融數據與互動工具，為您打造的學習平台。</p>
+                    <p>請點擊左側的任一顆星球，開始您的探索之旅，建立穩固的財務知識，邁向富足人生。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: 理財規劃基礎 -->
+        <section id="section-2" class="content-section reveal">
+            <h2><i class="fas fa-clipboard-list"></i>二、理財規劃基礎</h2>
+            <p>學習理財是為了釐清「賺的錢夠不夠用一輩子」、「如何做出重大財務決策」等人生課題。一個完整的理財規劃流程包含：設定目標、模擬收支、制定方案、定期評估。</p>
+            
+            <h3>家庭財務健康檢查三報表</h3>
+            <div class="card-container">
+                <div class="card reveal"><h4><i class="fas fa-balance-scale"></i> 資產負債表</h4><p>檢視「特定時間點」的資產、負債與淨值。淨值越高，代表家庭越富裕。</p></div>
+                <div class="card reveal"><h4><i class="fas fa-file-invoice-dollar"></i> 損益表</h4><p>呈現「一段時間內」的收入、支出與儲蓄，看出儲蓄能力。</p></div>
+                <div class="card reveal"><h4><i class="fas fa-cash-register"></i> 現金預算表</h4><p>預估「未來一段時間」的現金流，並透過區分「必要、需要、想要」來有效控管支出。</p></div>
+            </div>
+
+            <div id="financial-statement-tool" class="tool-container reveal">
+                <h3><i class="fas fa-calculator"></i> 家庭財務報表計算器</h3>
+                <div class="tool-form">
+                    <div class="input-group"><h4>資產項目</h4></div>
+                    <div class="input-group"></div>
+                    <div class="input-group">
+                        <label>現金與存款</label>
+                        <input type="number" id="cash" placeholder="例如：500000">
+                    </div>
+                    <div class="input-group">
+                        <label>投資資產</label>
+                        <input type="number" id="investments" placeholder="例如：800000">
+                    </div>
+                    <div class="input-group">
+                        <label>不動產</label>
+                        <input type="number" id="realEstate" placeholder="例如：5000000">
+                    </div>
+                     <div class="input-group"></div>
+                    <div class="input-group"><h4>負債項目</h4></div>
+                    <div class="input-group"></div>
+                    <div class="input-group">
+                        <label>房屋貸款</label>
+                        <input type="number" id="mortgage" placeholder="例如：3000000">
+                    </div>
+                    <div class="input-group">
+                        <label>信用卡債</label>
+                        <input type="number" id="creditCard" placeholder="例如：50000">
+                    </div>
+                    <div class="input-group">
+                        <label>其他負債</label>
+                        <input type="number" id="otherDebt" placeholder="例如：100000">
+                    </div>
+                </div>
+                <button onclick="app.calculateNetWorth()">計算淨資產</button>
+                <div id="netWorthResult"></div>
+                <div id="netWorthChart" class="chart-container" style="display: none;">
+                    <canvas id="assetChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: 退休金與詐騙預防 -->
+        <section id="section-3" class="content-section reveal">
+            <h2><i class="fas fa-piggy-bank"></i>三、退休金與詐騙預防</h2>
+            <h3>退休金的三大支柱</h3>
+            <div class="pyramid-container reveal">
+                <div class="pyramid-level"><h4>第三層：個人儲蓄投資</h4><p>彌補退休金缺口</p></div>
+                <div class="pyramid-level"><h4>第二層：職業退休金</h4><p>雇主與受雇者共同提撥</p></div>
+                <div class="pyramid-level"><h4>第一層：社會保險</h4><p>保障基礎經濟生活</p></div>
+            </div>
+            
+            <div class="card-container">
+                <div class="card reveal"><h4><i class="fas fa-users"></i> 勞工保險（勞保）</h4><p>屬於「隨收隨付制」的共同帳戶。您可至 <a href="https://www.bli.gov.tw/0013063.html" target="_blank" class="external-link">勞保局網站</a> 線上試算。</p></div>
+                <div class="card reveal"><h4><i class="fas fa-user-lock"></i> 勞工退休金（勞退）</h4><p>屬於「完全準備制」的個人帳戶，不會破產。您可至 <a href="https://calc.mol.gov.tw/pension/web/index.html" target="_blank" class="external-link">勞動部網站</a> 試算。</p></div>
+            </div>
+            
+            <div id="retirement-calculator-tool" class="tool-container reveal">
+                <h3><i class="fas fa-calculator"></i> 退休金試算工具 (勞退新制)</h3>
+                <div class="tool-form">
+                     <div class="input-group">
+                        <label>目前年齡</label>
+                        <input type="number" id="currentAge" placeholder="例如：30">
+                    </div>
+                    <div class="input-group">
+                        <label>預計退休年齡</label>
+                        <input type="number" id="retirementAge" placeholder="例如：65">
+                    </div>
+                    <div class="input-group">
+                        <label>目前月薪 (元)</label>
+                        <input type="number" id="currentSalary" placeholder="例如：50000">
+                    </div>
+                    <div class="input-group">
+                        <label>預期薪資成長率 (%/年)</label>
+                        <input type="number" id="salaryGrowth" placeholder="例如：3" step="0.1">
+                    </div>
+                     <div class="input-group">
+                        <label>個人自願提繳率 (%)</label>
+                        <input type="number" id="personalContribution" placeholder="例如：6" step="1" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label>投資報酬率 (%/年)</label>
+                        <input type="number" id="investmentReturn" placeholder="例如：6" step="0.1">
+                    </div>
+                </div>
+                <button onclick="app.calculateRetirement()">計算退休金</button>
+                <div id="retirementResult"></div>
+            </div>
+
+            <h3 class="reveal">金融詐騙預防</h3>
+            <p class="reveal">金融詐騙無孔不入，應時刻保持警覺。切記「保證獲利、穩賺不賠」就是警訊。如遇金融消費爭議，可撥打<b>金融服務專線1998</b>或<b>165反詐騙專線</b>。</p>
+        </section>
+
+        <!-- Section 4: 職涯規劃與借貸 -->
+        <section id="section-4" class="content-section reveal">
+            <h2><i class="fas fa-briefcase"></i>四、職涯規劃與借貸</h2>
+            <p>在長壽時代，持續快樂地工作是百歲財務策略的關鍵。</p>
+
+            <h3>好債 vs 壞債</h3>
+            <div class="card-container">
+                <div class="card reveal" style="border-top-color: #5cb85c;">
+                    <h4><i class="fas fa-check-circle" style="color: #5cb85c;"></i> 好債</h4>
+                    <p>用於能產生未來收益的資產，例如：學習新技能的學貸、合理的投資性房貸。</p>
+                </div>
+                <div class="card reveal" style="border-top-color: #d9534f;">
+                    <h4><i class="fas fa-times-circle" style="color: #d9534f;"></i> 壞債</h4>
+                    <p>用於一次性消費或會貶值的物品，例如：購買奢侈品的信用卡債、非必要的汽車貸款。</p>
+                </div>
+            </div>
+
+            <h3 class="reveal">您的信用分數</h3>
+            <p class="reveal">信用分數是您與銀行打交道的重要依據，分數越高，越容易取得優惠的貸款條件。您可以透過<a href="https://www.jcic.org.tw" target="_blank" class="external-link">聯徵中心網站</a>查詢。</p>
+             <div class="tool-container reveal">
+                <h3><i class="fas fa-calculator"></i> 債務整合計算器</h3>
+                <p>此工具開發中，敬請期待！</p>
+            </div>
+        </section>
+
+        <!-- Section 5: 投資報酬與風險 -->
+        <section id="section-5" class="content-section reveal">
+            <h2><i class="fas fa-chart-line"></i>五、投資報酬與風險</h2>
+            <div class="quote reveal">投資六字真言：高報酬、高風險。</div>
+
+            <h3>投資工具風險等級</h3>
+            <div class="pyramid-container risk-pyramid reveal">
+                <div class="pyramid-level"><h4>高風險</h4><p>商品/原物料</p></div>
+                <div class="pyramid-level"><h4></h4><p>股票</p></div>
+                <div class="pyramid-level"><h4></h4><p>公司債</p></div>
+                <div class="pyramid-level"><h4>低風險</h4><p>存款、公債、貨幣市場基金</p></div>
+            </div>
+
+            <div id="investment-calculator-tool" class="tool-container reveal">
+                <h3><i class="fas fa-calculator"></i> 投資報酬率計算器</h3>
+                <div class="tool-form">
+                    <div class="input-group">
+                        <label>初始投資金額 (元)</label>
+                        <input type="number" id="initialInvestment" placeholder="例如：100000">
+                    </div>
+                    <div class="input-group">
+                        <label>每月定期投資 (元)</label>
+                        <input type="number" id="monthlyInvestment" placeholder="例如：10000">
+                    </div>
+                    <div class="input-group">
+                        <label>預期年報酬率 (%)</label>
+                        <input type="number" id="annualReturn" placeholder="例如：8" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>投資期間 (年)</label>
+                        <input type="number" id="investmentPeriod" placeholder="例如：10">
+                    </div>
+                </div>
+                <button onclick="app.calculateInvestment()">計算投資報酬</button>
+                <div id="investmentResult"></div>
+            </div>
+
+             <div id="asset-allocation-tool" class="tool-container reveal">
+                <h3><i class="fas fa-calculator"></i> 資產配置建議器</h3>
+                <div class="tool-form">
+                    <div class="input-group">
+                        <label>風險承受度</label>
+                        <select id="riskTolerance">
+                            <option value="">請選擇...</option>
+                            <option value="conservative">保守型</option>
+                            <option value="moderate">穩健型</option>
+                            <option value="aggressive">積極型</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>投資金額 (元)</label>
+                        <input type="number" id="totalAmount" placeholder="例如：1000000">
+                    </div>
+                </div>
+                <button onclick="app.suggestAllocation()">建議資產配置</button>
+                <div id="allocationResult"></div>
+                <div id="allocationChart" class="chart-container" style="display: none;">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 6: 人生風險與保險 -->
+        <section id="section-6" class="content-section reveal">
+            <h2><i class="fas fa-shield-heart"></i>六、人生風險與保險</h2>
+            <p>保險是用小額、可負擔的保費，來轉移未來可能無法承受的巨大財務損失。</p>
+            
+            <h3>主要人身保險解析</h3>
+            <div class="accordion-container reveal">
+                <div class="accordion-item">
+                    <button class="accordion-header">壽險 <span class="icon fas fa-chevron-down"></span></button>
+                    <div class="accordion-content"><div class="accordion-content-inner"><p>保障身故或全殘，主要為解決遺族的生活、教育與喪葬費用。分為保費較低的「定期壽險」與保費較高的「終身壽險」。</p></div></div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">醫療險 <span class="icon fas fa-chevron-down"></span></button>
+                    <div class="accordion-content"><div class="accordion-content-inner"><p>彌補疾病或意外的醫療開銷。其中「實支實付型」最為關鍵，能應對健保不給付的高額自費藥品與醫材。</p></div></div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">失能/長照險 <span class="icon fas fa-chevron-down"></span></button>
+                    <div class="accordion-content"><div class="accordion-content-inner"><p>因疾病或意外導致失能或需要長期照護時，提供一次性或分期給付，以支應看護費與生活開銷。</p></div></div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">癌症/重大傷病險 <span class="icon fas fa-chevron-down"></span></button>
+                    <div class="accordion-content"><div class="accordion-content-inner"><p>確診相關疾病時，提供一筆一次性給付的保險金，讓病患能彈性選擇最適合的治療方式，或彌補無法工作的收入損失。</p></div></div>
+                </div>
+            </div>
+            
+            <h3>退休風險管理工具</h3>
+            <div class="card-container">
+                <div class="card reveal"><h4><i class="fas fa-handshake"></i> 安養信託</h4><p>將資產交付信託管理，由銀行依約定支付生活費用，可有效防止資產被不當挪用或詐騙。</p></div>
+                <div class="card reveal"><h4><i class="fas fa-home"></i> 以房養老</h4><p>年長者將房屋抵押給銀行，由銀行按月支付生活費，將不動產轉化為退休現金流。</p></div>
+            </div>
+             <div class="tool-container reveal">
+                <h3><i class="fas fa-calculator"></i> 保險需求分析工具</h3>
+                <p>此工具開發中，敬請期待！</p>
+            </div>
+            <p class="reveal" style="margin-top:20px;"><b>實用工具</b>：別忘了到壽險公會的「<a href="https://insurtech.lia-roc.org.tw/index.html" target="_blank" class="external-link">保險存摺</a>」平台，一站式查詢您所有的保單！</p>
+        </section>
+    </main>
+
+    <script>
+        // 全域變數
+        let app;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化應用程式
+            app = new FinancialPlanningApp();
+
+            // --- Mobile Menu Toggle ---
+            const menuToggle = document.getElementById('menu-toggle');
+            const navbar = document.getElementById('navbar');
+            menuToggle.addEventListener('click', () => navbar.classList.toggle('active'));
+            
+            // --- Active Nav Link on Scroll ---
+            const sections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observerOptions = { rootMargin: '-40% 0px -60% 0px' };
+
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id;
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${activeId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => sectionObserver.observe(section));
+            
+            // Close mobile menu when a link is clicked
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 1200) navbar.classList.remove('active');
+                });
+            });
+
+            // --- Reveal on Scroll Animation ---
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+            // --- Accordion ---
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    this.classList.toggle('active');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+
+            // --- Financial Compass (Solar System) ---
+            const orbit = document.getElementById('orbit-container');
+            const planets = orbit.querySelectorAll('.planet');
+            
+            function positionPlanets() {
+                const orbitRadius = orbit.offsetWidth / 2;
+                const planetRadius = planets[0].offsetWidth / 2;
+                const center = orbitRadius - planetRadius;
+                const numPlanets = planets.length;
+                const angleStep = (2 * Math.PI) / numPlanets;
+
+                planets.forEach((planet, index) => {
+                    const angle = angleStep * index - (Math.PI / 2);
+                    const x = center + (orbitRadius * 0.8 - planetRadius) * Math.cos(angle);
+                    const y = center + (orbitRadius * 0.8 - planetRadius) * Math.sin(angle);
+                    planet.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            }
+            positionPlanets();
+            window.addEventListener('resize', positionPlanets);
+
+            // --- [此處為功能修正的重點] ---
+            // 為每個星球按鈕添加點擊事件監聽器
+            planets.forEach(planet => {
+                planet.addEventListener('click', function (e) {
+                    // 防止預設行為 (雖然此處 div 沒有預設行為)
+                    e.preventDefault(); 
+                    
+                    // 從 data-target 屬性讀取目標區塊的 ID
+                    const targetId = this.dataset.target;
+                    const targetElement = document.querySelector(targetId);
+                    
+                    // 如果找到目標區塊，就平滑滾動至該位置
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // --- Fetch external financial data ---
+            async function fetchFinancialData() {
+                const dataContainer = document.getElementById('data-container');
+                try {
+                    const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&type=IND&_=' + new Date().getTime()));
+                    if (!response.ok) throw new Error('Network response was not ok.');
+                    
+                    const data = await response.json();
+                    const jsonData = JSON.parse(data.contents);
+                    const dataArray = jsonData.data9 || [];
+
+                    if (jsonData.stat === 'OK' && dataArray.length > 0) {
+                        const taiexData = dataArray.find(d => d[0] === '發行量加權股價指數');
+                        if (taiexData) {
+                            const [name, close, changeWithSign, changePercentWithSign] = taiexData;
+                            const changeVal = parseFloat(changeWithSign.replace(/,/g, ''));
+                            
+                            let colorClass = changeVal > 0 ? 'color:green;' : (changeVal < 0 ? 'color:red;' : '');
+                            
+                            dataContainer.innerHTML = `
+                                <div style="display:flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 500;">臺灣加權指數 (TAIEX)</span>
+                                    <div style="text-align: right;">
+                                        <span style="font-weight: bold; font-size: 1.2em; ${colorClass}">${close}</span>
+                                        <span style="font-size: 0.9em; ${colorClass}">${changeWithSign} (${changePercentWithSign})</span>
+                                    </div>
+                                </div>
+                                <p style="font-size: 0.75em; color: #888; margin-top: 5px; margin-bottom: 0;">資料日期: ${jsonData.date} (僅供參考)</p>
+                            `;
+                        } else {
+                             throw new Error('TAIEX data not found in data9.');
+                        }
+                    } else if (jsonData.stat === 'OK' && dataArray.length === 0) {
+                         dataContainer.innerHTML = `<p>今日休市或尚無資料 (日期: ${jsonData.date})</p>`;
+                    }
+                    else {
+                        throw new Error('Invalid data format received.');
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch financial data:', error);
+                    dataContainer.innerHTML = '<p style="color:red;">無法載入即時財經資訊。</p>';
+                }
+            }
+            fetchFinancialData();
+        });
+
+        // 應用程式主要功能 (來自 app.js)
+        class FinancialPlanningApp {
+            constructor() {
+                this.charts = {}; // Store chart instances
+            }
+
+            calculateNetWorth() {
+                const cash = parseFloat(document.getElementById('cash').value) || 0;
+                const investments = parseFloat(document.getElementById('investments').value) || 0;
+                const realEstate = parseFloat(document.getElementById('realEstate').value) || 0;
+                const mortgage = parseFloat(document.getElementById('mortgage').value) || 0;
+                const creditCard = parseFloat(document.getElementById('creditCard').value) || 0;
+                const otherDebt = parseFloat(document.getElementById('otherDebt').value) || 0;
+
+                const totalAssets = cash + investments + realEstate;
+                const totalLiabilities = mortgage + creditCard + otherDebt;
+                const netWorth = totalAssets - totalLiabilities;
+
+                const resultDiv = document.getElementById('netWorthResult');
+                resultDiv.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-title">財務報表分析</div>
+                        <div class="result-item"><span class="result-label">總資產：</span><span class="result-value">NT$ ${totalAssets.toLocaleString('zh-TW')}</span></div>
+                        <div class="result-item"><span class="result-label">總負債：</span><span class="result-value">NT$ ${totalLiabilities.toLocaleString('zh-TW')}</span></div>
+                        <div class="result-item"><span class="result-label">淨資產：</span><span class="result-value" style="color: ${netWorth >= 0 ? 'var(--color-success)' : 'var(--color-error)'}">NT$ ${netWorth.toLocaleString('zh-TW')}</span></div>
+                    </div>`;
+
+                if (totalAssets > 0) {
+                    this.drawChart('assetChart', 'pie', ['現金存款', '投資資產', '不動產'], [cash, investments, realEstate], ['#4CAF50', '#2196F3', '#FFC107']);
+                }
+            }
+
+            calculateRetirement() {
+                const currentAge = parseInt(document.getElementById('currentAge').value);
+                const retirementAge = parseInt(document.getElementById('retirementAge').value);
+                const currentSalary = parseFloat(document.getElementById('currentSalary').value);
+                const salaryGrowth = parseFloat(document.getElementById('salaryGrowth').value) / 100;
+                const personalContribution = parseFloat(document.getElementById('personalContribution').value) / 100;
+                const investmentReturn = parseFloat(document.getElementById('investmentReturn').value) / 100;
+
+                if (!currentAge || !retirementAge || !currentSalary || isNaN(salaryGrowth) || isNaN(investmentReturn) || isNaN(personalContribution)) {
+                    alert('請填寫完整資料'); return;
+                }
+
+                const workingYears = retirementAge - currentAge;
+                let totalFund = 0;
+                for (let i = 0; i < workingYears; i++) {
+                    const yearSalary = currentSalary * 12 * Math.pow(1 + salaryGrowth, i);
+                    const employerContribution = Math.min(yearSalary, 150000 * 12) * 0.06;
+                    const employeeContribution = Math.min(yearSalary, 150000 * 12) * personalContribution;
+                    totalFund = (totalFund + employerContribution + employeeContribution) * (1 + investmentReturn);
+                }
+
+                const resultDiv = document.getElementById('retirementResult');
+                resultDiv.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-title">退休金試算結果 (勞退新制)</div>
+                        <div class="result-item"><span class="result-label">工作年數：</span><span class="result-value">${workingYears} 年</span></div>
+                        <div class="result-item"><span class="result-label">退休時累積金額：</span><span class="result-value">NT$ ${totalFund.toLocaleString('zh-TW', {maximumFractionDigits: 0})}</span></div>
+                        <div class="result-item"><span class="result-label">每月可領金額 (月領至85歲)：</span><span class="result-value">NT$ ${(totalFund / ((85 - retirementAge) * 12)).toLocaleString('zh-TW', {maximumFractionDigits: 0})}</span></div>
+                    </div>`;
+            }
+
+            calculateInvestment() {
+                const initial = parseFloat(document.getElementById('initialInvestment').value) || 0;
+                const monthly = parseFloat(document.getElementById('monthlyInvestment').value) || 0;
+                const rate = parseFloat(document.getElementById('annualReturn').value) / 100;
+                const years = parseFloat(document.getElementById('investmentPeriod').value);
+
+                if (isNaN(rate) || !years) { alert('請填寫完整資料'); return; }
+
+                const months = years * 12;
+                const monthlyRate = rate / 12;
+                
+                let futureValue = initial * Math.pow(1 + monthlyRate, months);
+                if (monthly > 0) {
+                    futureValue += monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+                }
+                
+                const totalInvested = initial + (monthly * months);
+                const totalReturn = futureValue - totalInvested;
+
+                const resultDiv = document.getElementById('investmentResult');
+                resultDiv.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-title">投資報酬計算結果</div>
+                        <div class="result-item"><span class="result-label">總投資本金：</span><span class="result-value">NT$ ${totalInvested.toLocaleString('zh-TW', {maximumFractionDigits: 0})}</span></div>
+                        <div class="result-item"><span class="result-label">投資期末價值：</span><span class="result-value">NT$ ${futureValue.toLocaleString('zh-TW', {maximumFractionDigits: 0})}</span></div>
+                        <div class="result-item"><span class="result-label">總報酬：</span><span class="result-value">NT$ ${totalReturn.toLocaleString('zh-TW', {maximumFractionDigits: 0})}</span></div>
+                        <div class="result-item"><span class="result-label">報酬率：</span><span class="result-value">${totalInvested > 0 ? ((totalReturn / totalInvested) * 100).toFixed(2) : 0}%</span></div>
+                    </div>`;
+            }
+            
+            suggestAllocation() {
+                const riskTolerance = document.getElementById('riskTolerance').value;
+                const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+
+                if (!riskTolerance || !totalAmount) { alert('請填寫完整資料'); return; }
+
+                let allocation = {};
+                if (riskTolerance === 'conservative') { allocation = { stocks: 20, bonds: 60, cash: 20 }; }
+                else if (riskTolerance === 'moderate') { allocation = { stocks: 50, bonds: 40, cash: 10 }; }
+                else { allocation = { stocks: 70, bonds: 25, cash: 5 }; }
+
+                const stockAmount = totalAmount * (allocation.stocks / 100);
+                const bondAmount = totalAmount * (allocation.bonds / 100);
+                const cashAmount = totalAmount * (allocation.cash / 100);
+
+                const resultDiv = document.getElementById('allocationResult');
+                resultDiv.innerHTML = `
+                    <div class="result-card">
+                        <div class="result-title">資產配置建議</div>
+                        <div class="result-item"><span class="result-label">股票型投資 (${allocation.stocks}%)：</span><span class="result-value">NT$ ${stockAmount.toLocaleString('zh-TW')}</span></div>
+                        <div class="result-item"><span class="result-label">債券型投資 (${allocation.bonds}%)：</span><span class="result-value">NT$ ${bondAmount.toLocaleString('zh-TW')}</span></div>
+                        <div class="result-item"><span class="result-label">現金部位 (${allocation.cash}%)：</span><span class="result-value">NT$ ${cashAmount.toLocaleString('zh-TW')}</span></div>
+                    </div>`;
+                
+                this.drawChart('pieChart', 'doughnut', ['股票', '債券', '現金'], [allocation.stocks, allocation.bonds, allocation.cash], ['#f44336', '#2196F3', '#FFC107']);
+            }
+
+            drawChart(canvasId, type, labels, data, colors) {
+                const chartContainer = document.getElementById(canvasId).parentElement;
+                chartContainer.style.display = 'block';
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                
+                if (this.charts[canvasId]) {
+                    this.charts[canvasId].destroy();
+                }
+                
+                this.charts[canvasId] = new Chart(ctx, {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{ data: data, backgroundColor: colors }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
