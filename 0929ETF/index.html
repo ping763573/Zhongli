@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣高股息與市值型ETF完整分析指南</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="header__title">台灣高股息與市值型ETF完整分析指南</h1>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="#overview" class="nav__link">ETF概觀</a></li>
+                    <li><a href="#comparison" class="nav__link">特性比較</a></li>
+                    <li><a href="#performance" class="nav__link">績效分析</a></li>
+                    <li><a href="#pros-cons" class="nav__link">優缺點</a></li>
+                    <li><a href="#guide" class="nav__link">選擇指南</a></li>
+                    <li><a href="#tools" class="nav__link">實用工具</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- ETF 概觀區塊 -->
+        <section id="overview" class="section section--overview">
+            <div class="container">
+                <h2 class="section__title">ETF概觀</h2>
+                <div class="intro-cards">
+                    <div class="intro-card">
+                        <h3>市值型ETF</h3>
+                        <p>追蹤台灣股市主要指數，以公司市值大小為權重分配，適合長期投資者追求資本增值。</p>
+                    </div>
+                    <div class="intro-card">
+                        <h3>高股息ETF</h3>
+                        <p>專注於高殖利率股票，提供穩定配息收入，適合追求現金流的投資者。</p>
+                    </div>
+                </div>
+                
+                <h3 class="subsection-title">主要ETF一覽</h3>
+                <div class="etf-grid" id="etf-cards">
+                    <!-- ETF cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 特性比較區塊 -->
+        <section id="comparison" class="section section--comparison">
+            <div class="container">
+                <h2 class="section__title">特性比較</h2>
+                <div class="comparison-controls">
+                    <h3>選擇要比較的ETF (最多4檔)</h3>
+                    <div class="comparison-selector" id="comparison-selector">
+                        <!-- Checkboxes will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="comparison-content">
+                    <div class="radar-chart-container">
+                        <h4>多維度比較雷達圖</h4>
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/e393683d8f98ab899a168e01ca9318fd/9fe17d7e-9f01-47cf-83dc-e0fc57d37d97/a6f734d1.png" alt="台灣主要ETF多維度比較雷達圖" class="radar-image">
+                    </div>
+                    
+                    <div class="comparison-table-container">
+                        <table class="comparison-table" id="comparison-table">
+                            <!-- Table will be populated by JavaScript -->
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="indicators-explanation">
+                    <h4>指標說明</h4>
+                    <div class="indicator-cards">
+                        <div class="indicator-card">
+                            <h5>風險等級</h5>
+                            <p>基於歷史波動率評估，1為最低風險，5為最高風險</p>
+                        </div>
+                        <div class="indicator-card">
+                            <h5>預期報酬率</h5>
+                            <p>基於歷史績效推估的年化報酬率</p>
+                        </div>
+                        <div class="indicator-card">
+                            <h5>殖利率</h5>
+                            <p>近12個月股利收入與股價的比率</p>
+                        </div>
+                        <div class="indicator-card">
+                            <h5>流動性</h5>
+                            <p>基於日平均成交量評估，1為流動性最差，5為最佳</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 績效分析區塊 -->
+        <section id="performance" class="section section--performance">
+            <div class="container">
+                <h2 class="section__title">績效分析</h2>
+                
+                <div class="performance-controls">
+                    <div class="time-selector">
+                        <label>時間範圍：</label>
+                        <select id="time-range">
+                            <option value="1">1年</option>
+                            <option value="3">3年</option>
+                            <option value="5">5年</option>
+                            <option value="10" selected>10年</option>
+                        </select>
+                    </div>
+                    <div class="return-type">
+                        <label>
+                            <input type="radio" name="return-type" value="total" checked> 含息報酬
+                        </label>
+                        <label>
+                            <input type="radio" name="return-type" value="price"> 不含息報酬
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="performance-chart-container">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/e393683d8f98ab899a168e01ca9318fd/bd55cb70-ac1e-430c-9e70-c46cd55266ad/5fe5a305.png" alt="市值型ETF vs 高股息ETF 10年含息總報酬比較" class="performance-image">
+                </div>
+                
+                <div class="performance-summary">
+                    <div class="summary-card">
+                        <h4>市值型ETF表現</h4>
+                        <p>10年累積報酬：<span class="highlight">+85%</span></p>
+                        <p>年化報酬率：<span class="highlight">約6.3%</span></p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>高股息ETF表現</h4>
+                        <p>10年累積報酬：<span class="highlight">+52%</span></p>
+                        <p>年化報酬率：<span class="highlight">約4.3%</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 優缺點分析區塊 -->
+        <section id="pros-cons" class="section section--pros-cons">
+            <div class="container">
+                <h2 class="section__title">優缺點分析</h2>
+                <div class="pros-cons-grid">
+                    <div class="pros-cons-card">
+                        <h3>市值型ETF</h3>
+                        <div class="accordion-item">
+                            <button class="accordion-header" data-target="market-cap-pros">
+                                優點 <span class="accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content" id="market-cap-pros">
+                                <ul id="market-cap-pros-list">
+                                    <!-- Will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header" data-target="market-cap-cons">
+                                缺點 <span class="accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content" id="market-cap-cons">
+                                <ul id="market-cap-cons-list">
+                                    <!-- Will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons-card">
+                        <h3>高股息ETF</h3>
+                        <div class="accordion-item">
+                            <button class="accordion-header" data-target="high-dividend-pros">
+                                優點 <span class="accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content" id="high-dividend-pros">
+                                <ul id="high-dividend-pros-list">
+                                    <!-- Will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header" data-target="high-dividend-cons">
+                                缺點 <span class="accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content" id="high-dividend-cons">
+                                <ul id="high-dividend-cons-list">
+                                    <!-- Will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="risk-warning">
+                    <h4>⚠️ 投資風險提醒</h4>
+                    <p>ETF投資具有市場風險，配息並非保證，過去績效不代表未來表現。投資前請詳閱公開說明書並審慎評估自身風險承受度。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 選擇指南區塊 -->
+        <section id="guide" class="section section--guide">
+            <div class="container">
+                <h2 class="section__title">投資人選擇指南</h2>
+                
+                <div class="questionnaire-container">
+                    <h3>投資偏好問卷</h3>
+                    <form id="investment-questionnaire" class="questionnaire">
+                        <div class="question">
+                            <label>您的投資目標是？</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="goal" value="growth"> 追求長期資本增值</label>
+                                <label><input type="radio" name="goal" value="income"> 追求穩定現金收入</label>
+                                <label><input type="radio" name="goal" value="balanced"> 兼顧成長與收入</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <label>您的投資經驗？</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="experience" value="beginner"> 新手投資者</label>
+                                <label><input type="radio" name="experience" value="intermediate"> 中等經驗</label>
+                                <label><input type="radio" name="experience" value="advanced"> 豐富經驗</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <label>您的投資期間？</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="period" value="short"> 1-3年</label>
+                                <label><input type="radio" name="period" value="medium"> 3-10年</label>
+                                <label><input type="radio" name="period" value="long"> 10年以上</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <label>您的風險承受度？</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="risk" value="conservative"> 保守型</label>
+                                <label><input type="radio" name="risk" value="moderate"> 穩健型</label>
+                                <label><input type="radio" name="risk" value="aggressive"> 積極型</label>
+                                <label><input type="radio" name="risk" value="speculative"> 激進型</label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn--primary">獲得投資建議</button>
+                    </form>
+                </div>
+                
+                <div class="recommendation-result hidden" id="recommendation-result">
+                    <h3>個人化投資建議</h3>
+                    <div class="recommendation-content">
+                        <div class="recommended-etfs" id="recommended-etfs">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="allocation-chart">
+                            <h4>建議資產配置</h4>
+                            <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/e393683d8f98ab899a168e01ca9318fd/6843d5dd-431b-4890-aacd-ced3ebce4c7f/ebe60834.png" alt="不同風險偏好投資人的ETF配置策略建議" class="allocation-image">
+                            <div id="allocation-details" class="allocation-details">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 實用工具區塊 -->
+        <section id="tools" class="section section--tools">
+            <div class="container">
+                <h2 class="section__title">實用工具</h2>
+                
+                <div class="tools-grid">
+                    <!-- 配息計算器 -->
+                    <div class="tool-card">
+                        <h3>ETF配息計算器</h3>
+                        <div class="calculator">
+                            <div class="form-group">
+                                <label class="form-label">選擇ETF：</label>
+                                <select class="form-control" id="dividend-etf-select">
+                                    <option value="">請選擇</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">投資金額（元）：</label>
+                                <input type="number" class="form-control" id="investment-amount" placeholder="100000">
+                            </div>
+                            <button class="btn btn--secondary" id="calculate-dividend">計算配息</button>
+                            <div class="calculator-result" id="dividend-result">
+                                <!-- Results will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 投資組合模擬器 -->
+                    <div class="tool-card">
+                        <h3>投資組合模擬器</h3>
+                        <div class="portfolio-simulator">
+                            <div class="portfolio-inputs" id="portfolio-inputs">
+                                <div class="portfolio-input">
+                                    <label>市值型ETF比例（%）：</label>
+                                    <input type="range" min="0" max="100" value="50" id="market-cap-ratio">
+                                    <span id="market-cap-ratio-value">50%</span>
+                                </div>
+                                <div class="portfolio-input">
+                                    <label>高股息ETF比例（%）：</label>
+                                    <input type="range" min="0" max="100" value="50" id="high-dividend-ratio">
+                                    <span id="high-dividend-ratio-value">50%</span>
+                                </div>
+                            </div>
+                            <button class="btn btn--secondary" id="simulate-portfolio">模擬投資組合</button>
+                            <div class="simulation-result" id="simulation-result">
+                                <!-- Results will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 定期定額試算器 -->
+                    <div class="tool-card">
+                        <h3>定期定額試算器</h3>
+                        <div class="dca-calculator">
+                            <div class="form-group">
+                                <label class="form-label">每月投資金額（元）：</label>
+                                <input type="number" class="form-control" id="monthly-amount" placeholder="10000">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">投資期間（年）：</label>
+                                <input type="number" class="form-control" id="investment-years" placeholder="10">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">預期年報酬率（%）：</label>
+                                <input type="number" class="form-control" id="expected-return" placeholder="6" step="0.1">
+                            </div>
+                            <button class="btn btn--secondary" id="calculate-dca">計算複利效果</button>
+                            <div class="calculator-result" id="dca-result">
+                                <!-- Results will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="disclaimer">
+                <h4>重要聲明</h4>
+                <p>本網站資料僅供參考，不構成投資建議。投資有風險，過去績效不代表未來表現。投資前請詳閱公開說明書並審慎評估自身風險承受度。</p>
+                <p>資料更新時間：2025年9月</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
