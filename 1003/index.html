@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防詐知識中心 | 守護您的財產安全</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="goToHomepage()">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>防詐知識中心</span>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-section="dashboard">
+                        <i class="fas fa-chart-pie"></i> 首頁統計
+                    </button>
+                    <button class="nav-btn" data-section="knowledge">
+                        <i class="fas fa-book"></i> 知識庫
+                    </button>
+                    <button class="nav-btn" data-section="quiz">
+                        <i class="fas fa-question-circle"></i> 防詐測驗
+                    </button>
+                    <button class="nav-btn" data-section="scenarios">
+                        <i class="fas fa-gamepad"></i> 情境模擬
+                    </button>
+                    <button class="nav-btn" data-section="emergency">
+                        <i class="fas fa-phone"></i> 緊急求助
+                    </button>
+                    <button class="nav-btn" data-section="legal">
+                        <i class="fas fa-gavel"></i> 法規資訊
+                    </button>
+                    <button class="nav-btn" data-section="tools">
+                        <i class="fas fa-tools"></i> 防詐工具
+                    </button>
+                </nav>
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            <i class="fas fa-exclamation-triangle warning-icon"></i>
+                            2024年詐騙損失創新高
+                        </h1>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">502億</span>
+                                <span class="stat-label">總損失金額</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">11萬+</span>
+                                <span class="stat-label">詐騙案件</span>
+                            </div>
+                        </div>
+                        <p class="hero-description">每天都有人受騙，學會防詐知識保護自己！</p>
+                        <div class="hero-actions">
+                            <button class="btn btn--primary" data-action="start-quiz">
+                                <i class="fas fa-play"></i> 開始防詐測驗
+                            </button>
+                            <button class="btn btn--outline" data-action="emergency-call">
+                                <i class="fas fa-phone"></i> 165專線
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>詐騙趨勢分析</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="fraudChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>主要詐騙類型</h3>
+                            <div class="fraud-types-list">
+                                <div class="fraud-type-item">
+                                    <div class="fraud-type-info">
+                                        <span class="fraud-type-name">假投資詐騙</span>
+                                        <span class="fraud-type-amount">16億/週</span>
+                                    </div>
+                                    <div class="fraud-type-bar">
+                                        <div class="fraud-type-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                <div class="fraud-type-item">
+                                    <div class="fraud-type-info">
+                                        <span class="fraud-type-name">愛情詐騙</span>
+                                        <span class="fraud-type-amount">14億/月</span>
+                                    </div>
+                                    <div class="fraud-type-bar">
+                                        <div class="fraud-type-fill" style="width: 87%"></div>
+                                    </div>
+                                </div>
+                                <div class="fraud-type-item">
+                                    <div class="fraud-type-info">
+                                        <span class="fraud-type-name">假檢警詐騙</span>
+                                        <span class="fraud-type-amount">11億/月</span>
+                                    </div>
+                                    <div class="fraud-type-bar">
+                                        <div class="fraud-type-fill" style="width: 69%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Knowledge Base Section -->
+        <section id="knowledge" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>防詐知識庫</h2>
+                    <p>了解各種詐騙手法，提升防範意識</p>
+                </div>
+                <div class="knowledge-grid">
+                    <!-- Fraud types will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>防詐測驗</h2>
+                    <p>測試您的防詐能力，獲得即時反饋</p>
+                </div>
+                <div class="quiz-container">
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar">
+                            <div class="quiz-progress-fill"></div>
+                        </div>
+                        <span class="quiz-progress-text">題目 <span id="currentQuestion">1</span> / 5</span>
+                    </div>
+                    <div class="quiz-content">
+                        <div class="quiz-question-card">
+                            <h3 id="questionText">載入中...</h3>
+                            <div class="quiz-options" id="quizOptions">
+                                <!-- Options will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="quiz-feedback hidden" id="quizFeedback">
+                            <div class="feedback-content">
+                                <div class="feedback-icon"></div>
+                                <h4 class="feedback-title"></h4>
+                                <p class="feedback-explanation"></p>
+                                <button class="btn btn--primary" id="nextQuestion">下一題</button>
+                            </div>
+                        </div>
+                        <div class="quiz-results hidden" id="quizResults">
+                            <div class="results-content">
+                                <i class="fas fa-trophy results-icon"></i>
+                                <h3>測驗完成！</h3>
+                                <div class="results-score">
+                                    您的得分：<span id="finalScore">0</span> / 5
+                                </div>
+                                <div class="results-message" id="resultsMessage"></div>
+                                <div class="results-actions">
+                                    <button class="btn btn--primary" id="restartQuiz">重新測驗</button>
+                                    <button class="btn btn--outline" id="shareResults">分享結果</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scenarios Section -->
+        <section id="scenarios" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>情境模擬</h2>
+                    <p>體驗真實詐騙情境，學會正確應對</p>
+                </div>
+                <div class="scenarios-grid">
+                    <!-- Scenarios will be populated by JavaScript -->
+                </div>
+                
+                <!-- Scenario Player Modal -->
+                <div class="modal hidden" id="scenarioModal">
+                    <div class="modal-backdrop"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="scenarioTitle">情境模擬</h3>
+                            <button class="modal-close" id="closeScenario">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="scenario-player">
+                                <div class="scenario-content" id="scenarioContent">
+                                    <!-- Scenario content will be populated -->
+                                </div>
+                                <div class="scenario-choices" id="scenarioChoices">
+                                    <!-- Choices will be populated -->
+                                </div>
+                                <div class="scenario-feedback hidden" id="scenarioFeedback">
+                                    <!-- Feedback will be populated -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Emergency Section -->
+        <section id="emergency" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>緊急求助</h2>
+                    <p>遇到詐騙立即求助，越快行動損失越小</p>
+                </div>
+                <div class="emergency-grid">
+                    <div class="emergency-card primary">
+                        <div class="emergency-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h3>165反詐騙專線</h3>
+                        <p>24小時免費諮詢專線</p>
+                        <p class="emergency-note">市話免費，中華電信手機免費</p>
+                        <button class="btn btn--primary emergency-call" data-phone="165">
+                            <i class="fas fa-phone"></i> 立即撥打 165
+                        </button>
+                    </div>
+                    <div class="emergency-card">
+                        <div class="emergency-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>110報案專線</h3>
+                        <p>緊急報案專線</p>
+                        <p class="emergency-note">免費</p>
+                        <button class="btn btn--outline emergency-call" data-phone="110">
+                            <i class="fas fa-phone"></i> 撥打 110
+                        </button>
+                    </div>
+                    <div class="emergency-card">
+                        <div class="emergency-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>1950消保專線</h3>
+                        <p>消費糾紛申訴專線</p>
+                        <p class="emergency-note">免費</p>
+                        <button class="btn btn--outline emergency-call" data-phone="1950">
+                            <i class="fas fa-phone"></i> 撥打 1950
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="emergency-tips">
+                    <h3>遇到詐騙該怎麼辦？</h3>
+                    <div class="tips-grid">
+                        <div class="tip-item">
+                            <div class="tip-number">1</div>
+                            <div class="tip-content">
+                                <h4>立即停止</h4>
+                                <p>停止所有金錢往來和個資提供</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-number">2</div>
+                            <div class="tip-content">
+                                <h4>撥打165</h4>
+                                <p>立即撥打165反詐騙專線諮詢</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-number">3</div>
+                            <div class="tip-content">
+                                <h4>保留證據</h4>
+                                <p>保存所有相關對話、轉帳紀錄</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-number">4</div>
+                            <div class="tip-content">
+                                <h4>報警備案</h4>
+                                <p>到就近派出所報案，取得報案三聯單</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legal Section -->
+        <section id="legal" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>法規資訊</h2>
+                    <p>了解相關法律條文，知法守法</p>
+                </div>
+                <div class="legal-grid">
+                    <!-- Legal information will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>防詐工具推薦</h2>
+                    <p>善用科技工具，提升防詐能力</p>
+                </div>
+                <div class="tools-grid">
+                    <!-- Tools will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>防詐知識中心</span>
+                    </div>
+                    <p>守護全民財產安全，共創無詐社會</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>緊急聯絡</h4>
+                        <ul>
+                            <li><a href="tel:165">165反詐騙專線</a></li>
+                            <li><a href="tel:110">110報案專線</a></li>
+                            <li><a href="tel:1950">1950消保專線</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>相關資源</h4>
+                        <ul>
+                            <li><a href="https://165.npa.gov.tw" target="_blank">165全民防騙網</a></li>
+                            <li><a href="#" target="_blank">內政部警政署</a></li>
+                            <li><a href="#" target="_blank">金融監督管理委員會</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 防詐知識中心. 版權所有.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
