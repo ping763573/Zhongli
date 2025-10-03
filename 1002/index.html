@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資的朋友與敵人 - 理財教育平台</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h3>投資理財教育</h3>
+            </div>
+            <button class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#" class="nav-link active" data-page="home">首頁</a>
+                <a href="#" class="nav-link" data-page="analysis">分析摘要</a>
+                <a href="#" class="nav-link" data-page="suggestions">學習建議</a>
+                <a href="#" class="nav-link" data-page="flashcards">學習閃卡</a>
+                <a href="#" class="nav-link" data-page="quiz">填空測驗</a>
+                <a href="#" class="nav-link" data-page="data">數據展示</a>
+                <a href="#" class="nav-link" data-page="calculator">複利計算器</a>
+                <a href="#" class="nav-link" data-page="fraud-prevention">防詐知識</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- 首頁 -->
+        <div class="page active" id="home">
+            <div class="container">
+                <div class="hero-section">
+                    <h1 class="hero-title">投資的朋友與敵人</h1>
+                    <p class="hero-subtitle">理財教育學習平台</p>
+                    <p class="hero-description">基於中壢社區大學課程內容，幫助您建立正確的投資理財觀念</p>
+                </div>
+                
+                <div class="navigation-grid">
+                    <div class="nav-card" data-page="analysis">
+                        <div class="nav-card-icon">📊</div>
+                        <h3>分析摘要</h3>
+                        <p>投資教育重點分析，包含複利、投資理論等核心概念</p>
+                    </div>
+                    <div class="nav-card" data-page="suggestions">
+                        <div class="nav-card-icon">💡</div>
+                        <h3>學習建議</h3>
+                        <p>實用的投資理財建議與風險管理策略</p>
+                    </div>
+                    <div class="nav-card" data-page="flashcards">
+                        <div class="nav-card-icon">🎯</div>
+                        <h3>學習閃卡</h3>
+                        <p>32張互動式學習卡片，翻轉查看答案</p>
+                    </div>
+                    <div class="nav-card" data-page="quiz">
+                        <div class="nav-card-icon">✍️</div>
+                        <h3>填空測驗</h3>
+                        <p>30道填空題測驗，檢驗您的學習成效</p>
+                    </div>
+                    <div class="nav-card" data-page="data">
+                        <div class="nav-card-icon">📈</div>
+                        <h3>數據展示</h3>
+                        <p>投資數據視覺化圖表與統計分析</p>
+                    </div>
+                    <div class="nav-card" data-page="calculator">
+                        <div class="nav-card-icon">🧮</div>
+                        <h3>複利計算器</h3>
+                        <p>實用的複利計算工具，支援全螢幕模式</p>
+                    </div>
+                     <div class="nav-card" data-page="fraud-prevention">
+                        <div class="nav-card-icon">🛡️</div>
+                        <h3>防詐知識</h3>
+                        <p>了解常見金融詐騙手法，保護您的資產安全</p>
+                    </div>
+                </div>
+
+                <div class="course-intro">
+                    <div class="card">
+                        <div class="card__body">
+                            <h2>課程簡介</h2>
+                            <p>本課程旨在幫助學習者建立正確的投資理財觀念，了解投資中的「朋友」（複利效應、正確觀念）與「敵人」（行為偏誤、投資陷阱），讓您在投資路上做出更明智的決定。</p>
+                            
+                            <h3>學習目標</h3>
+                            <ul>
+                                <li>理解複利的威力與72法則</li>
+                                <li>掌握彼得林區雞尾酒理論</li>
+                                <li>學會三錢理論的理財規劃</li>
+                                <li>認識投資風險與行為偏誤</li>
+                                <li>建立長期投資的正確心態</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分析摘要頁面 -->
+        <div class="page" id="analysis">
+            <div class="container">
+                <h1>分析摘要</h1>
+                <div class="analysis-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>複利的重要性</h3>
+                            <p>愛因斯坦曾說：「複利是世界第八大奇蹟。」複利讓利息本身也產生利息，時間越長威力越驚人。</p>
+                            <div class="highlight-box">
+                                <p><strong>72法則：</strong>72 ÷ (利率×100) ≒ 本金變兩倍的年數</p>
+                                <p>例如：7.2%利率約需10年本金翻倍</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>彼得林區雞尾酒理論</h3>
+                            <p>透過觀察雞尾酒會上賓客對股票的態度，判斷股市所處階段：</p>
+                            <ul>
+                                <li><strong>第一階段：</strong>賓客說股市危險 → 買進時機</li>
+                                <li><strong>第二階段：</strong>寧可聊其他話題 → 持續加碼</li>
+                                <li><strong>第三階段：</strong>熱烈討論股票 → 分批減碼</li>
+                                <li><strong>第四階段：</strong>教你買什麼股票 → 趕快出場</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>投資風險分類</h3>
+                            <p><strong>系統風險（無法分散）：</strong></p>
+                            <ul>
+                                <li>政經情勢變動</li>
+                                <li>通貨膨脹</li>
+                                <li>利率變動</li>
+                            </ul>
+                            <p><strong>非系統風險（可分散）：</strong></p>
+                            <ul>
+                                <li>公司營運風險</li>
+                                <li>產業風險</li>
+                                <li>信用風險</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>三錢理論</h3>
+                            <div class="three-money-grid">
+                                <div class="money-type">
+                                    <h4>保命錢</h4>
+                                    <p>不追求報酬，注重安全易變現</p>
+                                    <span class="money-tools">現金、定存、保險</span>
+                                </div>
+                                <div class="money-type">
+                                    <h4>投資錢</h4>
+                                    <p>追求夠用的報酬，風險較小</p>
+                                    <span class="money-tools">大盤指數、被動投資</span>
+                                </div>
+                                <div class="money-type">
+                                    <h4>投機錢</h4>
+                                    <p>追求高報酬，承擔較大風險</p>
+                                    <span class="money-tools">積極投資策略</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>行為偏誤對投資的影響</h3>
+                            <ul>
+                                <li><strong>損失規避：</strong>對損失比獲利更敏感（2-3倍）</li>
+                                <li><strong>從眾行為：</strong>跟隨大多數人的投資決定</li>
+                                <li><strong>確認偏誤：</strong>只收集支持自己觀點的資訊</li>
+                                <li><strong>過度自信：</strong>高估自己的投資能力</li>
+                                <li><strong>錨定偏見：</strong>過度依賴最初的資訊</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 學習建議頁面 -->
+        <div class="page" id="suggestions">
+            <div class="container">
+                <h1>學習建議</h1>
+                <div class="suggestions-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>🚀 投資新手指南</h3>
+                            <p>建立正確的投資觀念是成功的第一步</p>
+                            <div class="action-steps">
+                                <h4>具體行動步驟：</h4>
+                                <ol>
+                                    <li>先建立緊急預備金（保命錢）</li>
+                                    <li>了解自己的風險承受度</li>
+                                    <li>從大盤指數基金開始投資</li>
+                                    <li>定期定額分散投資時間</li>
+                                    <li>持續學習並檢視投資組合</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>⚖️ 風險管理策略</h3>
+                            <p>風險控制是投資成功的關鍵要素</p>
+                            <div class="action-steps">
+                                <h4>具體行動步驟：</h4>
+                                <ol>
+                                    <li>不要把所有雞蛋放在同一個籃子</li>
+                                    <li>設定停損點並嚴格執行</li>
+                                    <li>投資金額不超過可承受的損失</li>
+                                    <li>定期檢視並調整投資組合</li>
+                                    <li>避免使用過高的槓桿</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>❌ 避免常見投資錯誤</h3>
+                            <p>學習他人的失敗經驗，避免重蹈覆轍</p>
+                            <div class="action-steps">
+                                <h4>具體行動步驟：</h4>
+                                <ol>
+                                    <li>不要追高殺低，避免情緒化決策</li>
+                                    <li>不要聽信明牌或小道消息</li>
+                                    <li>不要頻繁進出市場</li>
+                                    <li>不要把投資當作賭博</li>
+                                    <li>不要借錢投資</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>🛡️ 防範金融詐騙</h3>
+                            <p>保護自己免受金融詐騙的侵害</p>
+                            <div class="action-steps">
+                                <h4>五不原則：</h4>
+                                <ol>
+                                    <li>不接陌生來電推薦投資</li>
+                                    <li>不點擊未知連結</li>
+                                    <li>不聽信投資明牌</li>
+                                    <li>不怕莫名威脅</li>
+                                    <li>不給個人資料</li>
+                                </ol>
+                                <p><strong>遇疑慮請撥打165專線</strong></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>📈 長期投資的重要性</h3>
+                            <p>時間是投資者最好的朋友</p>
+                            <div class="action-steps">
+                                <h4>具體行動步驟：</h4>
+                                <ol>
+                                    <li>制定長期投資計劃（5-10年以上）</li>
+                                    <li>忽略短期市場波動</li>
+                                    <li>利用複利效應累積財富</li>
+                                    <li>定期檢視但不頻繁調整</li>
+                                    <li>堅持紀律執行投資計劃</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>🎯 投資心態建設</h3>
+                            <p>正確的投資心態決定成敗</p>
+                            <div class="action-steps">
+                                <h4>具體行動步驟：</h4>
+                                <ol>
+                                    <li>保持理性，避免貪婪和恐懼</li>
+                                    <li>接受市場的不確定性</li>
+                                    <li>學會從失敗中吸取教訓</li>
+                                    <li>持續學習新的投資知識</li>
+                                    <li>保持耐心，不求快速致富</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 學習閃卡頁面 -->
+        <div class="page" id="flashcards">
+            <div class="container">
+                <div class="flashcard-header">
+                    <h1>學習閃卡</h1>
+                    <div class="flashcard-controls">
+                        <div class="progress-info">
+                            <span id="card-counter">1 / 32</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="filter-controls">
+                            <select id="category-filter" class="form-control">
+                                <option value="all">所有分類</option>
+                                <option value="複利概念">複利概念</option>
+                                <option value="投資理論">投資理論</option>
+                                <option value="投資風險">投資風險</option>
+                                <option value="理財規劃">理財規劃</option>
+                                <option value="行為偏誤">行為偏誤</option>
+                                <option value="投資大師">投資大師</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="card-category" id="card-category">複利概念</div>
+                                <div class="card-question" id="card-question">點擊載入問題...</div>
+                                <div class="flip-hint">點擊翻轉查看答案</div>
+                            </div>
+                            <div class="flashcard-back">
+                                <div class="card-answer" id="card-answer">答案載入中...</div>
+                                <div class="flip-hint">點擊翻轉回到問題</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-navigation">
+                    <button class="btn btn--secondary" id="prev-card">上一題</button>
+                    <button class="btn btn--outline" id="mark-learned">標記已學會</button>
+                    <button class="btn btn--secondary" id="next-card">下一題</button>
+                </div>
+
+                <div class="learned-status">
+                    <p>已學會: <span id="learned-count">0</span> / <span id="total-cards">32</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 填空測驗頁面 -->
+        <div class="page" id="quiz">
+            <div class="container">
+                <div class="quiz-header">
+                    <h1>填空測驗</h1>
+                    <div class="quiz-info">
+                        <div class="quiz-progress">
+                            <span>進度: <span id="quiz-current">1</span> / <span id="quiz-total">30</span></span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="quiz-progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="quiz-score">
+                            <span>正確率: <span id="quiz-accuracy">0%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question" id="quiz-question">
+                        載入中...
+                    </div>
+                    <div class="quiz-input-container">
+                        <input type="text" id="quiz-input" class="form-control quiz-input" placeholder="請輸入答案">
+                        <button class="btn btn--primary" id="check-answer">檢查答案</button>
+                    </div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                    <div class="quiz-explanation" id="quiz-explanation"></div>
+                </div>
+
+                <div class="quiz-navigation">
+                    <button class="btn btn--secondary" id="prev-question" disabled>上一題</button>
+                    <button class="btn btn--secondary" id="next-question">下一題</button>
+                </div>
+
+                <div class="quiz-results" id="quiz-results" style="display: none;">
+                    <div class="card">
+                        <div class="card__body">
+                            <h2>測驗完成！</h2>
+                            <div class="results-summary">
+                                <p>總分: <span id="final-score">0</span> / 30</p>
+                                <p>正確率: <span id="final-accuracy">0%</span></p>
+                            </div>
+                            <div class="learning-recommendation" id="learning-recommendation">
+                                <h3>學習建議</h3>
+                                <p id="recommendation-text"></p>
+                            </div>
+                            <button class="btn btn--primary" id="restart-quiz">重新開始</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 數據展示頁面 -->
+        <div class="page" id="data">
+            <div class="container">
+                <h1>數據展示</h1>
+                <div class="data-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>72法則表格</h3>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>年利率</th>
+                                            <th>倍增年數</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rule72-table">
+                                        <!-- 動態載入 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>投資大師績效比較</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="masters-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>複利效果視覺化</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="compound-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>早期投資 vs 晚期投資</h3>
+                            <div class="investment-comparison">
+                                <div class="comparison-item">
+                                    <h4>小明 (25歲開始)</h4>
+                                    <p>每月投資: $3,000</p>
+                                    <p>投資期間: 10年 (25-35歲)</p>
+                                    <p>總投入: $360,000</p>
+                                    <p class="highlight">65歲時價值: $1,864,000</p>
+                                </div>
+                                <div class="comparison-item">
+                                    <h4>小華 (35歲開始)</h4>
+                                    <p>每月投資: $3,000</p>
+                                    <p>投資期間: 30年 (35-65歲)</p>
+                                    <p>總投入: $1,080,000</p>
+                                    <p class="highlight">65歲時價值: $1,800,000</p>
+                                </div>
+                            </div>
+                            <p class="comparison-conclusion">
+                                <strong>結論:</strong> 小明投入更少但更早開始，最終獲得更多！
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>系統風險 vs 非系統風險</h3>
+                            <div class="risk-analysis">
+                                <div class="risk-type">
+                                    <h4>系統風險 (無法分散)</h4>
+                                    <ul id="system-risks">
+                                        <!-- 動態載入 -->
+                                    </ul>
+                                </div>
+                                <div class="risk-type">
+                                    <h4>非系統風險 (可分散)</h4>
+                                    <ul id="non-system-risks">
+                                        <!-- 動態載入 -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 複利計算器頁面 -->
+        <div class="page" id="calculator">
+            <div class="container" id="calculator-container">
+                <div class="calculator-header">
+                    <h1>複利計算器</h1>
+                    <button class="btn btn--outline" id="fullscreen-toggle">全螢幕</button>
+                </div>
+
+                <div class="calculator-content">
+                    <div class="calculator-inputs">
+                        <div class="card">
+                            <div class="card__body">
+                                <div class="input-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">本金 (元)</label>
+                                        <input type="number" id="principal" class="form-control" value="10000" min="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">年利率 (%)</label>
+                                        <input type="number" id="rate" class="form-control" value="7.2" min="0" max="100" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">投資年期</label>
+                                        <input type="number" id="years" class="form-control" value="10" min="1" max="50">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">計息頻率</label>
+                                        <select id="frequency" class="form-control">
+                                            <option value="1">年計息</option>
+                                            <option value="4">季計息</option>
+                                            <option value="12">月計息</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="btn btn--primary btn--full-width" id="calculate">計算複利</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calculator-results">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>計算結果</h3>
+                                <div class="results-summary">
+                                    <div class="result-item">
+                                        <span class="result-label">本金:</span>
+                                        <span class="result-value" id="result-principal">$0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <span class="result-label">利息收入:</span>
+                                        <span class="result-value" id="result-interest">$0</span>
+                                    </div>
+                                    <div class="result-item highlight">
+                                        <span class="result-label">總金額:</span>
+                                        <span class="result-value" id="result-total">$0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>72法則快速計算</h3>
+                                <p>根據您輸入的利率 <span id="rate-display">7.2%</span>，本金翻倍需要約 <span id="double-years">10</span> 年</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>複利成長圖表</h3>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="growth-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>單利 vs 複利比較</h3>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="comparison-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>年度成長明細表</h3>
+                                <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>年度</th>
+                                                <th>期初金額</th>
+                                                <th>利息</th>
+                                                <th>期末金額</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="growth-table">
+                                            <!-- 動態載入 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 防詐知識頁面 -->
+        <div class="page" id="fraud-prevention">
+            <div class="container" id="fraud-prevention-container">
+                <div class="fraud-prevention-header">
+                    <h1>防詐知識</h1>
+                    <button class="btn btn--outline" id="fraud-fullscreen-toggle">全螢幕</button>
+                </div>
+                <div class="suggestions-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>常見詐騙手法</h3>
+                            <div class="action-steps">
+                                <ul>
+                                    <li><strong>保證獲利/高報酬：</strong>宣稱「穩賺不賠」、「保證獲利」、「無風險高報酬」，利用人性貪婪弱點。</li>
+                                    <li><strong>假冒名人/專家：</strong>盜用名人照片或冒充投資專家，在社群媒體或LINE群組上分享假投資建議。</li>
+                                    <li><strong>假投資平台/APP：</strong>誘導被害人下載假的投資APP或登入假網站，初期可能給予小額獲利，待大筆資金投入後即關閉平台。</li>
+                                    <li><strong>網路釣魚：</strong>發送假冒券商或交易所的郵件/簡訊，騙取您的帳號密碼等個資。</li>
+                                    <li><strong>虛擬貨幣/NFT詐騙：</strong>利用新興金融商品資訊不透明的特性，編造複雜的投資計畫進行詐騙。</li>
+                                    <li><strong>交友軟體詐騙(殺豬盤)：</strong>透過交友軟體建立感情關係，再誘導對方投入資金到詐騙平台。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>如何判斷真假投資</h3>
+                            <div class="action-steps">
+                                <ul>
+                                    <li><strong>查證合法性：</strong>投資機構或平台是否受金管會等主管機關監管？可至金管會網站查詢合法金融機構名單。</li>
+                                    <li><strong>報酬率是否合理：</strong>遠高於市場平均水準(如年化20%以上)的報酬率，通常有詐。巴菲特的年化報酬率約20%已是頂尖水準。</li>
+                                    <li><strong>金流是否正常：</strong>是否要求將資金匯入「個人帳戶」而非公司帳戶？正常的投資管道金流清晰可查。</li>
+                                    <li><strong>資訊是否透明：</strong>是否能清楚說明投資標的、風險、及費用？語焉不詳或刻意隱瞞細節都應警惕。</li>
+                                    <li><strong>是否催促做決定：</strong>是否以「限時優惠」、「名額有限」等話術，製造急迫感，讓您沒時間思考？</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>防範措施 (五不三要)</h3>
+                            <div class="action-steps">
+                                <h4>五不原則：</h4>
+                                <ol>
+                                    <li><strong>不接</strong>陌生來電、<strong>不加</strong>陌生投資群組。</li>
+                                    <li><strong>不點</strong>未知投資網址、<strong>不輕信</strong>網友推薦的APP。</li>
+                                    <li><strong>不聽</strong>來源不明的投資明牌。</li>
+                                    <li><strong>不怕</strong>莫名威脅、<strong>不給</strong>個資和帳戶密碼。</li>
+                                    <li><strong>不匯</strong>款至個人帳戶或可疑帳戶。</li>
+                                </ol>
+                                <h4>三要原則：</h4>
+                                <ol>
+                                    <li>投資<strong>要</strong>透過合法、正規的金融機構。</li>
+                                    <li>匯款、轉帳<strong>要</strong>再三確認對方身分與帳戶資訊。</li>
+                                    <li>有任何疑慮，<strong>要</strong>立即撥打165反詐騙專線查證。</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>遇到詐騙之因應之道</h3>
+                            <div class="action-steps">
+                                <ol>
+                                    <li><strong>保持冷靜，立即停損：</strong>停止投入任何資金，不要相信詐騙集團以「繳交保證金才能提領」等話術要求繼續匯款。</li>
+                                    <li><strong>保留完整對話與匯款紀錄：</strong>完整截圖與詐騙集團的對話紀錄(LINE、FB、IG等)、金流匯款證明(網路銀行截圖、ATM明細等)。</li>
+                                    <li><strong>立即撥打165反詐騙專線：</strong>尋求協助，並可線上完成報案。</li>
+                                    <li><strong>前往最近的警察局報案：</strong>攜帶相關證據(對話紀錄、匯款單等)至派出所完成報案程序，取得報案三聯單。</li>
+                                </ol>
+                                <div class="highlight-box">
+                                    <p style="text-align: center; font-size: 1.2rem; margin: 0;"><strong>警覺多一分，財產保一分</strong><br><strong>有任何疑問，立即撥打 <span style="color: var(--color-error); font-weight: bold;">165</span> 反詐騙諮詢專線</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
