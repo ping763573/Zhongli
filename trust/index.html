@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信託學習指南 - 從小白到達人</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 固定頂部導航欄 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <h1>🏛️ 信託學習指南</h1>
+            </div>
+            
+            <div class="navbar-nav">
+                <button class="nav-link" data-section="基礎概念">基礎概念</button>
+                <button class="nav-link" data-section="信託類型">信託類型</button>
+                <button class="nav-link" data-section="財產保護">財產保護</button>
+                <button class="nav-link" data-section="法律風險">法律風險</button>
+                <button class="nav-link" data-section="實務應用">實務應用</button>
+            </div>
+            
+            <div class="navbar-actions">
+                <div class="progress-container">
+                    <span class="progress-text">學習進度</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-percent" id="progressPercent">0%</span>
+                </div>
+                <button class="fullscreen-btn" id="fullscreenBtn">
+                    <span class="fullscreen-icon">⛶</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容區域 -->
+    <main class="main-content">
+        <!-- 歡迎頁面 -->
+        <section class="welcome-section" id="welcomeSection">
+            <div class="welcome-content">
+                <h1 class="welcome-title">🎯 信託學習指南</h1>
+                <h2 class="welcome-subtitle">從小白到達人的完整學習之旅</h2>
+                <p class="welcome-description">
+                    你好！我是你的信託達人導師。信託聽起來很複雜，但其實就像找一個專業管家幫你照顧財產。<br>
+                    讓我們一步步學習，用最簡單的方式理解信託的世界！
+                </p>
+                <button class="btn btn--primary start-learning-btn">開始學習之旅 🚀</button>
+            </div>
+        </section>
+
+        <!-- 章節選擇頁面 -->
+        <section class="sections-grid" id="sectionsGrid">
+            <!-- 章節卡片將由JavaScript動態生成 -->
+        </section>
+
+        <!-- 章節詳細內容 -->
+        <section class="section-detail" id="sectionDetail" style="display: none;">
+            <div class="section-header">
+                <button class="back-btn" id="backBtn">← 返回章節選擇</button>
+                <h2 class="section-title" id="sectionTitle"></h2>
+            </div>
+            <div class="modules-container" id="modulesContainer">
+                <!-- 模組內容將由JavaScript動態生成 -->
+            </div>
+        </section>
+
+        <!-- 測驗區域 -->
+        <section class="quiz-section" id="quizSection" style="display: none;">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <button class="back-btn" id="quizBackBtn">← 返回學習</button>
+                    <h3>📝 章節小測驗</h3>
+                </div>
+                <div class="quiz-content" id="quizContent">
+                    <!-- 測驗內容將由JavaScript動態生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 實際案例區域 -->
+        <section class="cases-section" id="casesSection" style="display: none;">
+            <div class="cases-container">
+                <div class="cases-header">
+                    <button class="back-btn" id="casesBackBtn">← 返回學習</button>
+                    <h3>📚 實際案例分析</h3>
+                </div>
+                <div class="cases-content" id="casesContent">
+                    <!-- 案例內容將由JavaScript動態生成 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 成功動畫模態框 -->
+    <div class="modal hidden" id="successModal">
+        <div class="modal-content">
+            <div class="success-animation">🎉</div>
+            <h3>太棒了！</h3>
+            <p id="successMessage">恭喜你答對了！</p>
+            <button class="btn btn--primary" id="successOkBtn">繼續學習</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
