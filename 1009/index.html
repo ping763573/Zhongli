@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六週：投資工具入門 - 中壢社區大學</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 固定頂部導航欄 -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="course-title">第六週：投資工具入門</h1>
+                <div class="course-info">
+                    <span class="instructor">📚 劉威澤達人</span>
+                    <span class="date">📅 2025/10/9</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="progress-bar">
+                    <span class="progress-text">學習進度：<span id="progress-percent">0%</span></span>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                <button class="btn btn--secondary fullscreen-btn" id="fullscreen-btn">
+                    🔍 全螢幕
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要內容區域 -->
+    <main class="main-content">
+        <!-- 歡迎頁面 -->
+        <section class="welcome-section active" id="welcome">
+            <div class="welcome-container">
+                <div class="welcome-hero">
+                    <h2 class="welcome-title">🎯 歡迎來到投資工具入門課程！</h2>
+                    <p class="welcome-subtitle">從投資小白到理財達人，讓我們一步步帶你認識各種投資工具</p>
+                    <div class="instructor-card">
+                        <div class="instructor-avatar">👨‍🏫</div>
+                        <div class="instructor-info">
+                            <h3>劉威澤達人</h3>
+                            <p>白話解說投資工具，從股票到ETF，幫你建立正確投資觀念！</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="learning-objectives">
+                    <h3>📋 本週學習目標</h3>
+                    <ul class="objectives-list">
+                        <li>🎯 了解5種主要投資工具的特性</li>
+                        <li>💡 學會用生活化比喻理解複雜概念</li>
+                        <li>⚖️ 掌握各種工具的優缺點分析</li>
+                        <li>🧮 學會基本的投資成本計算</li>
+                        <li>🎪 根據個人目標選擇適合的投資工具</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn--primary btn--lg" id="start-learning">
+                    🚀 開始學習之旅
+                </button>
+            </div>
+        </section>
+
+        <!-- 主要學習區域 -->
+        <section class="learning-section" id="learning">
+            <!-- 側邊導航選單 -->
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    <h3>📚 課程章節</h3>
+                </div>
+                <ul class="chapter-nav" id="chapter-nav">
+                    <li class="nav-item active" data-section="stocks">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-title">股票</span>
+                        <span class="nav-status">📖</span>
+                    </li>
+                    <li class="nav-item" data-section="bonds">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-title">債券</span>
+                        <span class="nav-status">⏳</span>
+                    </li>
+                    <li class="nav-item" data-section="funds">
+                        <span class="nav-icon">🤝</span>
+                        <span class="nav-title">基金</span>
+                        <span class="nav-status">⏳</span>
+                    </li>
+                    <li class="nav-item" data-section="etf">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-title">ETF</span>
+                        <span class="nav-status">⏳</span>
+                    </li>
+                    <li class="nav-item" data-section="insurance">
+                        <span class="nav-icon">🛡️</span>
+                        <span class="nav-title">理財保險</span>
+                        <span class="nav-status">⏳</span>
+                    </li>
+                    <li class="nav-item" data-section="comparison">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-title">工具比較</span>
+                        <span class="nav-status">⏳</span>
+                    </li>
+                    <li class="nav-item" data-section="advice">
+                        <span class="nav-icon">💡</span>
+                        <span class="nav-title">達人建議</span>
+                        <span class="nav-status">⏳</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 內容區域 -->
+            <div class="content-area">
+                <!-- 股票章節 -->
+                <div class="chapter active" id="stocks">
+                    <div class="chapter-header">
+                        <h2>📈 股票：成為公司股東</h2>
+                        <p class="chapter-subtitle">股票就是買下公司的一小部分，讓你成為股東！</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h3>🍧 生活化比喻</h3>
+                        <p>想像你和朋友合開一間飲料店，每個人出錢買股份，股票就像是你持有店面的證明書！</p>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>🔑 重要觀念</h3>
+                        <div class="points-grid">
+                            <div class="point-card">
+                                <span class="point-icon">🇹🇼</span>
+                                <div>
+                                    <strong>台灣規則</strong>
+                                    <p>一張股票 = 1000股</p>
+                                </div>
+                            </div>
+                            <div class="point-card">
+                                <span class="point-icon">💰</span>
+                                <div>
+                                    <strong>股價計算</strong>
+                                    <p>一股的價格（例：台積電877元 = 87.7萬/張）</p>
+                                </div>
+                            </div>
+                            <div class="point-card">
+                                <span class="point-icon">💵</span>
+                                <div>
+                                    <strong>賺錢方式</strong>
+                                    <p>賣價比買價高（賺價差）</p>
+                                </div>
+                            </div>
+                            <div class="point-card">
+                                <span class="point-icon">📋</span>
+                                <div>
+                                    <strong>交易成本</strong>
+                                    <p>買+賣約總金額的0.5%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cost-breakdown">
+                        <h3>💰 交易成本詳解</h3>
+                        <div class="cost-table">
+                            <div class="cost-row">
+                                <span class="cost-type">買進手續費</span>
+                                <span class="cost-value">約0.1425% × 折扣</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-type">賣出手續費 + 證交稅</span>
+                                <span class="cost-value">約0.44%</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-type">當沖證交稅</span>
+                                <span class="cost-value">0.15%（較低）</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-type">ETF證交稅</span>
+                                <span class="cost-value">0.1%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="examples-section">
+                        <h3>📊 實際案例</h3>
+                        <div class="example-cards">
+                            <div class="example-card">
+                                <h4>台積電(2330)</h4>
+                                <p class="highlight">護國神山，連續33年發股利！</p>
+                                <p>平均現金殖利率約2.40%</p>
+                            </div>
+                            <div class="example-card">
+                                <h4>中華電信(2412)</h4>
+                                <p class="highlight">電信龍頭，穩定配息</p>
+                                <p>現金殖利率約3.79%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pros-cons">
+                        <h3>⚖️ 優缺點分析</h3>
+                        <div class="pros-cons-grid">
+                            <div class="pros">
+                                <h4>✅ 優點</h4>
+                                <ul>
+                                    <li>🚀 參與公司成長</li>
+                                    <li>💰 領股利</li>
+                                    <li>💧 流動性高</li>
+                                    <li>📊 資訊透明</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ 缺點</h4>
+                                <ul>
+                                    <li>📉 價格波動大</li>
+                                    <li>📚 需要研究</li>
+                                    <li>💸 交易成本</li>
+                                    <li>🧾 稅務複雜</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 債券章節 -->
+                <div class="chapter" id="bonds">
+                    <div class="chapter-header">
+                        <h2>📋 債券：借錢給政府或公司</h2>
+                        <p class="chapter-subtitle">債券就是借據！你借錢給政府或公司，他們定期付利息給你。</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h3>🍧 生活化比喻</h3>
+                        <p>就像你借錢給朋友，朋友寫張借據承諾還錢加利息。債券就是政府或大公司開的借據！</p>
+                    </div>
+
+                    <div class="credit-ratings">
+                        <h3>🏆 信用評等（越高越安全）</h3>
+                        <div class="rating-cards">
+                            <div class="rating-card aaa">
+                                <h4>AAA</h4>
+                                <p>最安全：微軟等大公司</p>
+                            </div>
+                            <div class="rating-card aa">
+                                <h4>AA+</h4>
+                                <p>很安全：蘋果、Google、美國政府</p>
+                            </div>
+                            <div class="rating-card aa">
+                                <h4>AA</h4>
+                                <p>安全：中華電信、亞馬遜</p>
+                            </div>
+                            <div class="rating-card bbb">
+                                <h4>BBB</h4>
+                                <p>普通：Tesla、台灣銀行股</p>
+                            </div>
+                        </div>
+                        <div class="rating-explanation">
+                            <p>💡 信用評等就像學生成績單，AAA是模範生（幾乎不會倒帳），BBB是普通學生（還算可靠），再低就要小心了！</p>
+                        </div>
+                    </div>
+
+                    <div class="purchase-ways">
+                        <h3>🛒 購買方式</h3>
+                        <div class="purchase-options">
+                            <div class="option-card">
+                                <span class="option-icon">🇹🇼</span>
+                                <div>
+                                    <strong>買台股債券ETF</strong>
+                                    <p>最簡單的方式</p>
+                                </div>
+                            </div>
+                            <div class="option-card">
+                                <span class="option-icon">🇺🇸</span>
+                                <div>
+                                    <strong>買美股債券ETF</strong>
+                                    <p>更多選擇</p>
+                                </div>
+                            </div>
+                            <div class="option-card">
+                                <span class="option-icon">📊</span>
+                                <div>
+                                    <strong>買債券型基金</strong>
+                                    <p>專業管理</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pros-cons">
+                        <h3>⚖️ 優缺點分析</h3>
+                        <div class="pros-cons-grid">
+                            <div class="pros">
+                                <h4>✅ 優點</h4>
+                                <ul>
+                                    <li>😌 收入穩定</li>
+                                    <li>🛡️ 風險較低</li>
+                                    <li>⏰ 到期保證還錢</li>
+                                    <li>📈 利率下降時賺價差</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ 缺點</h4>
+                                <ul>
+                                    <li>📉 通膨會蝕食購買力</li>
+                                    <li>📊 利率上升時虧價差</li>
+                                    <li>💸 可能遇到倒帳</li>
+                                    <li>💧 不容易賣出</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 基金章節 -->
+                <div class="chapter" id="funds">
+                    <div class="chapter-header">
+                        <h2>🤝 基金：大家一起投資</h2>
+                        <p class="chapter-subtitle">基金就是大家把錢湊在一起，請專業經理人幫我們投資！</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h3>🍧 生活化比喻</h3>
+                        <p>想像班上要買零食，每個人出100元，選一個最會買零食的同學去採購，買回來大家分享！</p>
+                    </div>
+
+                    <div class="fund-types">
+                        <h3>🏷️ 基金種類（超多選擇）</h3>
+                        <div class="type-cards">
+                            <div class="type-card">
+                                <h4>📊 投資什麼</h4>
+                                <p>股票型、債券型、平衡型</p>
+                            </div>
+                            <div class="type-card">
+                                <h4>🌍 投資哪裡</h4>
+                                <p>台灣、美國、全世界</p>
+                            </div>
+                            <div class="type-card">
+                                <h4>🎯 管理方式</h4>
+                                <p>主動选股 vs 被動追蹤指數</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calculation-example">
+                        <h3>🧮 實際計算例子</h3>
+                        <div class="calculation-card">
+                            <h4>投資100萬到基金A</h4>
+                            <div class="calculation-steps">
+                                <div class="step">✓ 手續費3% → 實際投入97萬</div>
+                                <div class="step">✓ 淨值9.5元 → 買到10.2萬個單位</div>
+                                <div class="step">✓ 配息0.05元 → 領到5,100元</div>
+                                <div class="step">✓ 贖回10.5元 → 拿回107萬</div>
+                                <div class="step result">🎯 總獲利：約10.3% + 配息</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pros-cons">
+                        <h3>⚖️ 優缺點分析</h3>
+                        <div class="pros-cons-grid">
+                            <div class="pros">
+                                <h4>✅ 優點</h4>
+                                <ul>
+                                    <li>👨‍💼 專業管理</li>
+                                    <li>🎯 分散投資</li>
+                                    <li>💵 小錢參與</li>
+                                    <li>💧 容易買賣</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ 缺點</h4>
+                                <ul>
+                                    <li>💸 管理費用</li>
+                                    <li>🤷‍♂️ 無法控制決策</li>
+                                    <li>📉 可能表現不如大盤</li>
+                                    <li>🧾 稅務考量</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ETF章節 -->
+                <div class="chapter" id="etf">
+                    <div class="chapter-header">
+                        <h2>🎯 ETF：最受歡迎的懶人投資法</h2>
+                        <p class="chapter-subtitle">ETF = 可以像股票一樣買賣的基金！結合基金的分散投資和股票的交易便利。</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h3>🍧 生活化比喻</h3>
+                        <p>想像ETF是個「投資禮盒」，裡面裝了很多不同公司的股票，你買一個禮盒就等於買了一堆公司！</p>
+                    </div>
+
+                    <div class="taiwan-example">
+                        <h3>🇹🇼 台灣50 ETF 例子</h3>
+                        <div class="etf-card">
+                            <h4>富邦台灣采吉50（0050類似）</h4>
+                            <p>這個ETF買了台灣最大的50家公司</p>
+                            <div class="holdings">
+                                <div class="holding">台積電：55.49%（超過一半！）</div>
+                                <div class="holding">聯發科：5.24%</div>
+                                <div class="holding">鴻海：4.40%</div>
+                                <div class="holding">台達電：1.97%</div>
+                            </div>
+                            <p class="asset-mix">資產配置：99%股票 + 1%現金債券</p>
+                        </div>
+                    </div>
+
+                    <div class="etf-advantages">
+                        <h3>🌟 為什麼ETF這麼受歡迎？</h3>
+                        <div class="advantage-cards">
+                            <div class="advantage-card">
+                                <span class="advantage-icon">💰</span>
+                                <div>
+                                    <strong>費用超低</strong>
+                                    <p>年費通常不到0.5%</p>
+                                </div>
+                            </div>
+                            <div class="advantage-card">
+                                <span class="advantage-icon">🛡️</span>
+                                <div>
+                                    <strong>自動分散風險</strong>
+                                    <p>一次買一堆股票</p>
+                                </div>
+                            </div>
+                            <div class="advantage-card">
+                                <span class="advantage-icon">😌</span>
+                                <div>
+                                    <strong>不用選股</strong>
+                                    <p>跟著大盤走</p>
+                                </div>
+                            </div>
+                            <div class="advantage-card">
+                                <span class="advantage-icon">💧</span>
+                                <div>
+                                    <strong>交易方便</strong>
+                                    <p>想買就買，想賣就賣</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="beginner-tip">
+                        <h3>💡 新手小提醒</h3>
+                        <p>ETF很適合新手！不用研究個股，跟著整個市場一起成長，費用又低。就像坐公車一樣簡單！</p>
+                    </div>
+
+                    <div class="pros-cons">
+                        <h3>⚖️ 優缺點分析</h3>
+                        <div class="pros-cons-grid">
+                            <div class="pros">
+                                <h4>✅ 優點</h4>
+                                <ul>
+                                    <li>💰 費用超低</li>
+                                    <li>🛡️ 自動分散風險</li>
+                                    <li>😌 不用選股</li>
+                                    <li>📊 透明度100%</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ 缺點</h4>
+                                <ul>
+                                    <li>📈 無法超越大盤表現</li>
+                                    <li>📊 有追蹤誤差</li>
+                                    <li>💸 可能有折溢價</li>
+                                    <li>🤷‍♂️ 無法主動避險</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 理財保險章節 -->
+                <div class="chapter" id="insurance">
+                    <div class="chapter-header">
+                        <h2>🛡️ 理財型保險：保障+投資二合一</h2>
+                        <p class="chapter-subtitle">理財型保險 = 保障 + 投資，一個商品兩種功能！</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h3>🍧 生活化比喻</h3>
+                        <p>就像買個有儲蓄功能的保險箱，既能保護你的家人，又能讓錢慢慢成長！</p>
+                    </div>
+
+                    <div class="insurance-types">
+                        <h3>🏷️ 保險種類</h3>
+                        <div class="insurance-cards">
+                            <div class="insurance-card">
+                                <h4>📊 儲蓄險</h4>
+                                <p>主要是儲蓄，保障比較少</p>
+                                <ul>
+                                    <li>增額型（保額會成長）</li>
+                                    <li>還本型（定期領錢）</li>
+                                    <li>分紅型（有紅利）</li>
+                                </ul>
+                            </div>
+                            <div class="insurance-card">
+                                <h4>📈 投資型保單</h4>
+                                <p>保险 + 投资，你的錢會去投資基金，報酬不固定</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-card">
+                        <h3>⚠️ 新手注意事項</h3>
+                        <p>保險商品很複雜，建議先搞懂基本投資工具（ETF、基金）再考慮買理財險！</p>
+                    </div>
+
+                    <div class="pros-cons">
+                        <h3>⚖️ 優缺點分析</h3>
+                        <div class="pros-cons-grid">
+                            <div class="pros">
+                                <h4>✅ 優點</h4>
+                                <ul>
+                                    <li>🏦 不用另外開投資帳戶</li>
+                                    <li>🛡️ 有保障功能</li>
+                                    <li>💰 可能有稅務優惠</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ 缺點</h4>
+                                <ul>
+                                    <li>⏰ 太早解約會被扣錢</li>
+                                    <li>👨‍💼 業務員不一定懂投資</li>
+                                    <li>💸 成本通常比較高</li>
+                                    <li>📋 商品複雜難懂</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 工具比較章節 -->
+                <div class="chapter" id="comparison">
+                    <div class="chapter-header">
+                        <h2>📊 投資工具比較</h2>
+                        <p class="chapter-subtitle">一次看懂各種投資工具的差異！</p>
+                    </div>
+
+                    <div class="comparison-table">
+                        <table class="tools-table">
+                            <thead>
+                                <tr>
+                                    <th>投資工具</th>
+                                    <th>預期報酬</th>
+                                    <th>風險等級</th>
+                                    <th>流動性</th>
+                                    <th>適合對象</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>💰 現金/定存</td>
+                                    <td>0-2%</td>
+                                    <td>🟢 極低</td>
+                                    <td>🟢 極高</td>
+                                    <td>保守型投資人</td>
+                                </tr>
+                                <tr>
+                                    <td>📋 債券</td>
+                                    <td>1-5%</td>
+                                    <td>🟡 低</td>
+                                    <td>🟡 中</td>
+                                    <td>穩健型投資人</td>
+                                </tr>
+                                <tr>
+                                    <td>🤝 基金</td>
+                                    <td>3-8%</td>
+                                    <td>🟡 中</td>
+                                    <td>🟢 高</td>
+                                    <td>想要專業管理</td>
+                                </tr>
+                                <tr>
+                                    <td>🎯 ETF</td>
+                                    <td>4-8%</td>
+                                    <td>🟡 中</td>
+                                    <td>🟢 高</td>
+                                    <td>新手最推薦！</td>
+                                </tr>
+                                <tr>
+                                    <td>📈 股票</td>
+                                    <td>5-12%</td>
+                                    <td>🔴 高</td>
+                                    <td>🟢 高</td>
+                                    <td>積極型投資人</td>
+                                </tr>
+                                <tr>
+                                    <td>🛡️ 理財保險</td>
+                                    <td>1-4%</td>
+                                    <td>🟢 低</td>
+                                    <td>🔴 低</td>
+                                    <td>需要保障+儲蓄</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 達人建議章節 -->
+                <div class="chapter" id="advice">
+                    <div class="chapter-header">
+                        <h2>💡 達人建議：選擇最適合你的投資工具</h2>
+                        <p class="chapter-subtitle">根據你的目標，找到最適合的投資方式！</p>
+                    </div>
+
+                    <div class="advice-cards">
+                        <div class="advice-card">
+                            <h4>🚀 想要高報酬</h4>
+                            <div class="advice-content">
+                                <p><strong>推薦：</strong>股票</p>
+                                <p><strong>提醒：</strong>高風險高報酬，要有心理準備！</p>
+                            </div>
+                        </div>
+                        <div class="advice-card">
+                            <h4>😌 追求穩定</h4>
+                            <div class="advice-content">
+                                <p><strong>推薦：</strong>現金、定存、保險、債券</p>
+                                <p><strong>提醒：</strong>安全但報酬較低</p>
+                            </div>
+                        </div>
+                        <div class="advice-card">
+                            <h4>⚖️ 想要平衡</h4>
+                            <div class="advice-content">
+                                <p><strong>推薦：</strong>資產配置（股票+債券+現金）</p>
+                                <p><strong>提醒：</strong>風險適中，報酬也適中</p>
+                            </div>
+                        </div>
+                        <div class="advice-card highlight">
+                            <h4>🔰 新手不知道選什麼</h4>
+                            <div class="advice-content">
+                                <p><strong>推薦：</strong>ETF（最推薦！）</p>
+                                <p><strong>提醒：</strong>簡單、便宜、分散風險</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="key-takeaways">
+                        <h3>🎯 關鍵重點提醒</h3>
+                        <ul class="takeaway-list">
+                            <li>🎯 沒有最好的投資工具，只有最適合你的！</li>
+                            <li>📚 先了解工具特性，再決定要不要投資</li>
+                            <li>💡 新手建議從ETF開始，簡單又有效</li>
+                            <li>⚠️ 投資前一定要了解風險和成本</li>
+                            <li>🤝 如果還是不確定，可以找專業人士諮詢</li>
+                        </ul>
+                    </div>
+
+                    <div class="completion-card">
+                        <h3>🎉 恭喜完成第六週課程！</h3>
+                        <p>你已經了解了各種投資工具的基本概念，現在可以開始規劃自己的投資策略了！</p>
+                        <button class="btn btn--primary" id="restart-course">🔄 重新學習</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
