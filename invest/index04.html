@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基金投資新手入門指南 v1.0.0</title>
+    <style>
+        /* --- 全局樣式 --- */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #dee2e6;
+            --hover-color: #0056b3;
+            --font-family: 'Helvetica Neue', Arial, '蘋方-繁', 'Microsoft JhengHei', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- 頂部導覽列 --- */
+        .top-bar {
+            background-color: white;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            background-color: transparent;
+            color: var(--primary-color);
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .system-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        #fullscreen-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-color);
+        }
+
+        .version-info {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* --- 主內容區域 --- */
+        .main-container {
+            padding-top: 120px; /* 預留頂部空間 */
+            padding-bottom: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .page {
+            display: none; /* 預設隱藏所有頁面 */
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* --- 內容元素樣式 --- */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.5em; margin-top: 40px;}
+        h3 { font-size: 1.2em; border-bottom: none; }
+
+        .card {
+            background: var(--secondary-color);
+            border-left: 5px solid var(--primary-color);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        ul {
+            list-style-type: '✓ ';
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .pros h3 { color: #28a745; }
+        .cons h3 { color: #dc3545; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--secondary-color);
+        }
+
+        /* --- 響應式設計 --- */
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .main-container {
+                padding-top: 180px; /* 增加手機版頂部空間 */
+            }
+            .nav-buttons {
+                margin-bottom: 10px;
+            }
+            .nav-btn {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .system-controls {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 音效元素 -->
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+
+    <!-- 頂部固定導覽列 -->
+    <div class="top-bar">
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showPage('intro', this)">基本概念</button>
+            <button class="nav-btn" onclick="showPage('where-to-buy', this)">基金去哪買</button>
+            <button class="nav-btn" onclick="showPage('three-stages', this)">投資三階段</button>
+            <button class="nav-btn" onclick="showPage('faq', this)">常見問答</button>
+        </div>
+        <div class="system-controls">
+            <span class="version-info">版本: 1.0.0</span>
+            <button id="fullscreen-btn" title="切換全螢幕" onclick="toggleFullScreen()">&#x26F6;</button>
+        </div>
+    </div>
+
+    <!-- 主內容容器 -->
+    <div class="main-container">
+        <div class="content-wrapper">
+
+            <!-- 頁面1: 基本概念 -->
+            <div id="intro" class="page active">
+                <h1>基金基本概念</h1>
+                <p>本章節將帶您了解基金最核心的知識，為您的投資之路打下堅實的基礎。</p>
+                
+                <div class="card">
+                    <h2>基金是什麼？</h2>
+                    <p>基金（Fund）就是集合一群人的資金，交由專業的基金經理人團隊進行管理和投資。這筆資金會被用來購買股票、債券、貨幣或其他金融商品，所有投資產生的收益或虧損，會由所有投資人按投入比例共同分享或承擔。</p>
+                </div>
+
+                <h2>基金的種類</h2>
+                <p>市面上的基金種類繁多，主要依據不同特性分類：</p>
+                <ul>
+                    <li><strong>依投資標的：</strong>股票型、債券型、平衡型、貨幣市場型。</li>
+                    <li><strong>依投資區域：</strong>國內基金（境內）、海外基金（境外）、全球型、區域型、單一國家型。</li>
+                    <li><strong>依操作方式：</strong>主動型基金（經理人主動選股）、被動型基金（追蹤指數，如ETF）。</li>
+                </ul>
+
+                <h2>基金投資的優缺點</h2>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h3>&#x2714; 優點</h3>
+                        <ul>
+                            <li><strong>專業管理：</strong>由專業團隊操盤，節省研究時間。</li>
+                            <li><strong>分散風險：</strong>一檔基金通常持有數十種標的，有效降低單一投資的風險。</li>
+                            <li><strong>小額投資：</strong>可以用較低的門檻參與多元化的市場投資。</li>
+                            <li><strong>接觸多元市場：</strong>輕鬆投資海外市場或特殊產業。</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>&#x2716; 缺點</h3>
+                        <ul>
+                            <li><strong>成本較高：</strong>需支付管理費、保管費、手續費等額外費用。</li>
+                            <li><strong>掌控度低：</strong>無法自行決定買賣時機與標的。</li>
+                            <li><strong>淨值更新慢：</strong>共同基金每日僅有一個淨值（價格），不像股票可隨時交易。</li>
+                            <li><strong>績效不保證：</strong>專業管理不代表穩賺不賠，仍受市場波動影響。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 頁面2: 基金去哪買 -->
+            <div id="where-to-buy" class="page">
+                <h1>基金可以去哪裡買？</h1>
+                <p>了解購買基金的管道，選擇最適合您的平台，是開始投資的重要一步。</p>
+
+                <div class="card">
+                    <h2>六大購買通路比較</h2>
+                    <p>基金的購買通路非常多元，包含銀行、基金平台、證券商、投信投顧、保險公司及郵局。新手最推薦從「基金平台」開始，因為手續費最低、選擇也最多樣。</p>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>通路類型</th>
+                            <th>申購手續費</th>
+                            <th>基金種類</th>
+                            <th>特色</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>基金平台</strong></td>
+                            <td>低 (常有0手續費優惠)</td>
+                            <td>多樣</td>
+                            <td>費用最低、選擇多，為新手首選。</td>
+                        </tr>
+                        <tr>
+                            <td>銀行</td>
+                            <td>中</td>
+                            <td>多樣</td>
+                            <td>最普遍的管道，但贖回可能需收帳管費。</td>
+                        </tr>
+                        <tr>
+                            <td>證券商</td>
+                            <td>中</td>
+                            <td>多樣</td>
+                            <td>方便已有股票帳戶的投資人。</td>
+                        </tr>
+                        <tr>
+                            <td>投信投顧</td>
+                            <td>低</td>
+                            <td>較少</td>
+                            <td>主要銷售自家或代理的基金。</td>
+                        </tr>
+                        <tr>
+                            <td>保險/郵局</td>
+                            <td>高</td>
+                            <td>較少</td>
+                            <td>通常不建議新手考慮。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2>開戶需要注意什麼？</h2>
+                <ul>
+                    <li><strong>線上開戶：</strong>大部分基金平台和券商都支援線上開戶，非常方便。</li>
+                    <li><strong>約定扣款帳戶：</strong>需要準備一個銀行帳戶用來扣款買基金及接收贖回的款項。</li>
+                    <li><strong>未成年開戶：</strong>未成年人也可以開戶，但需要法定代理人同意並準備相關文件，流程較為繁瑣。</li>
+                </ul>
+            </div>
+
+            <!-- 頁面3: 投資三階段 -->
+            <div id="three-stages" class="page">
+                <h1>基金投資三階段：挑選、持有、賣出</h1>
+                <p>系統化地了解投資流程，讓您在每個階段都能做出更明智的決策。</p>
+                
+                <div class="card">
+                    <h2>第一階段：挑選適合自己的基金</h2>
+                    <p>挑選基金前，請先問自己幾個問題：</p>
+                    <ul>
+                        <li><strong>投資目標：</strong>您是為了短期獲利，還是長期規劃（如退休）？</li>
+                        <li><strong>風險承受度：</strong>您能接受多大的資產波動？股票型風險高，債券型風險低。</li>
+                        <li><strong>投資風格：</strong>您想追求超越市場的報酬（主動型），還是穩穩跟隨市場（被動型）？</li>
+                    </ul>
+                    <p>確定方向後，可以利用基金平台的篩選工具，找出符合條件的基金，並務必閱讀「基金公開說明書」了解詳細資訊。</p>
+                </div>
+                
+                <h2>第二階段：持有與檢視</h2>
+                <p>買進基金後不是放著不管，您需要定期檢視基金的表現。</p>
+                <ul>
+                    <li><strong>了解基金費用：</strong>申購時有「手續費」，持有期間有內扣的「管理費」與「保管費」。這些費用會直接影響您的最終報酬。</li>
+                    <li><strong>閱讀基金月報：</strong>基金公司每月會提供月報，揭露最新的績效、持股狀況及經理人對市場的看法。</li>
+                    <li><strong>定期定額 vs 單筆投入：</strong>如果您對進場時機沒有把握，定期定額是個分散時間風險的好方法。</li>
+                </ul>
+                
+                <h2>第三階段：賣出（贖回）</h2>
+                <p>當您決定要獲利了結或停損時，就需要執行「贖回」。</p>
+                <ul>
+                    <li><strong>贖回時間：</strong>賣出基金的錢不會馬上入帳。境內基金約需3-5個工作天，境外基金則需5-10個工作天。</li>
+                    <li><strong>淨值計算日：</strong>您下單贖回的價格，通常是當天或下一個營業日的淨值，而非您下單當下看到的淨值。</li>
+                    <li><strong>稅務問題：</strong>基金的配息和資本利得（價差）可能需要繳稅。境內基金配息併入個人所得稅；境外基金所得則併入海外所得計算。</li>
+                </ul>
+            </div>
+
+            <!-- 頁面4: 常見問答 -->
+            <div id="faq" class="page">
+                <h1>新手常見問答 (FAQ)</h1>
+                <p>這裡整理了基金投資新手最常遇到的問題，幫助您快速解惑。</p>
+
+                <div class="card">
+                    <h3>Q1: 買基金一定會賺錢嗎？</h3>
+                    <p><strong>A:</strong> 不一定。任何投資都有風險，基金的淨值會隨著市場波動而變化。基金的好處在於透過分散投資來降低風險，但無法完全避免虧損。因此，選擇符合自己風險承受度的產品非常重要。</p>
+                </div>
+
+                <div class="card">
+                    <h3>Q2: 基金公司如果倒閉了，我的錢會不見嗎？</h3>
+                    <p><strong>A:</strong> 不會。您的錢是存放在一個獨立的「保管銀行」的信託專戶中，與基金公司自身的資產是分開的。即使基金公司不幸倒閉，您的資產依然受到法律保障，可以取回。</p>
+                </div>
+
+                <div class="card">
+                    <h3>Q3: 我該自己選股，還是交給基金經理人？</h3>
+                    <p><strong>A:</strong> 這就像自己煮飯和上餐廳吃飯的選擇。如果您有時間研究、具備投資技巧，自己選股可能更省成本且彈性高。如果您沒時間或不擅長研究，那麼將資金交給專業的基金經理人，會是一個更省時省力的選擇。</p>
+                </div>
+
+                <div class="card">
+                    <h3>Q4: 什麼是「配息可能來自本金」？</h3>
+                    <p><strong>A:</strong> 這句話常出現在高配息基金的說明中。這裡的「本金」定義較廣，不只包含您最初投入的錢，也可能包含基金尚未實現的資本利得。這是一個警語，提醒投資人配息來源的多元性，不代表基金一定會虧錢發還給您。</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- JavaScript 互動邏輯 ---
+
+        // 預設顯示第一個頁面
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('intro', document.querySelector('.nav-btn'));
+        });
+
+        const pages = document.querySelectorAll('.page');
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const clickSound = document.getElementById('click-sound');
+
+        // 顯示指定頁面的函式
+        function showPage(pageId, clickedButton) {
+            // 播放點擊音效
+            if (clickSound) {
+                clickSound.currentTime = 0; // 重置音效
+                clickSound.play().catch(e => console.log("音效播放失敗:", e));
+            }
+
+            // 隱藏所有頁面
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 移除所有按鈕的 active 狀態
+            navButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 顯示目標頁面
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // 將點擊的按鈕設為 active
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+        
+        // 全螢幕切換函式
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`錯誤：無法啟用全螢幕模式: ${err.message} (${err.name})`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

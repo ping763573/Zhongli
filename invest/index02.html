@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美股新手入門教學懶人包 v1.0.0</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #059669;
+            --background-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Fixed Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface-color);
+            border-bottom: 2px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .fullscreen-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .fullscreen-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .version-display {
+            background: var(--secondary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-chapters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chapter-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .chapter-btn:hover,
+        .chapter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 0 20px 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .progress-circle.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .progress-circle.completed {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .progress-step.active .progress-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Chapter Sections */
+        .chapter-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .chapter-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-header {
+            background: var(--surface-color);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .chapter-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .content-card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+        }
+
+        .card-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Tables */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f1f5f9;
+        }
+
+        /* Lists */
+        .feature-list {
+            display: grid;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--surface-color);
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .feature-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            background: var(--surface-color);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: #1d4ed8;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.open {
+            padding: 20px;
+            max-height: 200px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px;
+            }
+
+            .nav-chapters {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .chapter-btn {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .main-content {
+                margin-top: 140px;
+                padding: 0 16px 40px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .progress-bar {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .progress-step {
+                flex-direction: row;
+                justify-content: flex-start;
+                width: 100%;
+            }
+
+            .progress-circle {
+                margin-bottom: 0;
+                margin-right: 12px;
+            }
+        }
+
+        /* Fullscreen Styles */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--background-color);
+            z-index: 9999;
+            overflow-y: auto;
+        }
+
+        .fullscreen .main-content {
+            margin-top: 100px;
+            max-width: none;
+            padding: 0 40px 40px;
+        }
+
+        /* Animations */
+        .bounce {
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                <span>⛶</span>
+                全螢幕切換
+            </button>
+            <div class="version-display">v1.0.0</div>
+        </div>
+        
+        <div class="nav-chapters">
+            <button class="chapter-btn active" onclick="showChapter(0)">美股市場基礎</button>
+            <button class="chapter-btn" onclick="showChapter(1)">投資規則</button>
+            <button class="chapter-btn" onclick="showChapter(2)">優缺點分析</button>
+            <button class="chapter-btn" onclick="showChapter(3)">購買管道</button>
+            <button class="chapter-btn" onclick="showChapter(4)">選股策略</button>
+            <button class="chapter-btn" onclick="showChapter(5)">常見問答</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">美股新手入門教學懶人包</h1>
+            <p class="hero-subtitle">帶你買進第一支美股</p>
+        </section>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-step active">
+                    <div class="progress-circle active">1</div>
+                    <span class="progress-label">美股市場基礎</span>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-circle">2</div>
+                    <span class="progress-label">投資規則</span>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-circle">3</div>
+                    <span class="progress-label">優缺點分析</span>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-circle">4</div>
+                    <span class="progress-label">購買管道</span>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-circle">5</div>
+                    <span class="progress-label">選股策略</span>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-circle">6</div>
+                    <span class="progress-label">常見問答</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter 1: Market Basics -->
+        <section class="chapter-section active" data-chapter="0">
+            <div class="chapter-header">
+                <h2 class="chapter-title">第一章：美股市場基礎</h2>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">為什麼要投資美股？</h3>
+                <div class="card-content">
+                    <p>美國佔全世界股票市值總額超過50%，佔全球1/4左右的GDP，聚集全球各產業龍頭公司。2024年全球最大20家公司幾乎都是美國公司，包括微軟、蘋果、輝達NVIDIA、Google母公司Alphabet、Amazon、META等。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">三大交易所</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">N</div>
+                        <div class="feature-content">
+                            <h4>紐約證券交易所(NYSE)</h4>
+                            <p>全球最大交易所，約有2400間公司上市</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">Q</div>
+                        <div class="feature-content">
+                            <h4>那斯達克交易所(NASDAQ)</h4>
+                            <p>科技股居多，約有3000+間公司上市</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">A</div>
+                        <div class="feature-content">
+                            <h4>美國證券交易所(AMEX)</h4>
+                            <p>已被NYSE合併，改名為NYSE American，多為中小型企業</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">三大指數</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>代號</th>
+                            <th>指數名稱</th>
+                            <th>說明</th>
+                            <th>公司數量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SPX</strong></td>
+                            <td>S&P500指數</td>
+                            <td>美國500間大型企業，被視為美股大盤</td>
+                            <td>500</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DJI30</strong></td>
+                            <td>道瓊工業平均指數</td>
+                            <td>30家大型公司，歷史悠久的指數</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NDX</strong></td>
+                            <td>納斯達克100指數</td>
+                            <td>科技股與成長股代表性指數</td>
+                            <td>100</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Chapter 2: Investment Rules -->
+        <section class="chapter-section" data-chapter="1">
+            <div class="chapter-header">
+                <h2 class="chapter-title">第二章：投資規則</h2>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">基本交易規則</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">⏰</div>
+                        <div class="feature-content">
+                            <h4>交易時間</h4>
+                            <p>夏令時：台北時間21:30-04:00<br>冬令時：台北時間22:30-05:00</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-content">
+                            <h4>交易單位</h4>
+                            <p>可單次只買賣1股</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-content">
+                            <h4>交割時間</h4>
+                            <p>T+1（交易日加一天）</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">熔斷機制</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>跌幅觸發點</th>
+                            <th>暫停措施</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>跌幅7%</td>
+                            <td>暫停交易15分鐘</td>
+                        </tr>
+                        <tr>
+                            <td>跌幅13%</td>
+                            <td>暫停交易15分鐘</td>
+                        </tr>
+                        <tr>
+                            <td>跌幅20%</td>
+                            <td>直接休市</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">其他重要規則</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h4>超級財報週</h4>
+                            <p>每年1月、4月、7月、10月的第3週</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🏷️</div>
+                        <div class="feature-content">
+                            <h4>股票代號</h4>
+                            <p>公司英文名稱縮寫，如蘋果=AAPL</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💵</div>
+                        <div class="feature-content">
+                            <h4>配息政策</h4>
+                            <p>不流行配息，約1/3公司完全不配息</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">稅費說明</h3>
+                <div class="card-content">
+                    <p><strong>資本利得：</strong>外國人買賣美股資本利得完全免稅</p>
+                    <p><strong>現金股利：</strong>有30%預扣稅</p>
+                    <p><strong>台灣海外所得：</strong>免稅額100萬/扣抵額750萬</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 3: Pros and Cons -->
+        <section class="chapter-section" data-chapter="2">
+            <div class="chapter-header">
+                <h2 class="chapter-title">第三章：優缺點分析</h2>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">投資美股的6大優點</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-content">
+                            <h4>全球性範圍更廣</h4>
+                            <p>能投資世界級企業，產業類別多、規模大</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🛡️</div>
+                        <div class="feature-content">
+                            <h4>安全性高</h4>
+                            <p>FDIC保障25萬美元，SIPC保障50萬美元</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-content">
+                            <h4>投資管道多</h4>
+                            <p>可透過複委託或海外券商，手續費低</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💵</div>
+                        <div class="feature-content">
+                            <h4>美元貨幣穩定</h4>
+                            <p>全球強勢貨幣，風險相對最低</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h4>領先通膨</h4>
+                            <p>長期年均複合成長率高於通膨率</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-content">
+                            <h4>閒置資金利息</h4>
+                            <p>海外券商提供接近聯準會利率的利息</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">投資美股的3大缺點</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">💱</div>
+                        <div class="feature-content">
+                            <h4>匯率變數</h4>
+                            <p>台幣美元匯率波動影響，但長期影響有限</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🏦</div>
+                        <div class="feature-content">
+                            <h4>海外匯款手續費</h4>
+                            <p>入金出金產生電匯費用</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-content">
+                            <h4>稅務問題</h4>
+                            <p>配息30%預扣稅，海外遺產稅問題</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 4: Buying Channels -->
+        <section class="chapter-section" data-chapter="3">
+            <div class="chapter-header">
+                <h2 class="chapter-title">第四章：購買管道</h2>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">複委託 vs 海外券商比較</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>國內券商複委託</th>
+                            <th>海外券商</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>適合人群</strong></td>
+                            <td>長期投資人、有一定資金規模、不想用海外平台</td>
+                            <td>資金小、希望費用低、頻繁交易</td>
+                        </tr>
+                        <tr>
+                            <td><strong>手續費</strong></td>
+                            <td>買賣約0.25~1%，最低收取15~39.9美元</td>
+                            <td>單次交易約0~0.1%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>出入金費用</strong></td>
+                            <td>不用匯錢到海外</td>
+                            <td>入金1150~1850台幣，出金10~35美元/次</td>
+                        </tr>
+                        <tr>
+                            <td><strong>監管單位</strong></td>
+                            <td>台灣金融主管機關</td>
+                            <td>海外各國監管機構</td>
+                        </tr>
+                        <tr>
+                            <td><strong>投資市場</strong></td>
+                            <td>美國、香港、日本、英國、新加坡</td>
+                            <td>以美國為主，少數券商提供港股、A股等</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">推薦券商</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🏦</div>
+                        <div class="feature-content">
+                            <h4>國內券商</h4>
+                            <p><strong>永豐金證券-大戶投：</strong>新手入門首選<br>
+                            <strong>富邦證券：</strong>一般投資人都適用</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌐</div>
+                        <div class="feature-content">
+                            <h4>海外券商</h4>
+                            <p><strong>Firstrade：</strong>適合初學者的美股券商<br>
+                            <strong>IB盈透證券：</strong>適合想投資全球商品的投資人<br>
+                            <strong>嘉信證券：</strong>適合想在大型機構交易的投資人</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 5: Stock Selection -->
+        <section class="chapter-section" data-chapter="4">
+            <div class="chapter-header">
+                <h2 class="chapter-title">第五章：選股策略</h2>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">四大投資策略</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-content">
+                            <h4>被動投資</h4>
+                            <p><strong>適合：</strong>想長期被動投資、取得穩定報酬<br>
+                            <strong>方法：</strong>ETF投資，採取買進持有策略</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <h4>主動選股</h4>
+                            <p><strong>適合：</strong>想賺額外報酬<br>
+                            <strong>方法：</strong>透過財報分析、產業分析進行選股</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💎</div>
+                        <div class="feature-content">
+                            <h4>價值投資</h4>
+                            <p><strong>適合：</strong>沒有特定看法又想買個股<br>
+                            <strong>方法：</strong>參考投資大師持股清單</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-content">
+                            <h4>股息策略</h4>
+                            <p><strong>適合：</strong>追求穩定配息<br>
+                            <strong>方法：</strong>選擇股息貴族股票</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">巴菲特持股清單</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>股票代號</th>
+                            <th>公司名稱</th>
+                            <th>持股比例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>AAPL</strong></td>
+                            <td>蘋果公司</td>
+                            <td>40.81%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BAC</strong></td>
+                            <td>美國銀行</td>
+                            <td>11.81%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AXP</strong></td>
+                            <td>美國運通</td>
+                            <td>10.41%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">股息貴族範例</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>股票代號</th>
+                            <th>公司名稱</th>
+                            <th>產業</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CHRW</strong></td>
+                            <td>CH Robinson Worldwide Inc</td>
+                            <td>工業</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NEE</strong></td>
+                            <td>NextEra Energy Inc</td>
+                            <td>公用事業</td>
+                        </tr>
+                        <tr>
+                            <td><strong>APD</strong></td>
+                            <td>Air Products &amp; Chemicals Inc</td>
+                            <td>材料</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-card">
+                <h3 class="card-title">實用查詢網站</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">⭐</div>
+                        <div class="feature-content">
+                            <h4>Morningstar</h4>
+                            <p>查看財報數據、財務比率</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h4>Yahoo! Finance</h4>
+                            <p>查看圖表、下載歷史數據</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💼</div>
+                        <div class="feature-content">
+                            <h4>ETFdatabase</h4>
+                            <p>查詢ETF資料</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-content">
+                            <h4>finviz.com</h4>
+                            <p>查看美股漲跌狀況</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-content">
+                            <h4>Portfoliovisualizer</h4>
+                            <p>回測資料分析</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 6: FAQ -->
+        <section class="chapter-section" data-chapter="5">
+            <div class="chapter-header">
+                <h2 class="chapter-title">第六章：常見問答</h2>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>投資美股英文一定要很好？</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>不一定，現在許多券商都有中文介面，基本的英文單字即可。</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>一定要半夜凌晨才能交易？</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>美股交易時間確實是台灣的夜間，但也可以使用盤前盤後交易功能。</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>美股開戶很麻煩？</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>現在大部分券商都可以線上開戶，流程已經簡化很多。</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>美股交易成本很高？</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>海外券商多數提供零手續費交易，成本反而比台股低。</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>投資美股要繳稅嗎？</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>資本利得免稅，配息有30%預扣稅，但美國公司多數不配息。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Global variables for state management
+        let currentChapter = 0;
+        let isFullscreen = false;
+        
+        // Chapter navigation
+        function showChapter(chapterIndex) {
+            // Hide all chapters
+            const chapters = document.querySelectorAll('.chapter-section');
+            chapters.forEach(chapter => {
+                chapter.classList.remove('active');
+            });
+            
+            // Show selected chapter
+            chapters[chapterIndex].classList.add('active');
+            
+            // Update chapter buttons
+            const buttons = document.querySelectorAll('.chapter-btn');
+            buttons.forEach((btn, index) => {
+                btn.classList.toggle('active', index === chapterIndex);
+                if (index === chapterIndex) {
+                    btn.classList.add('bounce');
+                    setTimeout(() => btn.classList.remove('bounce'), 600);
+                }
+            });
+            
+            // Update progress indicator
+            updateProgress(chapterIndex);
+            
+            // Update current chapter
+            currentChapter = chapterIndex;
+            
+            // Smooth scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Update progress indicator
+        function updateProgress(activeIndex) {
+            const steps = document.querySelectorAll('.progress-step');
+            steps.forEach((step, index) => {
+                const circle = step.querySelector('.progress-circle');
+                
+                // Remove all classes
+                step.classList.remove('active');
+                circle.classList.remove('active', 'completed');
+                
+                // Add appropriate classes
+                if (index === activeIndex) {
+                    step.classList.add('active');
+                    circle.classList.add('active');
+                } else if (index < activeIndex) {
+                    circle.classList.add('completed');
+                }
+            });
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            const body = document.body;
+            const fullscreenBtn = document.querySelector('.fullscreen-btn');
+            
+            if (!isFullscreen) {
+                // Enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                
+                body.classList.add('fullscreen');
+                fullscreenBtn.innerHTML = '<span>⛶</span>離開全螢幕';
+                isFullscreen = true;
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                
+                body.classList.remove('fullscreen');
+                fullscreenBtn.innerHTML = '<span>⛶</span>全螢幕切換';
+                isFullscreen = false;
+            }
+            
+            // Add bounce effect
+            fullscreenBtn.classList.add('bounce');
+            setTimeout(() => fullscreenBtn.classList.remove('bounce'), 600);
+        }
+        
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            const isFullscreenNow = !!(document.fullscreenElement || 
+                                    document.webkitFullscreenElement || 
+                                    document.msFullscreenElement);
+            
+            if (!isFullscreenNow && isFullscreen) {
+                // User exited fullscreen using ESC key
+                document.body.classList.remove('fullscreen');
+                document.querySelector('.fullscreen-btn').innerHTML = '<span>⛶</span>全螢幕切換';
+                isFullscreen = false;
+            }
+        }
+        
+        // Toggle FAQ items
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const isOpen = answer.classList.contains('open');
+            const icon = element.querySelector('span:last-child');
+            
+            // Close all other FAQ items
+            document.querySelectorAll('.faq-answer').forEach(item => {
+                item.classList.remove('open');
+            });
+            document.querySelectorAll('.faq-question span:last-child').forEach(item => {
+                item.textContent = '+';
+            });
+            
+            // Toggle current FAQ item
+            if (!isOpen) {
+                answer.classList.add('open');
+                icon.textContent = '−';
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    if (currentChapter > 0) {
+                        showChapter(currentChapter - 1);
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentChapter < 5) {
+                        showChapter(currentChapter + 1);
+                    }
+                    break;
+                case 'f':
+                case 'F':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        toggleFullscreen();
+                    }
+                    break;
+                case 'Escape':
+                    if (isFullscreen) {
+                        toggleFullscreen();
+                    }
+                    break;
+            }
+        });
+        
+        // Add hover effects to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.content-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+            });
+        });
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial progress
+            updateProgress(0);
+            
+            // Add smooth scrolling to all internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

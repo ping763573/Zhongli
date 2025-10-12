@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>債券新手入門指南 - v1.0.0</title>
+    <style>
+        /* --- 整體與字體設定 --- */
+        :root {
+            --primary-color: #4A90E2; /* 主題藍色 */
+            --secondary-color: #F4F8FF; /* 淡藍背景 */
+            --text-color: #333; /* 主要文字顏色 */
+            --header-bg: #FFFFFF; /* 頁首背景 */
+            --border-color: #E0E0E0; /* 邊框顏色 */
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- 頂部固定控制列 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 10px 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-right: 20px;
+        }
+        
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: 10px;
+            font-size: 1.5em; /* Icon size */
+            color: var(--primary-color);
+            transition: transform 0.2s ease;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* --- 主要內容區域 --- */
+        main {
+            padding-top: 100px; /* 預留頂部控制列的空間 */
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 50px; /* 預留頁尾空間 */
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none; /* 預設隱藏所有頁面 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block; /* 顯示當前頁面 */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .content-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        /* --- 頁尾 --- */
+        footer {
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--header-bg);
+            font-size: 0.9em;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- 響應式設計 --- */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px;
+                justify-content: center;
+            }
+            .logo {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            nav {
+                justify-content: center;
+                width: 100%;
+            }
+            .controls {
+                position: absolute;
+                top: 15px;
+                right: 10px;
+                margin-left: 0;
+            }
+            main {
+                padding-top: 160px; /* 增加頂部空間以適應換行的控制列 */
+            }
+            .nav-btn {
+                font-size: 0.8em;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景音樂 -->
+    <audio id="background-music" loop>
+        <!-- 使用一個可正常播放的免費來源 -->
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        您的瀏覽器不支援音訊播放。
+    </audio>
+
+    <!-- 頂部固定控制列 -->
+    <header>
+        <div class="logo">債券入門指南</div>
+        <nav id="main-nav">
+            <button class="nav-btn active" data-page="home">首頁</button>
+            <button class="nav-btn" data-page="step1">Step 1</button>
+            <button class="nav-btn" data-page="step2">Step 2</button>
+            <button class="nav-btn" data-page="step3">Step 3</button>
+            <button class="nav-btn" data-page="step4">Step 4</button>
+            <button class="nav-btn" data-page="step5">Step 5</button>
+            <button class="nav-btn" data-page="step6">Step 6</button>
+        </nav>
+        <div class="controls">
+            <button id="fullscreen-btn" class="control-btn" title="切換全螢幕">⛶</button>
+            <button id="music-btn" class="control-btn" title="播放/暫停音樂">🎵</button>
+        </div>
+    </header>
+
+    <!-- 主要內容區域 -->
+    <main>
+        <!-- Home Page -->
+        <section id="home" class="page active">
+            <div class="content-box">
+                <h1>債券新手入門教學懶人包</h1>
+                <h2>帶你買進第一支債券</h2>
+                <p>「想投資債券該怎麼開始？買債券好嗎？」</p>
+                <p>如果你有這樣的想法，這篇文章會為您整理新手投資債券的入門知識，從債券種類、債券怎麼買、投資債券的好處與風險，教你如何開始債券投資的第一步、用債券進行資產配置，並將債券常見迷思與問題總整理，看完以後你會對投資債券更加了解。</p>
+                <h3>閱讀進度</h3>
+                <ul>
+                    <li><b>Step 1: 債券投資是如何運作的</b> - 債券是什麼？優點與風險？如何獲利？</li>
+                    <li><b>Step 2: 完整認識債券</b> - 認識債券組成的5個元素、報酬率怎麼看？</li>
+                    <li><b>Step 3: 債券種類詳解</b> - 根據發行者、地區、風險等級分類。</li>
+                    <li><b>Step 4: 債券怎麼買</b> - 了解購買管道與查詢實用網站。</li>
+                    <li><b>Step 5: 你適合投資哪一種債券</b> - 從風險程度分析適合的債券類型。</li>
+                    <li><b>Step 6: 用債券打造投資組合</b> - 學習資產配置與打造現金流。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Step 1 Page -->
+        <section id="step1" class="page">
+            <div class="content-box">
+                <h2>Step 1: 債券投資是如何運作的</h2>
+                <h3>債券是什麼？</h3>
+                <p>債券（英文：Bond）是一種「借據」。發行者為了募集資金，跟投資人借錢，並承諾在到期前的每期支付固定的利息，以及到期時一次還清票面面額上的本金。</p>
+                <h3>債券是由誰發行？</h3>
+                <p>債券發行者大多是國家政府、大型企業。募集的資金可用來拓展國家政府的基礎建設，或是投入資本發展公司經營。</p>
+                <h3>投資債券的優點與風險</h3>
+                <ul>
+                    <li><b>優點 1: 固定收益（定期領息）</b> - 性質類似定存，是定期領利息的投資工具。</li>
+                    <li><b>優點 2: 風險波動低（投資等級債以上）</b> - 與股票比較，債券的風險波動較小（此指美國公債或高評等債券）。</li>
+                    <li><b>優點 3: 增加資產穩定性</b> - 透過資產配置將資金投資到不同類型的資產，用來控制風險。當股市風險高時，資金傾向流向債券，能減少整體資產波動。</li>
+                </ul>
+                <ul>
+                    <li><b>風險 1: 違約風險</b> - 發行的國家或公司付不出利息或本金。</li>
+                    <li><b>風險 2: 利率風險</b> - 利率和債券價格大多成反比。當利率上升時，債券價格下跌。</li>
+                    <li><b>風險 3: 市場情緒</b> - 恐慌時，安全債券可能上漲，而高風險債券價格可能暴跌。</li>
+                    <li><b>風險 4: 流動性風險</b> - 交易冷清的債券可能會有有價無市的狀況，不易換成現金。</li>
+                </ul>
+                <h3>投資債券如何獲利？</h3>
+                <p>主要有兩種獲利方式：</p>
+                <ol>
+                    <li><b>固定收益：</b>收取利息並在到期時拿回本金，這是最主要的獲利來源。</li>
+                    <li><b>資本利得：</b>透過買賣債券賺取價差。但對入門者不建議，因為價格會受利率和市場情緒影響，預測困難。</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Step 2 Page -->
+        <section id="step2" class="page">
+            <div class="content-box">
+                <h2>Step 2: 完整認識債券</h2>
+                <h3>認識債券組成的5個元素</h3>
+                <p>一張債券主要由5個元素組成：</p>
+                <ol>
+                    <li><b>票面金額 (Face Value)</b>: 到期時可拿回的本金。</li>
+                    <li><b>票面利率 (Coupon Rate)</b>: 發行時承諾的年利率。</li>
+                    <li><b>到期日 (Maturity Date)</b>: 償還本金的日期。</li>
+                    <li><b>票息日期 (Coupon Date)</b>: 支付利息的日期。</li>
+                    <li><b>發行價 (Issue Price)</b>: 發行時的價格。</li>
+                </ol>
+                <p><b>市場先生提示：</b>對大多數使用債券ETF或基金的投資人來說，只需了解「到期殖利率」即可。</p>
+                <h3>債券報酬率怎麼看？</h3>
+                <p>投資債券時，最重要的指標是「到期殖利率 (Yield to Maturity, YTM)」。它考慮了買入價格、未來能領到的所有利息、以及到期後拿回的本金，所推算出的年化報酬率。</p>
+                <p><b>切記：</b>銀行銷售時提到的「6%~8%票面利率」可能只是話術，實際的到期殖利率可能遠低於此。買進債券只需要看「到期殖利率」。</p>
+                <h3>哪些因素會影響債券報酬？</h3>
+                <ul>
+                    <li><b>違約風險：</b>是投資債券最大的風險。報酬根據風險高低決定，投資人會參考信用評等（如S&P、Moody's）來評估。</li>
+                    <li><b>存續期間 (Duration)：</b>衡量債券價格對利率變動的敏感度。定義為「當市場利率每變動1%，債券價格預期會變動多少%」。存續期間越長，受利率影響越大。</li>
+                    <li><b>利率風險：</b>利率與債券價格成反比。市場利率上升，現有債券吸引力下降，價格隨之下跌。</li>
+                    <li><b>匯率風險：</b>投資非本國貨幣計價的債券時，需承擔匯率波動的風險。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Step 3 Page -->
+        <section id="step3" class="page">
+            <div class="content-box">
+                <h2>Step 3: 債券種類詳解</h2>
+                <p>債券種類很多，但真正的差異只有一個：風險高或低。我們可以從幾個角度來分類：</p>
+                <h3>根據發行者分類</h3>
+                <ul>
+                    <li><b>國債/公債 (風險低):</b> 國家發行的債券，用國家稅收作為還款來源。</li>
+                    <li><b>公司債 (風險高):</b> 公司企業發行的債券，用企業盈餘來還款。</li>
+                </ul>
+                <h3>根據地區分類</h3>
+                <ul>
+                    <li><b>美國債券 (風險低):</b> 美國公司或政府的債券，通常風險相對低。</li>
+                    <li><b>已開發市場債券 (風險低):</b> 如英國、德國、日本等。</li>
+                    <li><b>新興市場債券 (風險中、高):</b> 如中國、俄羅斯、印度、台灣等。</li>
+                </ul>
+                <h3>根據風險等級分類</h3>
+                <ul>
+                    <li><b>投資等級債券 (風險低):</b> 信用評等在BBB級以上，大多是已開發國家國債或大型公司債。</li>
+                    <li><b>垃圾債券 (又稱高收益債券) (風險高):</b> 信用評等低於BBB級，大多是公司債。</li>
+                </ul>
+                <p><b>市場先生建議：</b>投資新手一定要認識的3種債券為：美國公債、投資等級債、新興市場債。<b>尤其投資新手，先不要碰BB等級以下的債券。</b></p>
+            </div>
+        </section>
+        
+        <!-- Step 4 Page -->
+        <section id="step4" class="page">
+            <div class="content-box">
+                <h2>Step 4: 債券怎麼買</h2>
+                <p>由於美國債券市場規模龐大、機制完善，一般我們談到債券，主要指的都是美國的債券。</p>
+                <h3>三種債券買進方式：單一債券、債券ETF、債券基金</h3>
+                <ul>
+                    <li><b>單一債券：</b>在台灣不易購買，通常只有銀行針對高資產客戶銷售，單位價格極高且成本昂貴。</li>
+                    <li><b>債券基金：</b>透過基金平台買進一籃子的債券，由經理人主動操作，有額外的管理費與交易手續費。</li>
+                    <li><b>債券指數基金 (ETF)：</b>透過股票券商買進，追蹤特定債券指數，採被動投資，管理費與交易成本比基金低很多。</li>
+                </ul>
+                <h3>投資新手，從債券ETF、債券基金開始</h3>
+                <p>不建議新手購買單一債券，因為單價高、沒有分散效果、成本高。建議一次配置多檔債券，建立投資組合，避免單一債券違約的風險。</p>
+                <p>因此，<b>債券ETF和債券基金</b>比較適合投資新手，好處是成本低、也有分散效果。</p>
+                <h3>實用查詢債券網站</h3>
+                <p>查詢美國債券ETF，除了各ETF官網以外，主要有2個實用網站：</p>
+                <ul>
+                    <li><b>ETF Database (etfdb.com)</b></li>
+                    <li><b>Fidelity - ETF</b></li>
+                </ul>
+                <p>這些網站提供方便的篩選功能、完整的費用率和持股資訊，方便投資人進行評估選擇。</p>
+            </div>
+        </section>
+
+        <!-- Step 5 Page -->
+        <section id="step5" class="page">
+            <div class="content-box">
+                <h2>Step 5: 你適合投資哪一種債券</h2>
+                <h3>哪些人適合投資債券？</h3>
+                <p>如果你符合下面的任何一種情況，就可以考慮將債券納入投資工具：</p>
+                <ul>
+                    <li><b>擔心波動風險，且不追求高報酬：</b>較保守的投資人或接近退休年紀，對風險承受度較低，投資債券比股票合適。</li>
+                    <li><b>有資產配置的需求：</b>股票與債券在某些時候走勢呈低相關或負相關。在股市空頭時，債券的獲利能產生互補作用，減少整體資產價值的波動。</li>
+                </ul>
+                <h3>單一債券介紹：風險程度與對象</h3>
+                <p>以下將以債券ETF為例，介紹不同風險程度的債券類型。</p>
+                <h4>適合初階入門 (風險程度：低~中等)</h4>
+                <ul>
+                    <li><b>美國公債：</b>全世界最安全的投資工具之一，適合每個人。具有很強的對抗風險性質。</li>
+                    <li><b>投資等級債：</b>信用評等較高的公債或公司債，風險比美國公債高一點，但整體仍相對安全。</li>
+                    <li><b>新興市場債：</b>建議新手「優先認識，但先不要碰」。風險在於「主權違約」，判斷因素多，新手能力還不夠。</li>
+                </ul>
+                <h4>適合進階學習 (風險程度：中等~高)</h4>
+                <ul>
+                    <li><b>高收益債 (垃圾債)：</b>強烈建議新手「先不要碰」。其特質更像股票，負責創造收益，風險遠高於一般投資等級債。</li>
+                </ul>
+                <h4>適合高階專研 (風險程度：高)</h4>
+                <ul>
+                    <li><b>金融資產證券化商品 (MBS, ABS)</b></li>
+                    <li><b>可轉換公司債 (CB)</b></li>
+                    <li><b>連動債 (Structured Notes)</b></li>
+                </ul>
+                <p>這些屬於衍生性或結構相對複雜的債券，對新手來說不是必須，一般人不必懂也不要碰。</p>
+            </div>
+        </section>
+
+        <!-- Step 6 Page -->
+        <section id="step6" class="page">
+            <div class="content-box">
+                <h2>Step 6: 用債券打造投資組合</h2>
+                <h3>債券在資產配置中扮演的角色</h3>
+                <p>資產配置的主要目的，是<b>犧牲少部分報酬來減少不確定性（減少波動風險）</b>。</p>
+                <p>資產配置就是把錢投資在更多元的資產類別上（例如：不動產、債券、黃金等），藉此達到分散風險的目的。在資產配置中，有4個注意事項：</p>
+                <ol>
+                    <li>高度相關的資產類別，沒有降低波動性的效果。</li>
+                    <li>資產報酬必須長期向上。</li>
+                    <li>配置重點是「降低波動性」而不是追求「高報酬率」。</li>
+                    <li>依然需要長期投資，才能取得高確定性的成果。</li>
+                </ol>
+                <h3>用債券打造現金流的策略：債券梯 (Bond Ladder)</h3>
+                <p><b>市場先生提示：</b>對於想要建立較大債券部位並擁有固定現金流者，債券梯是個基本操作，但<b>不建議新手使用</b>。</p>
+                <h4>債券梯有什麼好處？</h4>
+                <ol>
+                    <li><b>控制利率風險：</b>將不同到期日的債券建立成一個投資組合，讓整體的存續期間保持一致，降低利率波動的衝擊。</li>
+                    <li><b>處理現金流再投資問題：</b>隨著債券配息、到期償還本金，會持續有現金流回來，債券梯可以有系統地處理這些現金流。</li>
+                    <li><b>讓殖利率與市場利率保持一致：</b>每次有債券到期時，都會用其本金根據當下利率再買入新的長年期債券，讓組合的殖利率能跟上市場狀況。</li>
+                </ol>
+                <p><b>提示：</b>投資新手選擇債券基金或是債券ETF也能達到債券梯的效果，用一個標的就能整合不同期別的債券，也可以平衡存續期間和利率。</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer>
+        <p>債券新手入門指南 | 版本: 1.0.0</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- 變數定義 ---
+            const nav = document.getElementById('main-nav');
+            const navButtons = nav.querySelectorAll('.nav-btn');
+            const pages = document.querySelectorAll('.page');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const musicBtn = document.getElementById('music-btn');
+            const bgMusic = document.getElementById('background-music');
+            let isMusicPlaying = false;
+
+            // --- 核心功能：頁面切換 ---
+            function showPage(pageId) {
+                // 隱藏所有頁面
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // 顯示指定頁面
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+
+                // 更新按鈕樣式
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.page === pageId) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            // --- 事件監聽：導覽列按鈕 ---
+            nav.addEventListener('click', function(e) {
+                if (e.target.classList.contains('nav-btn')) {
+                    const pageId = e.target.dataset.page;
+                    showPage(pageId);
+                }
+            });
+
+            // --- 功能：全螢幕切換 ---
+            fullscreenBtn.addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        alert(`無法啟用全螢幕模式: ${err.message} (${err.name})`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            // --- 功能：背景音樂控制 ---
+            musicBtn.addEventListener('click', function() {
+                if (isMusicPlaying) {
+                    bgMusic.pause();
+                    musicBtn.textContent = '🎵';
+                    musicBtn.title = '播放音樂';
+                } else {
+                    bgMusic.play().catch(err => {
+                        console.log("音樂播放失敗，可能需要使用者互動。");
+                    });
+                    musicBtn.textContent = '⏸️';
+                    musicBtn.title = '暫停音樂';
+                }
+                isMusicPlaying = !isMusicPlaying;
+            });
+            
+            // 處理瀏覽器自動播放政策
+            bgMusic.addEventListener('play', () => { isMusicPlaying = true; musicBtn.textContent = '⏸️'; });
+            bgMusic.addEventListener('pause', () => { isMusicPlaying = false; musicBtn.textContent = '🎵'; });
+
+
+            // --- 初始載入 ---
+            showPage('home'); // 預設顯示首頁
+        });
+    </script>
+</body>
+</html>

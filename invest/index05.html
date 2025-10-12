@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資產配置策略入門指南 v1.0.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* 頂部導航固定區域 */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .version {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .fullscreen-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        /* 主要內容區域 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+        }
+
+        /* 標題區 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #7f8c8d;
+        }
+
+        /* 章節卡片 */
+        .section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            font-size: 1.4em;
+            margin: 25px 0 15px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.05em;
+        }
+
+        /* 重點標記 */
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e17055;
+        }
+
+        .highlight h3 {
+            color: #d63031;
+            margin-top: 0;
+        }
+
+        /* 資產類別表格 */
+        .asset-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        .asset-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .asset-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .asset-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* 注意事項列表 */
+        .notice-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notice-list li {
+            padding: 15px;
+            margin: 10px 0;
+            background: #e3f2fd;
+            border-left: 5px solid #2196F3;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .notice-list li:hover {
+            background: #bbdefb;
+            transform: translateX(5px);
+        }
+
+        .notice-list li strong {
+            color: #1976D2;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        /* 互動式比較圖表 */
+        .comparison-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .comparison-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        .comparison-item h4 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .comparison-item .stat {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* 原則卡片 */
+        .principle-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .principle-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #11998e;
+            transition: all 0.3s;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .principle-card h4 {
+            color: #11998e;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        /* 互動式按鈕 */
+        .interactive-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .interactive-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .top-nav {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .container {
+                padding-top: 150px;
+            }
+        }
+
+        /* 頁尾 */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+            background: white;
+            border-radius: 15px;
+            margin-top: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部固定導航 -->
+    <div class="top-nav">
+        <div class="version">版本 1.0.0</div>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="scrollToSection('definition')">什麼是資產配置</button>
+            <button class="nav-btn" onclick="scrollToSection('assets')">資產類別</button>
+            <button class="nav-btn" onclick="scrollToSection('goal')">配置目標</button>
+            <button class="nav-btn" onclick="scrollToSection('principle')">配置原理</button>
+            <button class="nav-btn" onclick="scrollToSection('notices')">注意事項</button>
+            <button class="nav-btn fullscreen-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+        </div>
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="container">
+        <!-- 標題區 -->
+        <div class="header">
+            <h1>📊 資產配置投資策略入門指南</h1>
+            <p>透過科學的資產配置，在風險與報酬間找到最佳平衡</p>
+        </div>
+
+        <!-- 什麼是資產配置 -->
+        <div class="section" id="definition">
+            <h2>💡 什麼是資產配置？</h2>
+            <p><strong>資產配置定義：</strong>透過將資金投資到不同類型的資產類別上，達成期望的風險與報酬配置。</p>
+            
+            <h3>🎯 什麼是資產（Asset）？</h3>
+            <p>在投資領域，資產指的是「不同性質」或者說是「不同風險報酬特性」的投資標的。</p>
+            
+            <div class="highlight">
+                <h3>📌 核心概念</h3>
+                <p><strong>報酬：</strong>分散投資後得到的長期報酬，指的是長期「分散投資」的年化報酬率。</p>
+                <p><strong>風險：</strong>代表不確定性、波動大小。波動越大，未來的成果就可能跟預想的落差很大。</p>
+            </div>
+        </div>
+
+        <!-- 資產類別 -->
+        <div class="section" id="assets">
+            <h2>📋 資產類別有哪些？</h2>
+            <p>一般投資人常見的資產分類如下：</p>
+            
+            <table class="asset-table">
+                <thead>
+                    <tr>
+                        <th>資產類別</th>
+                        <th>英文</th>
+                        <th>更多細分類</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>美國股票</strong></td>
+                        <td>US Equity</td>
+                        <td>大型股、中型股、小型股、微型股<br>價值股、成長股</td>
+                    </tr>
+                    <tr>
+                        <td><strong>全球股市（非美）</strong></td>
+                        <td>International Equity</td>
+                        <td>全球（非美）、歐洲、亞洲<br>已開發市場、新興市場</td>
+                    </tr>
+                    <tr>
+                        <td><strong>固定收益</strong></td>
+                        <td>Fixed Income</td>
+                        <td>公債（短期、中期、長期）<br>免稅債券/市政債<br>全美國債券、全球債券<br>抗通膨債、投資等級債<br>公司債、高收益債</td>
+                    </tr>
+                    <tr>
+                        <td><strong>現金</strong></td>
+                        <td>Cash</td>
+                        <td>現金及約當現金</td>
+                    </tr>
+                    <tr>
+                        <td><strong>商品類</strong></td>
+                        <td>Commodities</td>
+                        <td>黃金、貴金屬<br>原油、綜合商品</td>
+                    </tr>
+                    <tr>
+                        <td><strong>不動產</strong></td>
+                        <td>REITs</td>
+                        <td>美國、非美國</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight">
+                <h3>⚠️ 進階資產類別（適合高資產人士）</h3>
+                <p>• 私募股權投資（創投、買進未上市公司）</p>
+                <p>• 不動產投資（直接持有土地和不動產）</p>
+                <p>• 絕對報酬基金（多空對沖策略、套利策略）</p>
+                <p><em>這類資產雖然可能有很高的報酬，但風險也較高或流動性較差，僅適合專業機構，較不適合一般大眾。</em></p>
+            </div>
+        </div>
+
+        <!-- 配置目標 -->
+        <div class="section" id="goal">
+            <h2>🎯 資產配置的目標</h2>
+            <p class="highlight" style="border-left-color: #667eea; background: linear-gradient(120deg, #dfe6e9 0%, #b2bec3 100%);">
+                <strong style="font-size: 1.3em; color: #2d3436;">核心目標：犧牲少部分報酬來減少不確定性（減少波動風險）</strong><br>
+                或者也可以說：在不提升風險的情況下，能提升報酬。
+            </p>
+
+            <h3>📊 實際案例比較</h3>
+            <div class="comparison-box">
+                <div class="comparison-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h4>100% 美國股票</h4>
+                    <div class="stat">9.76%</div>
+                    <p>年化報酬率</p>
+                    <p>最大回檔：-50.89%</p>
+                    <p>高報酬，高波動</p>
+                </div>
+                <div class="comparison-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h4>50% 股票 + 50% 債券</h4>
+                    <div class="stat">8.30%</div>
+                    <p>年化報酬率</p>
+                    <p>最大回檔：-21.63%</p>
+                    <p>平衡配置，波動適中</p>
+                </div>
+                <div class="comparison-item" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                    <h4>100% 美國公債</h4>
+                    <div class="stat">5.85%</div>
+                    <p>年化報酬率</p>
+                    <p>最大回檔：-6.47%</p>
+                    <p>低報酬，低波動</p>
+                </div>
+            </div>
+
+            <p>從上述案例可以看到，50%股票50%債券的配置，年化報酬率略低於100%股票（8.3% vs 9.76%），但最大回檔大幅降低（-21.63% vs -50.89%），達到風險與報酬的平衡。</p>
+
+            <div class="highlight">
+                <h3>📈 夏普率（Sharpe Ratio）分析</h3>
+                <p>夏普率是衡量單位波動能創造報酬高低的指標。配置後的夏普率為0.77，高於單純持有股票（0.53）或債券（0.68），代表每承擔1%的波動能得到更高的預期報酬。</p>
+            </div>
+        </div>
+
+        <!-- 配置原理 -->
+        <div class="section" id="principle">
+            <h2>🔬 資產配置的原理</h2>
+            <p class="highlight" style="border-left-color: #e17055;">
+                <strong style="font-size: 1.2em;">核心原理：兩個資產間走勢「負相關」或「無相關」</strong>
+            </p>
+
+            <h3>什麼是負相關？</h3>
+            <p>如果股票跌債券就漲、股票漲債券就跌，這種關係就稱為「負相關」。在資產配置中，我們的目標是「某資產發生大跌時其他資產不受影響」，這樣就足夠達到減少波動的目的。</p>
+
+            <h3>📌 不同資產的相關性</h3>
+            <ul class="notice-list">
+                <li>
+                    <strong>股票 vs 債券：</strong>
+                    負相關關係，股市大跌時債券常常漲幅較大，是最經典的配置組合。
+                </li>
+                <li>
+                    <strong>股票 vs 黃金/貴金屬：</strong>
+                    無相關或低相關，彼此漲跌沒什麼關係，可提供額外的分散效果。
+                </li>
+                <li>
+                    <strong>股票 vs 不動產REITs：</strong>
+                    相關性較高但不完全相同，可提供部分分散效果。
+                </li>
+                <li>
+                    <strong>股票 vs 高收益債：</strong>
+                    高度相關！不適合做資產配置，因為沒有降低波動性的效果。
+                </li>
+            </ul>
+
+            <div class="highlight">
+                <h3>⚡ 重要提醒</h3>
+                <p><strong>資產配置只關注比例，不談「時機」：</strong>使用資產配置時，不應該再問「現在可以進場嗎？」這種問題。因為資產配置的前提就是我們無法掌握短期變化，只能掌握長期成長。</p>
+            </div>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="section" id="notices">
+            <h2>⚠️ 資產配置要注意的 4 件事</h2>
+            
+            <ul class="notice-list">
+                <li>
+                    <strong>1. 高度相關的資產類別，沒有降低波動性的效果</strong>
+                    不是所有股票、所有債券都是負相關。例如股票和高收益債券的走勢是高度相關，如果將錢分散在股票和高收益債，就完全沒有資產配置效果。相關性要看長期（不低於15年）的報酬走勢。
+                </li>
+                <li>
+                    <strong>2. 資產報酬必須長期向上</strong>
+                    必須要選擇長期能創造正報酬的資產，才能作為配置的一環。股票、債券、不動產（REITs）都沒什麼疑慮。商品類資產（黃金、原油等）長期報酬較低但波動大，因其與股債走勢無關，可降低整體波動性。
+                </li>
+                <li>
+                    <strong>3. 資產配置重點是「降低波動性」而不是追求「高報酬率」</strong>
+                    想要高報酬率，不要做資產配置！單純持有股票報酬率最高。資產配置是透過犧牲一些報酬率，來大幅減少不確定性。如果資金少、投資期長、不在意波動，可能不需要資產配置；反之則資產配置很重要。
+                </li>
+                <li>
+                    <strong>4. 依然需要長期投資，才能取得高確定性的成果</strong>
+                    波動不可能完全消除，建議至少5年以上或更長的投資期，才會得到比較高確定性的成果。資金大、年紀大、害怕波動的人，更應該透過資產配置減少波動風險。
+                </li>
+            </ul>
+
+            <div class="highlight" style="background: linear-gradient(120deg, #fdcb6e 0%, #e17055 100%); color: white;">
+                <h3 style="color: white;">💡 實際例子</h3>
+                <p>資金100萬時，回檔50%還能承受，可配置8成以上股票。</p>
+                <p>資金5000萬時，回檔50%（剩2500萬）可能受不了，只能承受16%回檔（剩4200萬），這時配置超過3成股票就可能受不了波動。</p>
+            </div>
+        </div>
+
+        <!-- 配置原則 -->
+        <div class="section">
+            <h2>📐 資產配置的關鍵原則</h2>
+            <p class="highlight">
+                <strong>重要觀念：</strong>資產配置「沒有」最好的類別和比例！只存在「優化」而不存在「最佳化」。因為重點不是追求報酬率，而是在風險與報酬率之間，追求個人安心與可接受的平衡。
+            </p>
+
+            <div class="principle-cards">
+                <div class="principle-card">
+                    <h4>📈 原則 1：股票比重</h4>
+                    <p>股票的比重越高，整體報酬越高，但通常波動也越大。股票是所有資產類別中報酬最高的，其中美股最為重要，沒有一個有規模的資產管理業者會忽略美股。</p>
+                </div>
+                <div class="principle-card">
+                    <h4>🏦 原則 2：債券角色</h4>
+                    <p>大多數人忽略了債券，但債券在配置上的角色很重要。美國公債與股票有負相關的互補特性，可以減少波動。最基礎的資產配置，一定要包含股票和債券。</p>
+                </div>
+                <div class="principle-card">
+                    <h4>🌐 原則 3：資產種類</h4>
+                    <p>不相關的資產種類越多，穩定性就越高。許多知名的資產配置包含4種以上資產，甚至細分超過10-20種。任一資產表現惡劣時，其他的不受影響。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最後提醒 -->
+        <div class="section">
+            <h2>🎓 最後提醒</h2>
+            <div class="highlight">
+                <h3>要了解自己的投資</h3>
+                <p>• 資產配置的目標是在風險與報酬間找到個人可接受的平衡</p>
+                <p>• 沒有所謂「最好」的配置，不要走火入魔</p>
+                <p>• 配置比例會隨著個人年齡、資金規模、風險承受度而調整</p>
+                <p>• 長期持有、定期檢視、適時再平衡是成功的關鍵</p>
+            </div>
+
+            <h3>🤖 理財機器人（Roboadvisor）</h3>
+            <p>理財機器人是一種自動化理財顧問，提供多種已經配置好的投資組合。每個投資組合會經過大數據分析歷史數據，讓投資人了解過去的風險與報酬表現，配置比例偏離建議時會提出再平衡建議。</p>
+        </div>
+
+        <!-- 頁尾 -->
+        <div class="footer">
+            <p><strong>資產配置投資策略入門指南</strong></p>
+            <p>版本 1.0.0 | 響應式互動設計</p>
+            <p>© 2025 投資理財教育平台</p>
+        </div>
+    </div>
+
+    <script>
+        // 平滑滾動到指定區塊
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const offsetTop = element.offsetTop - 100;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // 全螢幕切換
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert('無法進入全螢幕模式: ' + err.message);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // 監聽全螢幕變化
+        document.addEventListener('fullscreenchange', function() {
+            const btn = document.querySelector('.fullscreen-btn');
+            if (document.fullscreenElement) {
+                btn.textContent = '🔙 退出全螢幕';
+            } else {
+                btn.textContent = '🖥️ 全螢幕';
+            }
+        });
+
+        // 滾動動畫效果
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
