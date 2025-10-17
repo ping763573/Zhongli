@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣ETF懶人投資法完整指南 v1.0.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  /* RGB versions for opacity control */
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  /* Background color tokens (Light Mode) */
+  --color-bg-1: rgba(59, 130, 246, 0.08); /* Light blue */
+  --color-bg-2: rgba(245, 158, 11, 0.08); /* Light yellow */
+  --color-bg-3: rgba(34, 197, 94, 0.08); /* Light green */
+  --color-bg-4: rgba(239, 68, 68, 0.08); /* Light red */
+  --color-bg-5: rgba(147, 51, 234, 0.08); /* Light purple */
+  --color-bg-6: rgba(249, 115, 22, 0.08); /* Light orange */
+  --color-bg-7: rgba(236, 72, 153, 0.08); /* Light pink */
+  --color-bg-8: rgba(6, 182, 212, 0.08); /* Light cyan */
+
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  /* Common style patterns */
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+  --status-bg-opacity: 0.15;
+  --status-border-opacity: 0.25;
+  --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+  /* RGB versions for opacity control */
+  --color-success-rgb: 33, 128, 141;
+  --color-error-rgb: 192, 21, 47;
+  --color-warning-rgb: 168, 75, 47;
+  --color-info-rgb: 98, 108, 113;
+
+  /* Typography */
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.01em;
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+
+  /* Animation */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+}
+
+/* Dark mode colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* RGB versions for opacity control (Dark Mode) */
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    /* Background color tokens (Dark Mode) */
+    --color-bg-1: rgba(29, 78, 216, 0.15); /* Dark blue */
+    --color-bg-2: rgba(180, 83, 9, 0.15); /* Dark yellow */
+    --color-bg-3: rgba(21, 128, 61, 0.15); /* Dark green */
+    --color-bg-4: rgba(185, 28, 28, 0.15); /* Dark red */
+    --color-bg-5: rgba(107, 33, 168, 0.15); /* Dark purple */
+    --color-bg-6: rgba(194, 65, 12, 0.15); /* Dark orange */
+    --color-bg-7: rgba(190, 24, 93, 0.15); /* Dark pink */
+    --color-bg-8: rgba(8, 145, 178, 0.15); /* Dark cyan */
+
+    /* Semantic Color Tokens (Dark Mode) */
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-800);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-error: var(--color-red-400);
+    --color-success: var(--color-teal-300);
+    --color-warning: var(--color-orange-400);
+    --color-info: var(--color-gray-300);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    --button-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+
+    /* Common style patterns - updated for dark mode */
+    --focus-ring: 0 0 0 3px var(--color-focus-ring);
+    --focus-outline: 2px solid var(--color-primary);
+    --status-bg-opacity: 0.15;
+    --status-border-opacity: 0.25;
+    --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+    /* RGB versions for dark mode */
+    --color-success-rgb: var(--color-teal-300-rgb);
+    --color-error-rgb: var(--color-red-400-rgb);
+    --color-warning-rgb: var(--color-orange-400-rgb);
+    --color-info-rgb: var(--color-gray-300-rgb);
+  }
+}
+
+/* Data attribute for manual theme switching */
+[data-color-scheme="dark"] {
+  /* RGB versions for opacity control (dark mode) */
+  --color-gray-400-rgb: 119, 124, 124;
+  --color-teal-300-rgb: 50, 184, 198;
+  --color-gray-300-rgb: 167, 169, 169;
+  --color-gray-200-rgb: 245, 245, 245;
+
+  /* Colorful background palette - Dark Mode */
+  --color-bg-1: rgba(29, 78, 216, 0.15); /* Dark blue */
+  --color-bg-2: rgba(180, 83, 9, 0.15); /* Dark yellow */
+  --color-bg-3: rgba(21, 128, 61, 0.15); /* Dark green */
+  --color-bg-4: rgba(185, 28, 28, 0.15); /* Dark red */
+  --color-bg-5: rgba(107, 33, 168, 0.15); /* Dark purple */
+  --color-bg-6: rgba(194, 65, 12, 0.15); /* Dark orange */
+  --color-bg-7: rgba(190, 24, 93, 0.15); /* Dark pink */
+  --color-bg-8: rgba(8, 145, 178, 0.15); /* Dark cyan */
+
+  /* Semantic Color Tokens (Dark Mode) */
+  --color-background: var(--color-charcoal-700);
+  --color-surface: var(--color-charcoal-800);
+  --color-text: var(--color-gray-200);
+  --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+  --color-primary: var(--color-teal-300);
+  --color-primary-hover: var(--color-teal-400);
+  --color-primary-active: var(--color-teal-800);
+  --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+  --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+  --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+  --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+  --color-error: var(--color-red-400);
+  --color-success: var(--color-teal-300);
+  --color-warning: var(--color-orange-400);
+  --color-info: var(--color-gray-300);
+  --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+  --color-btn-primary-text: var(--color-slate-900);
+  --color-card-border: rgba(var(--color-gray-400-rgb), 0.15);
+  --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+  --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+
+  /* Common style patterns - updated for dark mode */
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+  --status-bg-opacity: 0.15;
+  --status-border-opacity: 0.25;
+  --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+  /* RGB versions for dark mode */
+  --color-success-rgb: var(--color-teal-300-rgb);
+  --color-error-rgb: var(--color-red-400-rgb);
+  --color-warning-rgb: var(--color-orange-400-rgb);
+  --color-info-rgb: var(--color-gray-300-rgb);
+}
+
+[data-color-scheme="light"] {
+  /* RGB versions for opacity control (light mode) */
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+
+  /* RGB versions for light mode */
+  --color-success-rgb: var(--color-teal-500-rgb);
+  --color-error-rgb: var(--color-red-500-rgb);
+  --color-warning-rgb: var(--color-orange-500-rgb);
+  --color-info-rgb: var(--color-slate-500-rgb);
+}
+
+/* Base styles */
+html {
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  padding-top: 80px; /* Space for fixed header */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+}
+h2 {
+  font-size: var(--font-size-3xl);
+}
+h3 {
+  font-size: var(--font-size-2xl);
+}
+h4 {
+  font-size: var(--font-size-xl);
+}
+h5 {
+  font-size: var(--font-size-lg);
+}
+h6 {
+  font-size: var(--font-size-md);
+}
+
+p {
+  margin: 0 0 var(--space-16) 0;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* Custom styles for ETF app */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-card-border);
+  padding: var(--space-16) var(--space-24);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: var(--shadow-sm);
+}
+
+.version {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-16);
+  align-items: center;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.nav-btn:hover {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+}
+
+.fullscreen-btn {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  border: none;
+  padding: var(--space-8);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.fullscreen-btn:hover {
+  background: var(--color-primary-hover);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: 0 var(--space-24);
+}
+
+.section {
+  padding: var(--space-32) 0;
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.hero {
+  text-align: center;
+  padding: var(--space-32) 0 var(--space-32);
+  background: var(--color-bg-3);
+  margin: 0 calc(-1 * var(--space-24));
+  padding-left: var(--space-24);
+  padding-right: var(--space-24);
+}
+
+.hero h1 {
+  margin-bottom: var(--space-16);
+  font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-4xl));
+}
+
+.hero p {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-32);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quick-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-16);
+  margin-top: var(--space-32);
+}
+
+.quick-nav-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.quick-nav-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
+}
+
+.quick-nav-card i {
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
+  margin-bottom: var(--space-8);
+}
+
+.quick-nav-card h4 {
+  margin-bottom: var(--space-4);
+}
+
+.quick-nav-card p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-24);
+  margin-top: var(--space-24);
+}
+
+.concept-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.concept-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.concept-card .icon {
+  width: 60px;
+  height: 60px;
+  background: var(--color-bg-1);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+}
+
+.concept-card:nth-child(2n) .icon {
+  background: var(--color-bg-2);
+}
+
+.concept-card:nth-child(3n) .icon {
+  background: var(--color-bg-3);
+}
+
+.concept-card:nth-child(4n) .icon {
+  background: var(--color-bg-4);
+}
+
+.concept-card:nth-child(5n) .icon {
+  background: var(--color-bg-5);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-24);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: var(--space-16);
+  text-align: left;
+  border-bottom: 1px solid var(--color-card-border-inner);
+}
+
+.comparison-table th {
+  background: var(--color-bg-1);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.comparison-table tr:hover {
+  background: var(--color-bg-3);
+}
+
+.comparison-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-24);
+  margin-top: var(--space-24);
+}
+
+.etf-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  position: relative;
+}
+
+.etf-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.etf-card:nth-child(2)::before {
+  background: var(--color-warning);
+}
+
+.etf-card h3 {
+  margin-bottom: var(--space-16);
+  color: var(--color-text);
+}
+
+.etf-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.etf-info li {
+  padding: var(--space-8) 0;
+  border-bottom: 1px solid var(--color-card-border-inner);
+  display: flex;
+  justify-content: space-between;
+}
+
+.etf-info li:last-child {
+  border-bottom: none;
+}
+
+.etf-info .label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.etf-info .value {
+  color: var(--color-text-secondary);
+  text-align: right;
+  flex: 1;
+  margin-left: var(--space-16);
+}
+
+.chart-container {
+  margin-top: var(--space-32);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  height: 400px;
+}
+
+.accordion {
+  margin-top: var(--space-24);
+}
+
+.accordion-item {
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-8);
+  overflow: hidden;
+}
+
+.accordion-header {
+  background: var(--color-surface);
+  padding: var(--space-16);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.accordion-header:hover {
+  background: var(--color-secondary);
+}
+
+.accordion-header h4 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.accordion-icon {
+  transition: transform var(--duration-fast) var(--ease-standard);
+  color: var(--color-primary);
+}
+
+.accordion-item.active .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  padding: 0 var(--space-16);
+  max-height: 0;
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--ease-standard);
+  background: var(--color-bg-1);
+}
+
+.accordion-item.active .accordion-content {
+  padding: var(--space-16);
+  max-height: 500px;
+}
+
+.truths-timeline {
+  position: relative;
+  margin-top: var(--space-24);
+}
+
+.truth-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-20);
+  margin-bottom: var(--space-16);
+  position: relative;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.truth-item:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-md);
+}
+
+.truth-item::before {
+  content: counter(truth-counter);
+  counter-increment: truth-counter;
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+}
+
+.truths-timeline {
+  counter-reset: truth-counter;
+}
+
+.truth-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--duration-normal) var(--ease-standard);
+  margin-top: var(--space-16);
+}
+
+.truth-item.expanded .truth-details {
+  max-height: 300px;
+}
+
+.highlight-box {
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-base);
+  padding: var(--space-16);
+  margin: var(--space-24) 0;
+}
+
+.highlight-box h4 {
+  color: var(--color-warning);
+  margin-bottom: var(--space-8);
+}
+
+.footer {
+  background: var(--color-bg-8);
+  padding: var(--space-32) 0;
+  margin-top: var(--space-32);
+  text-align: center;
+  border-top: 1px solid var(--color-card-border);
+}
+
+.footer p {
+  margin-bottom: var(--space-8);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: var(--space-12) var(--space-16);
+    flex-wrap: wrap;
+    gap: var(--space-12);
+  }
+  
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+  
+  .nav-btn {
+    font-size: var(--font-size-xs);
+    padding: var(--space-6) var(--space-8);
+  }
+  
+  .container {
+    padding: 0 var(--space-16);
+  }
+  
+  .hero {
+    margin: 0 calc(-1 * var(--space-16));
+    padding-left: var(--space-16);
+    padding-right: var(--space-16);
+  }
+  
+  .quick-nav {
+    grid-template-columns: 1fr;
+  }
+  
+  .concepts-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-16);
+  }
+  
+  .comparison-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .comparison-table {
+    font-size: var(--font-size-sm);
+  }
+  
+  .comparison-table th,
+  .comparison-table td {
+    padding: var(--space-8);
+  }
+  
+  .truth-item::before {
+    left: -15px;
+    width: 30px;
+    height: 30px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .truth-item {
+    margin-left: var(--space-20);
+  }
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
+    format('woff2');
+}
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="header">
+        <div class="version">版本 1.0.0</div>
+        <nav class="nav">
+            <button class="nav-btn" onclick="scrollToSection('hero')">首頁</button>
+            <button class="nav-btn" onclick="scrollToSection('lazy-investment')">懶人投資法</button>
+            <button class="nav-btn" onclick="scrollToSection('etf-comparison')">ETF類型比較</button>
+            <button class="nav-btn" onclick="scrollToSection('0050-vs-0056')">0050 vs 0056</button>
+            <button class="nav-btn" onclick="scrollToSection('tax-guide')">稅務指南</button>
+            <button class="nav-btn" onclick="scrollToSection('dividend-guide')">配息解密</button>
+            <button class="nav-btn" onclick="scrollToSection('investment-truths')">投資真相</button>
+        </nav>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()" title="切換全螢幕">
+            <i class="fas fa-expand" id="fullscreen-icon"></i>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+        <div class="container">
+            <h1>台灣ETF懶人投資法完整指南</h1>
+            <p>從新手到聰明投資人的完整學習路徑</p>
+            <p>懶人投資法的核心精神：先做功課，再聰明放手。不是無腦投入，而是理性選擇後的長期持有。</p>
+            
+            <div class="quick-nav">
+                <div class="quick-nav-card" onclick="scrollToSection('lazy-investment')">
+                    <i class="fas fa-lightbulb"></i>
+                    <h4>核心理念</h4>
+                    <p>了解懶人投資法的5大核心概念</p>
+                </div>
+                <div class="quick-nav-card" onclick="scrollToSection('etf-comparison')">
+                    <i class="fas fa-chart-bar"></i>
+                    <h4>ETF比較</h4>
+                    <p>市值型vs配息型ETF深度分析</p>
+                </div>
+                <div class="quick-nav-card" onclick="scrollToSection('0050-vs-0056')">
+                    <i class="fas fa-balance-scale"></i>
+                    <h4>0050 vs 0056</h4>
+                    <p>兩大主流ETF完整對比</p>
+                </div>
+                <div class="quick-nav-card" onclick="scrollToSection('tax-guide')">
+                    <i class="fas fa-calculator"></i>
+                    <h4>稅務指南</h4>
+                    <p>境內外ETF稅務規則解析</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lazy Investment Core Concepts -->
+    <section id="lazy-investment" class="section">
+        <div class="container">
+            <h2><i class="fas fa-brain" style="color: var(--color-primary); margin-right: var(--space-12);"></i>懶人投資法核心理念</h2>
+            <p class="section-intro">真正的懶人投資法並非「無腦投資」，而是透過理性分析後的聰明選擇。</p>
+            
+            <div class="concepts-grid">
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-user-check"></i></div>
+                    <h3>了解自己的需求</h3>
+                    <p>首重了解自己的需求（風險承受度、投資目標）</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-search"></i></div>
+                    <h3>清楚投資標的</h3>
+                    <p>清楚了解投資標的的特性</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-hands-helping"></i></div>
+                    <h3>專業分工原則</h3>
+                    <p>客人不當廚師、球員不當教練、病人不當醫生</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>交給專業管理</h3>
+                    <p>交給指數(ETF)、專業經理人管理</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-hand-paper"></i></div>
+                    <h3>聰明放手</h3>
+                    <p>聰明地放手，而非無腦投入</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ETF Comparison -->
+    <section id="etf-comparison" class="section">
+        <div class="container">
+            <h2><i class="fas fa-chart-bar" style="color: var(--color-primary); margin-right: var(--space-12);"></i>ETF類型深度比較</h2>
+            <p class="section-intro">市值型與配息型ETF各有其特色與適用情境，選擇前需了解兩者的核心差異。</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>比較維度</th>
+                        <th>市值型ETF (如0050)</th>
+                        <th>配息型ETF (如0056)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>主要目標</strong></td>
+                        <td>追求長期資本增長</td>
+                        <td>創造穩定現金流</td>
+                    </tr>
+                    <tr>
+                        <td><strong>報酬組成</strong></td>
+                        <td>資本利得與股利再投資</td>
+                        <td>定期派發股息</td>
+                    </tr>
+                    <tr>
+                        <td><strong>績效指標</strong></td>
+                        <td>加權股價報酬指數</td>
+                        <td>配息率的穩定性</td>
+                    </tr>
+                    <tr>
+                        <td><strong>核心優勢</strong></td>
+                        <td>長期總報酬表現通常較佳</td>
+                        <td>提供可預期金流</td>
+                    </tr>
+                    <tr>
+                        <td><strong>關鍵考量</strong></td>
+                        <td>需長期持有，承受市場波動</td>
+                        <td>配息金額不固定</td>
+                    </tr>
+                    <tr>
+                        <td><strong>稅務影響</strong></td>
+                        <td>資本利得不課稅；股利需課稅</td>
+                        <td>股利需課稅</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> 重點提醒</h4>
+                <p>選擇ETF類型應基於個人投資目標：追求長期資產最大化選市值型，需要穩定現金流選配息型。兩者沒有絕對的優劣，只有適不適合。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 0050 vs 0056 Comparison -->
+    <section id="0050-vs-0056" class="section">
+        <div class="container">
+            <h2><i class="fas fa-balance-scale" style="color: var(--color-primary); margin-right: var(--space-12);"></i>0050 vs 0056 完整對比</h2>
+            <p class="section-intro">台灣兩大主流ETF的全方位比較分析，幫助您做出明智的投資選擇。</p>
+            
+            <div class="comparison-cards">
+                <div class="etf-card">
+                    <h3>0050 元大台灣50</h3>
+                    <ul class="etf-info">
+                        <li>
+                            <span class="label">類型</span>
+                            <span class="value">市值型</span>
+                        </li>
+                        <li>
+                            <span class="label">追蹤標的</span>
+                            <span class="value">台灣市值前50大上市公司</span>
+                        </li>
+                        <li>
+                            <span class="label">投資目標</span>
+                            <span class="value">追求長期資本增長</span>
+                        </li>
+                        <li>
+                            <span class="label">長期表現</span>
+                            <span class="value">10年含息報酬約+180%</span>
+                        </li>
+                        <li>
+                            <span class="label">配息特性</span>
+                            <span class="value">年配息2次，殖利率較低</span>
+                        </li>
+                        <li>
+                            <span class="label">適合對象</span>
+                            <span class="value">追求長期資產最大化的投資人</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="etf-card">
+                    <h3>0056 元大高股息</h3>
+                    <ul class="etf-info">
+                        <li>
+                            <span class="label">類型</span>
+                            <span class="value">配息型/高股息</span>
+                        </li>
+                        <li>
+                            <span class="label">追蹤標的</span>
+                            <span class="value">台灣前150大企業中預期殖利率最高30檔</span>
+                        </li>
+                        <li>
+                            <span class="label">投資目標</span>
+                            <span class="value">創造穩定現金流</span>
+                        </li>
+                        <li>
+                            <span class="label">長期表現</span>
+                            <span class="value">10年含息報酬約+95%</span>
+                        </li>
+                        <li>
+                            <span class="label">配息特性</span>
+                            <span class="value">年配息頻率較高，殖利率較高</span>
+                        </li>
+                        <li>
+                            <span class="label">適合對象</span>
+                            <span class="value">需要穩定被動收入的投資人</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="riskChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tax Guide -->
+    <section id="tax-guide" class="section">
+        <div class="container">
+            <h2><i class="fas fa-calculator" style="color: var(--color-primary); margin-right: var(--space-12);"></i>境內vs境外：稅務差異一次搞懂</h2>
+            <p class="section-intro">不同類型ETF的稅務規則大不相同，正確理解有助於做出更好的投資決策。</p>
+            
+            <h3>基本稅務規則比較</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>境內股利所得</th>
+                        <th>境外配息所得</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>所得性質</strong></td>
+                        <td>綜合所得</td>
+                        <td>海外所得</td>
+                    </tr>
+                    <tr>
+                        <td><strong>適用稅制</strong></td>
+                        <td>併入個人綜所稅</td>
+                        <td>最低稅負制</td>
+                    </tr>
+                    <tr>
+                        <td><strong>關鍵規則</strong></td>
+                        <td>適用可扣抵稅額制度</td>
+                        <td>100萬內免計入；超過100萬全額計入</td>
+                    </tr>
+                    <tr>
+                        <td><strong>稅務優惠/計算方式</strong></td>
+                        <td>8.5%可扣抵稅額，每戶上限8萬元</td>
+                        <td>(海外所得－750萬)×20%，與綜所稅取較高者</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: var(--space-32);">配息來源與課稅規則</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>配息來源</th>
+                        <th>是否課稅</th>
+                        <th>是否扣補充保費</th>
+                        <th>說明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>股利或盈餘所得(54C)</strong></td>
+                        <td>是</td>
+                        <td>是(單次≥2萬)</td>
+                        <td>適用二擇一制：合併計稅(8.5%抵減)或分開計稅(28%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>財產交易所得(76W)</strong></td>
+                        <td>否</td>
+                        <td>否</td>
+                        <td>證券交易所得停徵，無稅負</td>
+                    </tr>
+                    <tr>
+                        <td><strong>收益平準金</strong></td>
+                        <td>否(非所得)</td>
+                        <td>否</td>
+                        <td>拿投資人部分本金來配息，非所得</td>
+                    </tr>
+                    <tr>
+                        <td><strong>境內利息所得(5A)</strong></td>
+                        <td>是</td>
+                        <td>是(單次≥2萬)</td>
+                        <td>計入綜所稅利息所得，享27萬扣除額</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box">
+                <h4><i class="fas fa-info-circle"></i> 00919配息實例說明</h4>
+                <p><strong>每單位配息：</strong>0.72元</p>
+                <ul style="margin: var(--space-12) 0; padding-left: var(--space-20);">
+                    <li>54C股利所得占比：36.11% (約0.259元，需課稅)</li>
+                    <li>76W資本利得占比：63.89% (約0.461元，免稅)</li>
+                    <li>持有未達77張不會被扣補充保費</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> 重點提示</h4>
+                <ul style="margin: var(--space-8) 0; padding-left: var(--space-20);">
+                    <li><strong>股利所得8.5%抵減：</strong>每戶上限8萬元，相當於股利所得94萬元</li>
+                    <li><strong>最低稅負制：</strong>海外所得100萬元以內免計入，超過則全額計入</li>
+                    <li><strong>補充保費：</strong>單次配息2萬元以上才會被扣取</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dividend Guide -->
+    <section id="dividend-guide" class="section">
+        <div class="container">
+            <h2><i class="fas fa-coins" style="color: var(--color-primary); margin-right: var(--space-12);"></i>配息大解密</h2>
+            <p class="section-intro">配息機制常被誤解，以下三大核心觀念幫助您正確理解ETF配息。</p>
+            
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h4><i class="fas fa-balance-scale" style="color: var(--color-primary); margin-right: var(--space-8);"></i>收益平準金機制</h4>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <h5>為什麼需要收益平準金？</h5>
+                        <p><strong>情境說明：</strong></p>
+                        <ul>
+                            <li><strong>情境1：</strong>40元股息分給4人，每人得10元</li>
+                            <li><strong>情境2：</strong>若有16人後來加入（共20人），不用平準金則每人只得2元</li>
+                        </ul>
+                        <p><strong>解決方案：</strong>後加入者提撥部分本金至平準金，維持配息穩定性</p>
+                        <p>收益平準金確保所有投資人都能獲得相對公平的配息，避免因申購時點不同而影響配息權益。</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h4><i class="fas fa-piggy-bank" style="color: var(--color-primary); margin-right: var(--space-8);"></i>配息來自本金不等於虧錢</h4>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <h5>重要觀念釐清</h5>
+                        <p>許多人誤解「配息來自本金就是虧錢」，但實際上：</p>
+                        <ul>
+                            <li><strong>「本金」定義：</strong>包含投資人原始投入資金 + 過去累積的未實現獲利</li>
+                            <li><strong>配息來源：</strong>可能來自當期股利收入、資本利得、或過去累積獲利</li>
+                            <li><strong>關鍵概念：</strong>只要配息來自過去的獲利部分，就不算是真正的「吃本金」</li>
+                        </ul>
+                        <p>判斷是否真的虧損，應看ETF的總報酬表現，而非單純配息來源。</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h4><i class="fas fa-chart-line" style="color: var(--color-primary); margin-right: var(--space-8);"></i>配息金額不固定的原因</h4>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <h5>影響配息的主要因素</h5>
+                        <ul>
+                            <li><strong>成分股股利變動：</strong>持股公司的股利政策改變</li>
+                            <li><strong>市場環境：</strong>經濟景氣循環影響企業獲利能力</li>
+                            <li><strong>匯率波動：</strong>投資海外標的時的匯率風險</li>
+                            <li><strong>基金規模：</strong>申購贖回影響可分配收益</li>
+                            <li><strong>費用支出：</strong>管理費、保管費等營運成本</li>
+                        </ul>
+                        <p>配息ETF無法保證固定配息，投資人應以總報酬率為主要考量指標。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Truths -->
+    <section id="investment-truths" class="section">
+        <div class="container">
+            <h2><i class="fas fa-lightbulb" style="color: var(--color-primary); margin-right: var(--space-12);"></i>投資五大真相</h2>
+            <p class="section-intro">投資路上的重要真相，幫助您建立正確的投資觀念。</p>
+            
+            <div class="truths-timeline">
+                <div class="truth-item">
+                    <h4>加權股價指數可能少算真實報酬</h4>
+                    <p>一般媒體報導的指數漲幅通常指「價格指數」，但實際投資績效應參考「報酬指數」。</p>
+                    <div class="truth-details">
+                        <p><strong>關鍵差異：</strong></p>
+                        <ul>
+                            <li><strong>價格指數：</strong>僅反映股價變動，忽略股息再投資效果</li>
+                            <li><strong>報酬指數：</strong>包含股價變動 + 股息再投資的複利效果</li>
+                            <li><strong>長期差異：</strong>10年期間報酬指數通常比價格指數高出30-50%</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="truth-item">
+                    <h4>配息來自本金≠虧錢</h4>
+                    <p>配息來源的會計科目不能直接等同於投資績效的好壞。</p>
+                    <div class="truth-details">
+                        <p><strong>正確理解：</strong></p>
+                        <ul>
+                            <li>本金包含過去累積的未實現獲利</li>
+                            <li>應以淨值表現判斷真實績效</li>
+                            <li>重點是總報酬，不是配息來源科目</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="truth-item">
+                    <h4>0050 vs 0056選擇在於「成長」或「現金流」</h4>
+                    <p>兩檔ETF沒有絕對優劣，關鍵在於符合個人投資目標。</p>
+                    <div class="truth-details">
+                        <p><strong>選擇考量：</strong></p>
+                        <ul>
+                            <li><strong>選0050：</strong>追求長期總報酬最大化</li>
+                            <li><strong>選0056：</strong>需要定期現金流收入</li>
+                            <li><strong>風險考量：</strong>0050波動較大，0056相對穩定</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="truth-item">
+                    <h4>境內境外ETF稅務差異大</h4>
+                    <p>稅務規則的不同可能影響實際報酬率，選擇前需仔細評估。</p>
+                    <div class="truth-details">
+                        <p><strong>主要差異：</strong></p>
+                        <ul>
+                            <li><strong>境內ETF：</strong>股利併入綜所稅，享8.5%抵減</li>
+                            <li><strong>境外ETF：</strong>適用最低稅負制，100萬內免稅</li>
+                            <li><strong>實務建議：</strong>依個人所得狀況選擇適合產品</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="truth-item">
+                    <h4>真正懶人投資需先做功課再放手</h4>
+                    <p>懶人投資法的「懶」是聰明的懶，不是無知的懶。</p>
+                    <div class="truth-details">
+                        <p><strong>正確做法：</strong></p>
+                        <ul>
+                            <li>深度了解投資標的特性</li>
+                            <li>評估個人風險承受度</li>
+                            <li>設定明確投資目標</li>
+                            <li>建立適合的資產配置</li>
+                            <li>長期持有，定期檢視</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Return Index Importance -->
+    <section id="return-index" class="section">
+        <div class="container">
+            <h2><i class="fas fa-chart-area" style="color: var(--color-primary); margin-right: var(--space-12);"></i>報酬指數重要性</h2>
+            <p class="section-intro">理解價格指數與報酬指數的差異，避免低估投資的真實績效。</p>
+            
+            <div class="concepts-grid">
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>加權股價指數</h3>
+                    <p>僅反映股價變動（資本利得）</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-coins"></i></div>
+                    <h3>加權股價報酬指數</h3>
+                    <p>資本利得＋股息再投資</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-target"></i></div>
+                    <h3>市值型ETF參考指標</h3>
+                    <p>應參考報酬指數才能看到真實總報酬</p>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="icon"><i class="fas fa-rocket"></i></div>
+                    <h3>複利成長關鍵</h3>
+                    <p>股息再投資是長期複利成長的關鍵動力</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h4><i class="fas fa-calculator"></i> 重要數據：費用結構</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-16); margin-top: var(--space-16);">
+                    <div>
+                        <h5>0050費用結構</h5>
+                        <ul style="margin: 0; padding-left: var(--space-20); font-size: var(--font-size-sm);">
+                            <li>管理費：0.05%-0.15% (依規模遞減)</li>
+                            <li>保管費：0.025%-0.03% (依規模遞減)</li>
+                            <li>目前實際費用約0.43%</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>006208費用結構</h5>
+                        <ul style="margin: 0; padding-left: var(--space-20); font-size: var(--font-size-sm);">
+                            <li>管理費：0.15%</li>
+                            <li>保管費：0.035%</li>
+                            <li>總費用約0.19%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>免責聲明：</strong>本內容僅供教育參考，不構成投資建議。投資有風險，過去績效不代表未來表現。</p>
+            <p><strong>資料來源：</strong>台灣證券交易所、元大投信、各投信公司官網</p>
+            <p><strong>更新日期：</strong>2025年10月17日 | <strong>版本編號：</strong>1.0.0</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const sectionTop = section.offsetTop - headerHeight - 20;
+                window.scrollTo({
+                    top: sectionTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Fullscreen functionality
+        let isFullscreen = false;
+        
+        function toggleFullscreen() {
+            const icon = document.getElementById('fullscreen-icon');
+            
+            if (!isFullscreen) {
+                // Enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                icon.className = 'fas fa-compress';
+                isFullscreen = true;
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                icon.className = 'fas fa-expand';
+                isFullscreen = false;
+            }
+        }
+
+        // Listen for fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const icon = document.getElementById('fullscreen-icon');
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                icon.className = 'fas fa-compress';
+                isFullscreen = true;
+            } else {
+                icon.className = 'fas fa-expand';
+                isFullscreen = false;
+            }
+        }
+
+        // Accordion functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const accordionItem = this.parentNode;
+                    const isActive = accordionItem.classList.contains('active');
+                    
+                    // Close all accordion items
+                    document.querySelectorAll('.accordion-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Open clicked item if it wasn't active
+                    if (!isActive) {
+                        accordionItem.classList.add('active');
+                    }
+                });
+            });
+            
+            // Truth items click to expand
+            const truthItems = document.querySelectorAll('.truth-item');
+            
+            truthItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
+            
+            // Create risk chart
+            createRiskChart();
+        });
+
+        // Risk comparison chart
+        function createRiskChart() {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            
+            const riskData = {
+                '0050': [28.88, 11.07, 26.43, 15.31, 16.05],
+                '0056': [20.45, 12.84, 20.44, 16.35, 10.66],
+                '00878': ['N/A', 9.93, 13.99, 17.36, 9.57],
+                '00697B': [7.45, 5.45, 6.04, 5.09, 4.81]
+            };
+            
+            const years = ['2020', '2021', '2022', '2023', '2024'];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: '0050',
+                            data: riskData['0050'],
+                            borderColor: '#1FB8CD',
+                            backgroundColor: 'rgba(31, 184, 205, 0.1)',
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: '0056',
+                            data: riskData['0056'],
+                            borderColor: '#FFC185',
+                            backgroundColor: 'rgba(255, 193, 133, 0.1)',
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: '00878',
+                            data: [null, riskData['00878'][1], riskData['00878'][2], riskData['00878'][3], riskData['00878'][4]],
+                            borderColor: '#B4413C',
+                            backgroundColor: 'rgba(180, 65, 60, 0.1)',
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: '00697B (債券)',
+                            data: riskData['00697B'],
+                            borderColor: '#5D878F',
+                            backgroundColor: 'rgba(93, 135, 143, 0.1)',
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ETF年化標準差比較 (風險指標)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '年化標準差 (%)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
