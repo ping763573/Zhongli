@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資理財新手入門指南 - Mr.Market市場先生</title>
+    <style>
+        :root {
+            /* Design System Variables */
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            
+            /* Background colors */
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            
+            /* Semantic colors */
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-secondary: rgba(94, 82, 64, 0.12);
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-card-border: rgba(94, 82, 64, 0.12);
+            
+            /* Typography */
+            --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            
+            /* Spacing */
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            
+            /* Radius */
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            
+            /* Animation */
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+        
+        .app-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background: var(--color-background);
+            overflow-y: auto; 
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .header h1 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--color-text);
+            padding: var(--space-8);
+            border-radius: var(--radius-base);
+            transition: background var(--duration-fast);
+        }
+        
+        .mobile-menu-btn:hover {
+            background: var(--color-secondary);
+        }
+        
+        .fullscreen-btn {
+            background: var(--color-primary);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all var(--duration-normal);
+        }
+        
+        .fullscreen-btn:hover {
+            background: var(--color-primary-hover);
+            transform: scale(1.05);
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: 3px;
+            background: var(--color-primary);
+            z-index: 1001;
+            transition: width var(--duration-fast);
+            width: 0%;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--color-surface);
+            border-right: 1px solid var(--color-border);
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform var(--duration-normal) var(--ease-standard);
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-nav {
+            padding: var(--space-24) 0;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: var(--space-12) var(--space-24);
+            color: var(--color-text);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all var(--duration-fast);
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: var(--color-secondary);
+            border-left-color: var(--color-primary);
+        }
+        
+        .nav-item.active {
+            background: rgba(33, 128, 141, 0.1);
+            border-left-color: var(--color-primary);
+            color: var(--color-primary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .nav-item-icon {
+            margin-right: var(--space-8);
+            font-size: 18px;
+        }
+        
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+            transition: margin-left var(--duration-normal) var(--ease-standard);
+        }
+        
+        .main-content.expanded {
+            margin-left: 0;
+        }
+        
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-32) var(--space-24);
+        }
+        
+        /* Introduction */
+        .intro-section {
+            background: var(--color-bg-1);
+            padding: var(--space-32);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-32);
+            text-align: center;
+        }
+        
+        .intro-section h2 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-16);
+            font-size: var(--font-size-3xl);
+        }
+        
+        .formula-highlight {
+            background: var(--color-surface);
+            padding: var(--space-20);
+            border-radius: var(--radius-base);
+            margin: var(--space-24) 0;
+            border-left: 4px solid var(--color-primary);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-primary);
+        }
+        
+        /* Section cards */
+        .section-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--duration-normal);
+            overflow: hidden;
+        }
+        
+        .section-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .section-header {
+            padding: var(--space-20);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background var(--duration-fast);
+        }
+        
+        .section-header:hover {
+            background: var(--color-secondary);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+            margin: 0;
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .section-icon {
+            font-size: 24px;
+        }
+        
+        .section-toggle {
+            font-size: 20px;
+            transition: transform var(--duration-normal);
+            color: var(--color-text-secondary);
+        }
+        
+        .section-card.expanded .section-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--duration-normal) var(--ease-standard);
+        }
+        
+        .section-card.expanded .section-content {
+            max-height: 2000px;
+        }
+        
+        .section-body {
+            padding: 0 var(--space-20) var(--space-20);
+        }
+        
+        .key-points {
+            background: var(--color-bg-2);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-20);
+        }
+        
+        .key-points h4 {
+            margin-bottom: var(--space-12);
+            color: var(--color-primary);
+        }
+        
+        .key-points ul {
+            margin: 0;
+            padding-left: var(--space-20);
+        }
+        
+        .key-points li {
+            margin-bottom: var(--space-8);
+            line-height: 1.6;
+        }
+        
+        .subsections {
+            display: grid;
+            gap: var(--space-16);
+        }
+        
+        .subsection {
+            background: var(--color-bg-3);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            border-left: 3px solid var(--color-primary);
+        }
+        
+        .subsection h5 {
+            margin-bottom: var(--space-12);
+            color: var(--color-text);
+        }
+        
+        .subsection ul {
+            margin: 0;
+            padding-left: var(--space-20);
+        }
+        
+        .subsection li {
+            margin-bottom: var(--space-8);
+            line-height: 1.5;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: var(--space-32);
+            right: var(--space-32);
+            width: 50px;
+            height: 50px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--duration-normal);
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: var(--font-size-lg);
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .content-container {
+                padding: var(--space-20) var(--space-16);
+            }
+            
+            .intro-section {
+                padding: var(--space-20);
+            }
+            
+            .section-header {
+                padding: var(--space-16);
+            }
+            
+            .section-body {
+                padding: 0 var(--space-16) var(--space-16);
+            }
+        }
+    
+        /* ========================================
+           優化增強樣式 - 提升可讀性與視覺吸引力
+           ======================================== */
+
+        /* 全域文字優化 - 增強可讀性 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: 0.3px;
+        }
+
+        /* 標題層級優化 - 更清晰的視覺層次 */
+        h2, h3, h4, h5 {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* 段落優化 - 改善閱讀體驗 */
+        p {
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+        }
+
+        /* 簡介區塊增強 - 更吸引人的視覺效果 */
+        .intro-section {
+            background: linear-gradient(135deg, 
+                rgba(50, 184, 198, 1) 0%, 
+                rgba(45, 166, 178, 1) 50%,
+                rgba(19, 52, 59, 0.95) 100%);
+            box-shadow: 0 20px 40px rgba(50, 184, 198, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 簡介區塊動態背景效果 */
+        .intro-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .intro-section h2,
+        .intro-section p {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 章節卡片增強 - 更立體的視覺效果 */
+        .section-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(50, 184, 198, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .section-card:hover::before {
+            opacity: 1;
+        }
+
+        .section-card:hover {
+            border-color: var(--color-teal-400);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 24px rgba(50, 184, 198, 0.2);
+        }
+
+        /* 章節圖示增強 - 更生動的圖標效果 */
+        .section-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .section-header:hover .section-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* 標題文字漸層效果 */
+        .section-title {
+            background: linear-gradient(135deg, var(--color-slate-900), var(--color-teal-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-card:hover .section-title {
+            background: linear-gradient(135deg, var(--color-teal-400), var(--color-teal-300));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 子章節標題優化 - 增加視覺標記 */
+        .subsection h4 {
+            position: relative;
+            padding-left: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .subsection h4::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--color-teal-400);
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .subsection:hover h4::before {
+            transform: translateX(4px);
+        }
+
+        .subsection h4:hover {
+            color: var(--color-teal-400);
+            padding-left: 2rem;
+        }
+
+        /* 列表項目優化 - 增強視覺引導 */
+        .subsection ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .subsection ul li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--color-teal-400);
+            font-size: 0.7em;
+            transition: all 0.2s ease;
+        }
+
+        .subsection ul li:hover {
+            padding-left: 2rem;
+            color: var(--color-slate-900);
+        }
+
+        .subsection ul li:hover::before {
+            transform: scale(1.5);
+            color: var(--color-teal-300);
+        }
+
+        /* 重點提示框增強 - 更醒目的視覺效果 */
+        .key-points {
+            background: linear-gradient(135deg, 
+                rgba(50, 184, 198, 0.08) 0%, 
+                rgba(50, 184, 198, 0.12) 100%);
+            border-left: 5px solid var(--color-teal-400);
+            box-shadow: 0 4px 12px rgba(50, 184, 198, 0.15);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .key-points::before {
+            content: '💡';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .key-points:hover {
+            background: linear-gradient(135deg, 
+                rgba(50, 184, 198, 0.12) 0%, 
+                rgba(50, 184, 198, 0.15) 100%);
+            box-shadow: 0 6px 16px rgba(50, 184, 198, 0.25);
+            transform: translateX(4px);
+        }
+
+        /* 公式高亮增強 - 更清晰的數學表達 */
+        .formula-highlight {
+            background: linear-gradient(135deg, var(--color-gray-200), var(--color-cream-50));
+            border: 2px solid var(--color-teal-400);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .formula-highlight:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(50, 184, 198, 0.3);
+            background: linear-gradient(135deg, var(--color-cream-50), var(--color-white));
+        }
+
+        /* 導航項目增強 - 更流暢的互動 */
+        .nav-item a {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--color-teal-400);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item a:hover::before {
+            transform: translateX(0);
+        }
+
+        .nav-item.active a::before {
+            transform: translateX(0);
+        }
+
+        /* 導航圖示動畫 */
+        .nav-item-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.2);
+        }
+
+        /* 回到頂部按鈕增強 - 更明顯的視覺提示 */
+        .back-to-top {
+            background: linear-gradient(135deg, var(--color-teal-400), var(--color-teal-300));
+            box-shadow: 0 8px 16px rgba(50, 184, 198, 0.4);
+        }
+
+        .back-to-top::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        .back-to-top:hover {
+            background: linear-gradient(135deg, var(--color-teal-300), var(--color-teal-400));
+        }
+
+        /* 進度條增強 - 更流暢的動畫 */
+        .progress-bar {
+            background: linear-gradient(90deg, 
+                var(--color-teal-400) 0%, 
+                var(--color-teal-300) 50%,
+                var(--color-teal-400) 100%);
+            background-size: 200% 100%;
+            animation: progressShimmer 2s linear infinite;
+            box-shadow: 0 2px 8px rgba(50, 184, 198, 0.5);
+        }
+
+        @keyframes progressShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* 全螢幕按鈕增強 */
+        .fullscreen-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fullscreen-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .fullscreen-btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 側邊欄滾動條美化 */
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--color-teal-400), var(--color-teal-300));
+            border-radius: 10px;
+        }
+
+        /* 內容區塊平滑進入動畫 */
+        .section-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 為不同章節添加延遲,創造連續動畫效果 */
+        .section-card:nth-child(1) { animation-delay: 0.1s; }
+        .section-card:nth-child(2) { animation-delay: 0.2s; }
+        .section-card:nth-child(3) { animation-delay: 0.3s; }
+        .section-card:nth-child(4) { animation-delay: 0.4s; }
+        .section-card:nth-child(5) { animation-delay: 0.5s; }
+        .section-card:nth-child(6) { animation-delay: 0.6s; }
+        .section-card:nth-child(7) { animation-delay: 0.7s; }
+        .section-card:nth-child(8) { animation-delay: 0.8s; }
+        .section-card:nth-child(9) { animation-delay: 0.9s; }
+
+        /* 強調文字優化 */
+        strong {
+            font-weight: 700;
+            color: var(--color-slate-900);
+            position: relative;
+            padding: 0 2px;
+        }
+
+        .subsection li strong {
+            background: linear-gradient(180deg, transparent 60%, rgba(50, 184, 198, 0.2) 60%);
+        }
+
+        /* 展開的內容添加淡入效果 */
+        .section-body {
+            opacity: 0;
+            transition: opacity 0.4s ease, max-height 0.5s ease;
+        }
+
+        .section-card.expanded .section-body {
+            opacity: 1;
+        }
+
+        /* 行動裝置選單按鈕增強 */
+        .mobile-menu-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* 標題懸停效果 */
+        .header h1 {
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .header h1:hover {
+            transform: scale(1.02);
+            color: var(--color-teal-400);
+        }
+
+        /* 優化有序列表 */
+        .subsection ol li {
+            counter-increment: item;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .subsection ol li::before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--color-teal-400);
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .subsection ol {
+            counter-reset: item;
+            list-style: none;
+        }
+
+        /* 增加內容區域的呼吸感 */
+        .subsection {
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .subsection:hover {
+            background-color: rgba(252, 252, 249, 0.5);
+        }
+
+        /* 響應式優化 - 確保動畫在小螢幕不影響性能 */
+        @media (max-width: 640px) {
+            /* 減少動畫以提升性能 */
+            .intro-section::before {
+                animation: none;
+            }
+
+            .section-card {
+                animation: none;
+            }
+
+            /* 簡化卡片懸停效果 */
+            .section-card:hover {
+                transform: none;
+            }
+        }
+
+        /* 列印時移除所有動畫和特效 */
+        @media print {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+        <!-- Header -->
+        <header class="header">
+            <h1>投資理財新手入門指南(參考市場先生文章)</h1>
+            <div class="header-controls">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="開啟選單">☰</button>
+                <button class="fullscreen-btn" id="fullscreenBtn" aria-label="全螢幕模式">⛶</button>
+            </div>
+        </header>
+        
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-nav">
+                <a href="#introduction" class="nav-item active" data-section="introduction">
+                    <span class="nav-item-icon">📖</span>寫在前面
+                </a>
+                <a href="#financial-concepts" class="nav-item" data-section="financial-concepts">
+                    <span class="nav-item-icon">💡</span>理財觀念篇
+                </a>
+                <a href="#financial-planning" class="nav-item" data-section="financial-planning">
+                    <span class="nav-item-icon">📝</span>理財規劃篇
+                </a>
+                <a href="#preparation" class="nav-item" data-section="preparation">
+                    <span class="nav-item-icon">📋</span>投資前的準備功課
+                </a>
+                <a href="#invest-yourself" class="nav-item" data-section="invest-yourself">
+                    <span class="nav-item-icon">🎯</span>投資自己
+                </a>
+                <a href="#investment-concepts" class="nav-item" data-section="investment-concepts">
+                    <span class="nav-item-icon">🧠</span>投資觀念篇
+                </a>
+                <a href="#assets-tools" class="nav-item" data-section="assets-tools">
+                    <span class="nav-item-icon">🛠️</span>投資資產與工具篇
+                </a>
+                <a href="#investment-methods" class="nav-item" data-section="investment-methods">
+                    <span class="nav-item-icon">📊</span>投資方法篇
+                </a>
+                <a href="#investment-mindset" class="nav-item" data-section="investment-mindset">
+                    <span class="nav-item-icon">🎓</span>投資心法篇
+                </a>
+                <a href="#knowledge-resources" class="nav-item" data-section="knowledge-resources">
+                    <span class="nav-item-icon">📚</span>知識資源
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="content-container">
+                <!-- Introduction -->
+                <section id="introduction" class="intro-section">
+                    <h2>寫在前面</h2>
+                    <p>本指南整理了投資理財新手最需要的知識索引，幫助你快速找到需要的資料，縮短起步時間。</p>
+                    <p>投資理財的成功公式很簡單：</p>
+                    <div class="formula-highlight">投資成果 = 本金 × 時間 × (報酬率 - 風險)</div>
+                    <p><strong>新手最大的問題：拖延、遲遲不開始</strong></p>
+                    <p style="margin-top: 20px; font-size: 12px; color: var(--color-text-secondary);">by Mr.Market市場先生</p>
+                </section>
+                
+                <!-- Financial Concepts -->
+                <article class="section-card expanded" id="financial-concepts">
+                    <div class="section-header" onclick="toggleSection('financial-concepts')">
+                        <h3 class="section-title">
+                            <span class="section-icon">💡</span>理財觀念篇
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>了解自己的Why - 為什麼要研究投資理財？</li>
+                                    <li>不需要被工作綁住：當下過得不錯，不代表擁有時間的選擇權。</li>
+                                    <li>能夠放心退休：提前規劃退休需要多少錢，建立足夠的被動收入。</li>
+                                    <li>理財是防守，投資是攻擊。先理財，後投資。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>學習投資理財如何起步</h5>
+                                    <ul>
+                                        <li>認識現金流與財務自由觀念。</li>
+                                        <li>現金流 = 持續性收入 - 持續性支出。</li>
+                                        <li>財務自由 = 被動收入 > (常態性支出 × 2)。</li>
+                                        <li>理財比投資重要：管好現金流才能累積本金。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>管理現金流</h5>
+                                    <ul>
+                                        <li>記帳：了解自己的支出，抓出財務漏洞。</li>
+                                        <li>提升收入：開源是累積本金的關鍵。</li>
+                                        <li>控制支出：節流，區分「需要」與「想要」。</li>
+                                        <li>建立緊急預備金：準備6個月以上的生活費以應對突發狀況。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>認識保險的功能</h5>
+                                    <ul>
+                                        <li>用小錢得到大保障，轉移無法承受的風險。</li>
+                                        <li>保大不保小，保近不保遠。</li>
+                                        <li>保障型保險優先於儲蓄型或投資型保險。</li>
+                                        <li>最全面的保險其實是足夠的被動收入。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="section-card" id="financial-planning">
+                    <div class="section-header" onclick="toggleSection('financial-planning')">
+                        <h3 class="section-title">
+                            <span class="section-icon">📝</span>理財規劃篇
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>理財規劃是達成人生目標的藍圖，讓夢想不再只是空想。</li>
+                                    <li>第一步：設定具體、可量化、有期限的財務目標。</li>
+                                    <li>第二步：誠實盤點收支與資產負債，了解自己的財務體質。</li>
+                                    <li>第三步：制定開源、節流、投資的行動方案，並定期檢視調整。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>步驟一：設定明確的財務目標</h5>
+                                    <ul>
+                                        <li>將夢想轉化為目標：目標必須是「具體、可衡量、有時間性」。</li>
+                                        <li>錯誤範例：「我想要變有錢。」</li>
+                                        <li>正確範例：「我希望在5年後存到100萬頭期款」、「我預計在60歲時，累積到2000萬退休金」。</li>
+                                        <li>將目標分級：區分短、中、長期目標（如：1年內還清學貸、5年內買車、25年後退休）。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>步驟二：盤點目前的財務現況</h5>
+                                    <ul>
+                                        <li>製作「收入支出表」：記錄每月收入與各項支出，算出「每月可儲蓄/投資金額」。這是你的現金流核心。</li>
+                                        <li>製作「資產負債表」：列出你擁有的「資產」（如存款、股票、房產）與背負的「負債」（如貸款、卡債），算出「資產淨值」。</li>
+                                        <li>目的：了解自己距離目標還有多遠，以及目前手上握有多少資源。</li>
+                                    </ul>
+                                </div>
+                                 <div class="subsection">
+                                    <h5>步驟三：執行計畫並定期檢視</h5>
+                                    <ul>
+                                        <li>制定策略：如何彌平「目標」與「現況」的差距？方法無非三種：增加收入、減少支出、提高投資報酬率。</li>
+                                        <li>化為行動：例如「開始經營副業」、「每月減少5%外食費」、「開始每月定期定額5000元投資ETF」。</li>
+                                        <li>定期檢視：至少每年檢查一次你的計畫。目標是否改變？收入是否增減？計畫是否需要調整？</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Preparation -->
+                <article class="section-card" id="preparation">
+                    <div class="section-header" onclick="toggleSection('preparation')">
+                        <h3 class="section-title">
+                            <span class="section-icon">📋</span>投資前的準備功課
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>**第一要務**：務必先準備好緊急預備金，再開始投資。</li>
+                                    <li>開立一個證券戶是投資的入場券。</li>
+                                    <li>了解交易成本：手續費與證交稅。</li>
+                                    <li>先從模擬交易開始，熟悉下單流程與市場波動。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <!-- --- NEW CONTENT START --- -->
+                                <div class="subsection">
+                                    <h5>準備緊急預備金 (Emergency Fund)</h5>
+                                    <ul>
+                                        <li>定義：一筆為了應付突發狀況（如失業、疾病、意外）而準備的備用資金。</li>
+                                        <li>重要性：避免在緊急時被迫中斷投資、賣在低點或借高利貸，是投資前最重要的財務護城河。</li>
+                                        <li>準備多少：至少準備「3到6個月」的必要生活支出總額。收入不穩定者建議拉高到12個月。</li>
+                                        <li>存放位置：需放在「高流動性」且「安全」的地方，例如銀行活存/定存、高利活存數位帳戶或貨幣市場基金。**絕不可**投入股市等高風險資產。</li>
+                                    </ul>
+                                </div>
+                                <!-- --- NEW CONTENT END --- -->
+                                <div class="subsection">
+                                    <h5>如何開證券戶</h5>
+                                    <ul>
+                                        <li>台股券商：可選擇大型券商（如元大、富邦、國泰）或主打手續費折扣的數位券商（如新光、口袋）。</li>
+                                        <li>美股券商：可透過國內券商複委託，或直接開立海外券商（如Firstrade、IB盈透證券）以節省成本。</li>
+                                        <li>比較重點：交易手續費、軟體易用性、服務品質。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>認識交易成本</h5>
+                                    <ul>
+                                        <li>台股手續費：公定價為0.1425%，券商通常提供折扣，買賣皆收取。</li>
+                                        <li>台股交易稅：賣出時收取0.3% (股票) 或 0.1% (ETF)。</li>
+                                        <li>美股交易成本：海外券商多為0手續費，但需考慮匯款成本。複委託手續費較高。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Invest in Yourself -->
+                <article class="section-card" id="invest-yourself">
+                    <div class="section-header" onclick="toggleSection('invest-yourself')">
+                        <h3 class="section-title">
+                            <span class="section-icon">🎯</span>投資自己
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>提升「賺錢能力」是初期放大資產最快的方式。</li>
+                                    <li>投資腦袋的報酬率，遠勝過初期投資金錢的報酬率。</li>
+                                    <li>專注於提升自己的時薪，創造更多可用於投資的本金。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>為什麼要投資自己？</h5>
+                                    <ul>
+                                        <li>本金小時，高報酬率意義不大 (1萬的20% vs 100萬的5%)。</li>
+                                        <li>提升專業技能、學習新知識，可以有效增加主動收入。</li>
+                                        <li>增加的收入可用來加速本金累積，讓複利效果提早發酵。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>如何投資自己</h5>
+                                    <ul>
+                                        <li>閱讀：廣泛涉獵財經、商業、心理學等領域書籍。</li>
+                                        <li>上課/進修：學習新技能，考取專業證照。</li>
+                                        <li>建立人脈：與優秀的人交流，拓展視野。</li>
+                                        <li>保持健康：健康的身體是實現所有目標的基礎。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Investment Concepts -->
+                <article class="section-card" id="investment-concepts">
+                    <div class="section-header" onclick="toggleSection('investment-concepts')">
+                        <h3 class="section-title">
+                            <span class="section-icon">🧠</span>投資觀念篇
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="formula-highlight" style="margin-bottom: 20px;">投資成果 = 本金 × 時間 × (報酬率 - 風險)</div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>本金：錢少的影響</h5>
+                                    <ul>
+                                        <li>累積本金很重要，而不是初期就追求高報酬。</li>
+                                        <li>報酬率的增加和努力不一定成正比，但本金增加和努力一定成正比。</li>
+                                        <li>被動投資金錢，主動投資人生。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>時間：投資就像滾雪球</h5>
+                                    <ul>
+                                        <li>時間是創造複利力量的關鍵，越早開始越好。</li>
+                                        <li>資產不是線性成長，而是指數成長。</li>
+                                        <li>巴菲特名言：「人生就像滾雪球，你所要做的就是找到濕的雪和一道長長的山坡。」</li>
+                                        <li>長期投資需要耐心和紀律。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>報酬率：報酬是不可控的</h5>
+                                    <ul>
+                                        <li>市場上大多數時候只能得到「合理報酬」。</li>
+                                        <li>你要知道你的報酬怎麼來的？是來自企業獲利、市場情緒，還是承擔了額外風險？</li>
+                                        <li>最容易賺的錢：長期與經濟一同成長，分享企業盈利的果實。</li>
+                                        <li>保持「我不知道」的謙虛，承認市場無法被精準預測。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>風險：投資與人的風險</h5>
+                                    <ul>
+                                        <li>風險的定義：可能的損失幅度與機率。</li>
+                                        <li>搞砸事情的常常不是投資工具，而是投資人自己（追高殺低、恐慌賣出）。</li>
+                                        <li>考慮投資期限：3年後要用的錢 vs 30年後要用的錢，適合的工具完全不同。</li>
+                                        <li>了解自己能承擔多大波動，避免在市場低點時被迫賣出。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Assets & Tools -->
+                <article class="section-card" id="assets-tools">
+                    <div class="section-header" onclick="toggleSection('assets-tools')">
+                        <h3 class="section-title">
+                            <span class="section-icon">🛠️</span>投資資產與工具篇
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>認識不同資產的風險與報酬特性。</li>
+                                    <li>股票是分享企業成長的工具，長期報酬潛力高。</li>
+                                    <li>ETF (指數股票型基金) 是新手最好的入門工具之一。</li>
+                                    <li>沒有最好的工具，只有最適合你的工具。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>股票 (Stock)</h5>
+                                    <ul>
+                                        <li>定義：成為公司股東，分享公司利潤或承擔虧損。</li>
+                                        <li>優點：長期報酬潛力高。</li>
+                                        <li>缺點：價格波動大，需要研究。</li>
+                                        <li>範例：台積電(2330)、Apple(AAPL)。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>ETF (指數股票型基金)</h5>
+                                    <ul>
+                                        <li>定義：買進一籃子標的，達到分散風險的效果。</li>
+                                        <li>優點：成本低廉、高度分散、交易方便。</li>
+                                        <li>缺點：無法獲得爆發性超額報酬。</li>
+                                        <li>範例：元大台灣50(0050)、Vanguard全世界股票ETF(VT)、追蹤S&P500指數的VOO。</li>
+                                    </ul>
+                                </div>
+                                 <div class="subsection">
+                                    <h5>債券 (Bond)</h5>
+                                    <ul>
+                                        <li>定義：借錢給政府或公司，賺取利息。</li>
+                                        <li>優點：風險較股票低，提供穩定現金流。</li>
+                                        <li>缺點：報酬潛力較低，易受信利率影響。</li>
+                                        <li>常見工具：美國政府公債ETF (如TLT, IEF)。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>其他資產</h5>
+                                    <ul>
+                                        <li>不動產 (Real Estate)：透過REITs參與，優點是抗通膨，缺點是流動性差。</li>
+                                        <li>黃金/原物料：避險功能，但本身不創造價值。</li>
+                                        <li>加密貨幣：高風險、高波動的新興資產。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Investment Methods -->
+                <article class="section-card" id="investment-methods">
+                    <div class="section-header" onclick="toggleSection('investment-methods')">
+                        <h3 class="section-title">
+                            <span class="section-icon">📊</span>投資方法篇
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>被動投資：不選時機、不選股，賺取市場的平均報酬。</li>
+                                    <li>主動投資：試圖挑選個股、判斷進出場時機，以創造超越市場的報酬。</li>
+                                    <li>新手建議：先從被動投資起步，建立核心資產。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>為什麼建議被動投資？</h5>
+                                    <ul>
+                                        <li>高確定性：長期而言，經濟成長帶動股市上漲是大概率事件。</li>
+                                        <li>低成本：指數化投資的管理費用極低。</li>
+                                        <li>省時省力：不需花費大量時間研究個股與盯盤。</li>
+                                        <li>績效卓越：數據顯示，長期下來，多數主動基金經理人難以持續戰勝市場指數。</li>
+                                        <li>70分的成果，卻能贏過80%的市場參與者。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>被動投資三大核心</h5>
+                                    <ul>
+                                        <li>廣泛分散：不把雞蛋放同一個籃子，投資於全球市場。</li>
+                                        <li>長期持有：讓時間發揮複利效果，忽略短期市場雜音。</li>
+                                        <li>資產配置：根據風險承受度，配置不同比例的股、債等資產，以平衡風險與報酬。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Investment Mindset -->
+                <article class="section-card" id="investment-mindset">
+                    <div class="section-header" onclick="toggleSection('investment-mindset')">
+                        <h3 class="section-title">
+                            <span class="section-icon">🎓</span>投資心法篇
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>投資最大的敵人是自己的人性弱點：貪婪與恐懼。</li>
+                                    <li>建立自動化、有紀律的投資流程。</li>
+                                    <li>遠離市場上的雜音，專注於自己的長期計畫。</li>
+                                    <li>持續學習，並保持開放與謙虛的心態。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>常見的投資心理偏誤</h5>
+                                    <ul>
+                                        <li>過度自信：高估自己的判斷能力。</li>
+                                        <li>處置效應：太快賣掉賺錢的股票，卻死抱著賠錢的股票。</li>
+                                        <li>羊群效應：跟隨大眾追高殺低。</li>
+                                        <li>損失規避：厭惡損失的程度遠大於喜歡獲利的程度，導致非理性決策。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>如何應對</h5>
+                                    <ul>
+                                        <li>制定投資計畫書：寫下你的目標、策略、買賣原則。</li>
+                                        <li>定期定額：用紀律克服人性，分批投入，攤平成本。</li>
+                                        <li>再平衡：定期調整資產配置，回到目標比例。</li>
+                                        <li>不要頻繁看盤：減少情緒干擾，專注於長期目標。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                 <!-- Knowledge Resources -->
+                <article class="section-card" id="knowledge-resources">
+                    <div class="section-header" onclick="toggleSection('knowledge-resources')">
+                        <h3 class="section-title">
+                            <span class="section-icon">📚</span>知識資源
+                        </h3>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <div class="section-body">
+                            <div class="key-points">
+                                <h4>重點提要：</h4>
+                                <ul>
+                                    <li>閱讀是獲取知識最便宜且有效的方式。</li>
+                                    <li>從經典著作中學習大師的智慧與經驗。</li>
+                                    <li>慎選資訊來源，避免被不實資訊或詐騙所害。</li>
+                                </ul>
+                            </div>
+                            <div class="subsections">
+                                <div class="subsection">
+                                    <h5>推薦書籍 (觀念建立)</h5>
+                                    <ul>
+                                        <li>《富爸爸，窮爸爸》：啟發現金流與資產思維。</li>
+                                        <li>《漫步華爾街》：指數化投資的經典。</li>
+                                        <li>《投資金律》：建立完整資產配置觀念。</li>
+                                        <li>《致富心態》：探討投資背後的心理學。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>推薦書籍 (進階學習)</h5>
+                                    <ul>
+                                        <li>《智慧型股票投資人》：價值投資之父葛拉漢的聖經。</li>
+                                        <li>《窮查理的普通常識》：學習跨領域的思維模型。</li>
+                                        <li>《原則：生活與工作》：橋水基金創辦人瑞達利歐的人生哲學。</li>
+                                    </ul>
+                                </div>
+                                <div class="subsection">
+                                    <h5>注意事項</h5>
+                                    <ul>
+                                        <li>警惕「報明牌」社群或老師。</li>
+                                        <li>宣稱「保證獲利」、「高報酬、零風險」的都是詐騙。</li>
+                                        <li>天下沒有白吃的午餐，花時間學習才是正途。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+        
+        <!-- Back to Top Button -->
+        <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="回到頂部">↑</button>
+    </div>
+    
+    <script>
+        // App state management
+        let appState = {
+            isFullscreen: false,
+            isSidebarOpen: false,
+            expandedSections: new Set(['financial-concepts']) // Keep the first section open by default
+        };
+        
+        // DOM elements
+        const elements = {
+            appContainer: document.getElementById('appContainer'),
+            fullscreenBtn: document.getElementById('fullscreenBtn'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            sidebar: document.getElementById('sidebar'),
+            mainContent: document.getElementById('mainContent'),
+            progressBar: document.getElementById('progressBar'),
+            backToTop: document.getElementById('backToTop'),
+            navItems: document.querySelectorAll('.nav-item')
+        };
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        function initApp() {
+            setupEventListeners();
+            // No need to explicitly open the first section if class `expanded` is already in HTML
+            // initFirstSection(); 
+            setupScrollObserver();
+            handleScroll(); // Initial call to set progress bar correctly
+        }
+        
+        function setupEventListeners() {
+            // Fullscreen toggle
+            elements.fullscreenBtn.addEventListener('click', toggleFullscreen);
+            
+            // Mobile menu toggle
+            elements.mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            
+            // Navigation
+            elements.navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = item.getAttribute('data-section');
+                    scrollToSection(target);
+                    if (window.innerWidth <= 768) closeMobileMenu();
+                });
+            });
+            
+            // Scroll events
+            const scrollContainer = document.fullscreenElement ? elements.appContainer : window;
+            scrollContainer.addEventListener('scroll', handleScroll);
+
+            window.addEventListener('resize', handleResize);
+            
+            // Click outside to close mobile menu
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && appState.isSidebarOpen) {
+                    if (!elements.sidebar.contains(e.target) && !elements.mobileMenuBtn.contains(e.target)) {
+                        closeMobileMenu();
+                    }
+                }
+            });
+        }
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                enterFullscreen();
+            } else {
+                exitFullscreen();
+            }
+        }
+        
+        function enterFullscreen() {
+            document.documentElement.requestFullscreen().then(() => {
+                elements.appContainer.classList.add('fullscreen');
+                elements.fullscreenBtn.innerHTML = '⛷';
+                appState.isFullscreen = true;
+            }).catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            });
+        }
+        
+        function exitFullscreen() {
+             document.exitFullscreen().then(() => {
+                // The fullscreenchange event listener will handle the state update
+             }).catch(err => {
+                console.error(`Error attempting to exit full-screen mode: ${err.message} (${err.name})`);
+             });
+        }
+
+        function handleFullscreenChange() {
+            const isFullscreen = !!document.fullscreenElement;
+            appState.isFullscreen = isFullscreen;
+            elements.appContainer.classList.toggle('fullscreen', isFullscreen);
+            
+            if (isFullscreen) {
+                elements.fullscreenBtn.innerHTML = '⛷';
+                window.removeEventListener('scroll', handleScroll);
+                elements.appContainer.addEventListener('scroll', handleScroll);
+            } else {
+                elements.fullscreenBtn.innerHTML = '⛶';
+                elements.appContainer.removeEventListener('scroll', handleScroll);
+                window.addEventListener('scroll', handleScroll);
+            }
+            // Recalculate scroll after mode change
+            handleScroll();
+        }
+
+        function toggleMobileMenu() {
+            if (appState.isSidebarOpen) closeMobileMenu();
+            else openMobileMenu();
+        }
+        
+        function openMobileMenu() {
+            elements.sidebar.classList.add('open');
+            elements.mobileMenuBtn.innerHTML = '✕';
+            appState.isSidebarOpen = true;
+        }
+        
+        function closeMobileMenu() {
+            elements.sidebar.classList.remove('open');
+            elements.mobileMenuBtn.innerHTML = '☰';
+            appState.isSidebarOpen = false;
+        }
+        
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+            
+            const isExpanded = section.classList.toggle('expanded');
+            if (isExpanded) {
+                appState.expandedSections.add(sectionId);
+            } else {
+                appState.expandedSections.delete(sectionId);
+            }
+        }
+        
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+
+            const headerOffset = 90; // Fixed header height + some margin
+            const elementPosition = section.getBoundingClientRect().top;
+            const scrollContainer = appState.isFullscreen ? elements.appContainer : window;
+            const currentScroll = appState.isFullscreen ? elements.appContainer.scrollTop : window.pageYOffset;
+
+            const offsetPosition = elementPosition + currentScroll - headerOffset;
+
+            scrollContainer.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+            updateActiveNavigation(sectionId);
+        }
+        
+        function updateActiveNavigation(activeSectionId) {
+            elements.navItems.forEach(item => {
+                const sectionId = item.getAttribute('data-section');
+                item.classList.toggle('active', sectionId === activeSectionId);
+            });
+        }
+        
+        function setupScrollObserver() {
+            const sections = document.querySelectorAll('section, article');
+            const observerOptions = {
+                root: null, // relative to the viewport
+                rootMargin: '-20% 0px -70% 0px',
+                threshold: 0
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateActiveNavigation(entry.target.id);
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => observer.observe(section));
+        }
+        
+        function handleScroll() {
+            const scrollableElement = appState.isFullscreen ? elements.appContainer : document.documentElement;
+            const scrollTop = scrollableElement.scrollTop;
+            const scrollHeight = scrollableElement.scrollHeight;
+            const clientHeight = scrollableElement.clientHeight;
+
+            const docHeight = scrollHeight - clientHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            
+            elements.progressBar.style.width = progress + '%';
+            elements.backToTop.classList.toggle('visible', scrollTop > 300);
+        }
+        
+        function handleResize() {
+            if (window.innerWidth > 768 && appState.isSidebarOpen) {
+                closeMobileMenu();
+            }
+        }
+        
+        function scrollToTop() {
+            const container = appState.isFullscreen ? elements.appContainer : window;
+            container.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Handle fullscreen change events
+        ['fullscreenchange', 'webkitfullscreenchange', 'msfullscreenchange'].forEach(event => {
+            document.addEventListener(event, handleFullscreenChange, false);
+        });
+        
+        // Initialize
+        handleResize();
+    </script>
+</body>
+</html>
