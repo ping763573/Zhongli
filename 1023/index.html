@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資產配置與再平衡：風險管理與長期投資策略 v1.0.0</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 版本號與全螢幕按鈕 -->
+    <div class="header-controls">
+        <span class="version">v1.0.0</span>
+        <button id="fullscreenBtn" class="fullscreen-btn" title="切換全螢幕">
+            <span class="icon-fullscreen">⛶</span>
+        </button>
+    </div>
+
+    <!-- 首頁橫幅 -->
+    <header class="hero">
+        <div class="container">
+            <h1>資產配置與再平衡：風險管理與長期投資策略</h1>
+            <p class="subtitle">中壢社大理財規劃實務課程</p>
+        </div>
+    </header>
+
+    <!-- 導航菜單 -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#chapter1" class="nav-link">投資風險</a>
+            <a href="#chapter2" class="nav-link">資產配置</a>
+            <a href="#chapter3" class="nav-link">再平衡機制</a>
+            <a href="#chapter4" class="nav-link">投資策略</a>
+            <a href="#chapter5" class="nav-link">退休配置</a>
+            <a href="#chapter6" class="nav-link">長期投資</a>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <main class="container main-content">
+        <!-- 第一章：投資風險的本質 -->
+        <section id="chapter1" class="chapter">
+            <div class="chapter-header" onclick="toggleChapter('chapter1')">
+                <h2>第一章：投資風險的本質</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="chapter-content">
+                <div class="card">
+                    <h3>風險的兩個面向</h3>
+                    <div class="risk-comparison">
+                        <div class="risk-item">
+                            <h4>結果不確定性</h4>
+                            <p>出場時的總報酬無法預知</p>
+                        </div>
+                        <div class="risk-item">
+                            <h4>過程波動性</h4>
+                            <p>投資期間價值起伏大，影響持有心理</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>標準差的意義</h3>
+                    <p>標準差是衡量投資過程風險的核心指標，數值越大代表波動越劇烈。</p>
+                </div>
+
+                <div class="card">
+                    <h3>股票與債券的風險特性比較</h3>
+                    <div class="chart-container">
+                        <canvas id="riskComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二章：資產配置原理 -->
+        <section id="chapter2" class="chapter">
+            <div class="chapter-header" onclick="toggleChapter('chapter2')">
+                <h2>第二章：資產配置原理</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="chapter-content">
+                <div class="card">
+                    <h3>資產配置的定義與目的</h3>
+                    <p><strong>定義：</strong>將資金配置在數種不同相關性的投資組合上，以降低過程風險（標準差）或調整預期報酬。</p>
+                    <p><strong>目的：</strong>不在於追求資產投資報酬率的最大化，而是為了降低投資的風險。</p>
+                    <div class="key-elements">
+                        <span class="badge">分散投資</span>
+                        <span class="badge">風險平衡</span>
+                        <span class="badge">回報優化</span>
+                        <span class="badge">地域多元</span>
+                        <span class="badge">長期布局</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>相關性分析（-1 到 +1）</h3>
+                    <div class="correlation-matrix">
+                        <div class="correlation-item" data-value="1.0">
+                            <strong>+1.0 完全正相關</strong>
+                            <p>走勢波動一模一樣<br>如：0050 與 006208</p>
+                        </div>
+                        <div class="correlation-item" data-value="0.7">
+                            <strong>+0.7 正相關</strong>
+                            <p>走勢原則上相同<br>如：0050 與 0056</p>
+                        </div>
+                        <div class="correlation-item" data-value="0.0">
+                            <strong>0.0 無相關</strong>
+                            <p>兩者無關聯<br>如：0050 與 現金</p>
+                        </div>
+                        <div class="correlation-item" data-value="-0.3">
+                            <strong>-0.3 負相關</strong>
+                            <p>走勢原則上相反<br>如：股債</p>
+                        </div>
+                        <div class="correlation-item" data-value="-1.0">
+                            <strong>-1.0 完全負相關</strong>
+                            <p>走勢波動完全相反</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>股債配置效果展示</h3>
+                    <div class="chart-container">
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+                    <div class="allocation-data">
+                        <div class="allocation-item">
+                            <h4>100% 股票</h4>
+                            <p>年化報酬：<strong>9.76%</strong></p>
+                            <p>總報酬：<strong>1522%</strong></p>
+                            <p>最大回檔：<strong class="negative">-50.89%</strong></p>
+                        </div>
+                        <div class="allocation-item">
+                            <h4>50% 股 50% 債</h4>
+                            <p>年化報酬：<strong>8.3%</strong></p>
+                            <p>總報酬：<strong>987%</strong></p>
+                            <p>最大回檔：<strong class="negative">-21.63%</strong></p>
+                        </div>
+                        <div class="allocation-item">
+                            <h4>100% 債券</h4>
+                            <p>年化報酬：<strong>5.85%</strong></p>
+                            <p>總報酬：<strong>448%</strong></p>
+                            <p>最大回檔：<strong class="negative">-6.47%</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三章：再平衡機制 -->
+        <section id="chapter3" class="chapter">
+            <div class="chapter-header" onclick="toggleChapter('chapter3')">
+                <h2>第三章：再平衡機制</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="chapter-content">
+                <div class="card">
+                    <h3>再平衡的定義與重要性</h3>
+                    <p><strong>定義：</strong>定期調整投資組合比例，使其回歸原始配置。</p>
+                    <div class="rebalance-effects">
+                        <div class="effect-item">✓ 保持初衷</div>
+                        <div class="effect-item">✓ 維持紀律</div>
+                        <div class="effect-item">✓ 逢低加碼</div>
+                        <div class="effect-item">✓ 逢高賣出</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>再平衡的方法</h3>
+                    <div class="method-comparison">
+                        <div class="method-item">
+                            <h4>自主操作</h4>
+                            <p>自己定期調整投資組合比例</p>
+                        </div>
+                        <div class="method-item">
+                            <h4>基金再平衡</h4>
+                            <p>選擇有再平衡機制的基金</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>再平衡互動模擬器</h3>
+                    <div class="simulator">
+                        <div class="input-group">
+                            <label>初始股票比例：<span id="stockValue">60</span>%</label>
+                            <input type="range" id="stockSlider" min="0" max="100" value="60" class="slider">
+                        </div>
+                        <div class="input-group">
+                            <label>市場變化（股票漲幅）：<span id="changeValue">20</span>%</label>
+                            <input type="range" id="changeSlider" min="-50" max="50" value="20" class="slider">
+                        </div>
+                        <button onclick="simulateRebalance()" class="btn btn-primary">模擬再平衡</button>
+                        <div id="rebalanceResult" class="result-box"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四章：投資策略比較 -->
+        <section id="chapter4" class="chapter">
+            <div class="chapter-header" onclick="toggleChapter('chapter4')">
+                <h2>第四章：投資策略比較</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="chapter-content">
+                <div class="card">
+                    <h3>固定比例投資法</h3>
+                    <p><strong>做法：</strong>從頭到尾維持固定股債比例（如 75% 股 + 25% 債）</p>
+                    <p><strong>優點：</strong>操作簡單</p>
+                    <p><strong>缺點：</strong>未考慮年齡和風險承受力變化</p>
+                </div>
+
+                <div class="card">
+                    <h3>年齡規則投資法</h3>
+                    <p><strong>做法：</strong>110 - 年齡 = 股票比例</p>
+                    <p><strong>範例：</strong>35 歲時持有 75% 股票</p>
+                    <div class="calculator">
+                        <label>輸入您的年齡：</label>
+                        <input type="number" id="ageInput" min="18" max="100" value="35" class="form-control">
+                        <button onclick="calculateAge()" class="btn btn-primary">計算建議配置</button>
+                        <div id="ageResult" class="result-box"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>生命週期投資法</h3>
+                    <div class="lifecycle-stages">
+                        <div class="stage-item">
+                            <h4>階段一</h4>
+                            <p>職場前 10 年</p>
+                            <p><strong>2 倍槓桿投資</strong></p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>階段二</h4>
+                            <p>工作 10 年到 50 歲</p>
+                            <p><strong>1-2 倍槓桿</strong></p>
+                        </div>
+                        <div class="stage-item">
+                            <h4>階段三</h4>
+                            <p>退休前 10 年</p>
+                            <p><strong>完全去槓桿</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>策略回測比較</h3>
+                    <div class="chart-container">
+                        <canvas id="strategyChart"></canvas>
+                    </div>
+                    <div class="backtest-data">
+                        <h4>生命週期投資法回測結果</h4>
+                        <p>平均報酬：<strong>1,223,105 美元</strong></p>
+                        <p>超越年齡規則法：<strong class="positive">89.2%</strong></p>
+                        <p>超越固定比例法：<strong class="positive">63.3%</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第五章：退休族群資產配置 -->
+        <section id="chapter5" class="chapter">
+            <div class="chapter-header" onclick="toggleChapter('chapter5')">
+                <h2>第五章：退休族群資產配置</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="chapter-content">
+                <div class="card">
+                    <h3>三層資產架構</h3>
+                    <div class="three-layer">
+                        <div class="layer-item layer-1">
+                            <h4>保命錢</h4>
+                            <p>現金或保險</p>
+                            <p>應對緊急支出和基本生活</p>
+                        </div>
+                        <div class="layer-item layer-2">
+                            <h4>投資錢</h4>
+                            <p>穩健增值</p>
+                            <p>中低風險產品</p>
+                        </div>
+                        <div class="layer-item layer-3">
+                            <h4>投機錢</h4>
+                            <p>高風險高報酬</p>
+                            <p>嚴格控制比例</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>風險承受度評估</h3>
+                    <div class="risk-assessment">
+                        <label>如果您的投資在一年內下跌 30%，您會：</label>
+                        <select id="riskTolerance" class="form-control">
+                            <option value="">請選擇...</option>
+                            <option value="low">立即全部賣出，無法承受</option>
+                            <option value="medium-low">賣出部分，減少損失</option>
+                            <option value="medium">保持冷靜，不動作</option>
+                            <option value="medium-high">小額加碼，逢低買進</option>
+                            <option value="high">大量加碼，絕佳機會</option>
+                        </select>
+                        <button onclick="assessRisk()" class="btn btn-primary">評估配置建議</button>
+                        <div id="riskResult" class="result-box"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第六章：長期投資關鍵 -->
+        <section id="chapter6" class="chapter">
+            <div class="chapter-header" onclick="toggleChapter('chapter6')">
+                <h2>第六章：長期投資關鍵</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="chapter-content">
+                <div class="card">
+                    <h3>台股投資勝率統計</h3>
+                    <div class="chart-container">
+                        <canvas id="winRateChart"></canvas>
+                    </div>
+                    <p class="insight">💡 投資時間越長，勝率越高！20 年勝率達到 100%</p>
+                </div>
+
+                <div class="card">
+                    <h3>複利計算器</h3>
+                    <div class="calculator">
+                        <div class="input-group">
+                            <label>初始投資金額（元）：</label>
+                            <input type="number" id="principal" value="100000" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <label>年化報酬率（%）：</label>
+                            <input type="number" id="annualReturn" value="8" step="0.1" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <label>投資年數：</label>
+                            <input type="number" id="years" value="20" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <label>每月定期定額（元）：</label>
+                            <input type="number" id="monthly" value="10000" class="form-control">
+                        </div>
+                        <button onclick="calculateCompound()" class="btn btn-primary">計算複利效果</button>
+                        <div id="compoundResult" class="result-box"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>長期投資的重要原則</h3>
+                    <ul class="principles-list">
+                        <li>✓ 時間是最好的朋友：複利效應需要時間累積</li>
+                        <li>✓ 分散投資降低風險：不要把雞蛋放在同一個籃子裡</li>
+                        <li>✓ 定期再平衡：維持目標配置比例</li>
+                        <li>✓ 控制情緒：避免追高殺低</li>
+                        <li>✓ 持續學習：了解市場和投資工具</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 中壢社大理財規劃實務課程 | 版本 1.0.0</p>
+            <p>本網頁僅供教學使用，不構成投資建議</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
