@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美股ETF投資儀表板 v1.0.0</title>
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+  --color-bg-6: rgba(249, 115, 22, 0.08);
+  --color-bg-7: rgba(236, 72, 153, 0.08);
+  --color-bg-8: rgba(6, 182, 212, 0.08);
+
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+  --status-bg-opacity: 0.15;
+  --status-border-opacity: 0.25;
+
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.01em;
+
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    --color-bg-1: rgba(29, 78, 216, 0.15);
+    --color-bg-2: rgba(180, 83, 9, 0.15);
+    --color-bg-3: rgba(21, 128, 61, 0.15);
+    --color-bg-4: rgba(185, 28, 28, 0.15);
+    --color-bg-5: rgba(107, 33, 168, 0.15);
+    --color-bg-6: rgba(194, 65, 12, 0.15);
+    --color-bg-7: rgba(190, 24, 93, 0.15);
+    --color-bg-8: rgba(8, 145, 178, 0.15);
+
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-800);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-error: var(--color-red-400);
+    --color-success: var(--color-teal-300);
+    --color-warning: var(--color-orange-400);
+    --color-info: var(--color-gray-300);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+  }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-16) var(--space-24);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+}
+
+.header-left h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+}
+
+.version-badge {
+    background-color: var(--color-bg-1);
+    color: var(--color-primary);
+    padding: var(--space-6) var(--space-12);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border: 1px solid var(--color-primary);
+}
+
+.fullscreen-btn {
+    background-color: var(--color-primary);
+    color: var(--color-btn-primary-text);
+    border: none;
+    padding: var(--space-8) var(--space-16);
+    border-radius: var(--radius-base);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    transition: background-color var(--duration-fast) var(--ease-standard);
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+}
+
+.fullscreen-btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.fullscreen-btn:active {
+    background-color: var(--color-primary-active);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-24);
+}
+
+.tabs {
+    display: flex;
+    gap: var(--space-8);
+    margin-bottom: var(--space-24);
+    border-bottom: 2px solid var(--color-border);
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: var(--space-12) var(--space-20);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all var(--duration-fast) var(--ease-standard);
+    position: relative;
+    bottom: -2px;
+}
+
+.tab-btn:hover {
+    color: var(--color-text);
+    background-color: var(--color-secondary);
+}
+
+.tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-20);
+    margin-bottom: var(--space-32);
+}
+
+.card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-20);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.card-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-12);
+    color: var(--color-text);
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-8) 0;
+    border-bottom: 1px solid var(--color-card-border-inner);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.info-value {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+}
+
+.positive {
+    color: var(--color-success);
+}
+
+.negative {
+    color: var(--color-error);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: var(--space-32);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-card-border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: var(--space-12) var(--space-16);
+    text-align: left;
+    border-bottom: 1px solid var(--color-card-border-inner);
+}
+
+th {
+    background-color: var(--color-bg-1);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+}
+
+td {
+    font-size: var(--font-size-sm);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: var(--color-secondary);
+}
+
+.chart-container {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-24);
+    margin-bottom: var(--space-24);
+    height: 400px;
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+.section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-20);
+    color: var(--color-text);
+}
+
+.concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-20);
+    margin-bottom: var(--space-32);
+}
+
+.concept-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-20);
+    box-shadow: var(--shadow-sm);
+}
+
+.concept-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-16);
+    color: var(--color-primary);
+}
+
+.concept-card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.concept-card li {
+    padding: var(--space-8) 0;
+    padding-left: var(--space-20);
+    position: relative;
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+}
+
+.concept-card li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-16);
+    margin-bottom: var(--space-32);
+}
+
+.stat-box {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius-base);
+    padding: var(--space-20);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-8);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: var(--space-12);
+        align-items: flex-start;
+    }
+
+    .header-left h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab-btn {
+        width: 100%;
+        text-align: left;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+    }
+
+    .tab-btn.active {
+        border-left-color: var(--color-primary);
+        border-bottom-color: transparent;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
+    format('woff2');
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>美股ETF投資儀表板 v1.0.0</h1>
+        </div>
+        <div class="header-right">
+            <span class="version-badge">版本 1.0.0</span>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                <span id="fullscreen-icon">⛶</span>
+                <span id="fullscreen-text">全螢幕</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">美股股票ETF</button>
+            <button class="tab-btn" onclick="switchTab(1)">美國公債ETF</button>
+            <button class="tab-btn" onclick="switchTab(2)">投資概念</button>
+            <button class="tab-btn" onclick="switchTab(3)">關鍵數據</button>
+        </div>
+
+        <!-- Tab 1: 美股股票ETF -->
+        <div class="tab-content active">
+            <h2 class="section-title">美股股票ETF概覽</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3 class="card-title">SPY - S&amp;P 500</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">22兆 USD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.0945%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">2024年報酬</span>
+                            <span class="info-value positive">+24%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">10年年化報酬</span>
+                            <span class="info-value positive">+13.51%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">10.67%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">VTI - 全美股票</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">16兆 USD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.03%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">2024年報酬</span>
+                            <span class="info-value positive">+25%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">10年年化報酬</span>
+                            <span class="info-value positive">+13%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">11.30%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">VT - 全世界股票</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">2兆 USD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.08%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">2024年報酬</span>
+                            <span class="info-value positive">+17.5%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">10年年化報酬</span>
+                            <span class="info-value positive">+10%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">9.95%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">ETF 對比表</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ETF</th>
+                            <th>規模</th>
+                            <th>費用率</th>
+                            <th>追蹤標的</th>
+                            <th>2024年報酬</th>
+                            <th>10年年化報酬</th>
+                            <th>年化標準差</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SPY</strong></td>
+                            <td>22兆 USD</td>
+                            <td>0.0945%</td>
+                            <td>S&amp;P 500</td>
+                            <td class="positive">+24%</td>
+                            <td class="positive">+13.51%</td>
+                            <td>10.67%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VTI</strong></td>
+                            <td>16兆 USD</td>
+                            <td>0.03%</td>
+                            <td>全美股市</td>
+                            <td class="positive">+25%</td>
+                            <td class="positive">+13%</td>
+                            <td>11.30%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VT</strong></td>
+                            <td>2兆 USD</td>
+                            <td>0.08%</td>
+                            <td>全球股市</td>
+                            <td class="positive">+17.5%</td>
+                            <td class="positive">+10%</td>
+                            <td>9.95%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-title">產業分佈</h3>
+            <div class="chart-container">
+                <canvas id="spyChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="vtiChart"></canvas>
+            </div>
+
+            <h3 class="section-title">前五大持股</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ETF</th>
+                            <th>股票代碼</th>
+                            <th>公司名稱</th>
+                            <th>佔比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="5"><strong>SPY</strong></td>
+                            <td>NVDIA</td>
+                            <td>輝達</td>
+                            <td>7.98%</td>
+                        </tr>
+                        <tr>
+                            <td>MSFT</td>
+                            <td>微軟</td>
+                            <td>6.75%</td>
+                        </tr>
+                        <tr>
+                            <td>AAPL</td>
+                            <td>蘋果</td>
+                            <td>6.62%</td>
+                        </tr>
+                        <tr>
+                            <td>AMZN</td>
+                            <td>亞馬遜</td>
+                            <td>3.74%</td>
+                        </tr>
+                        <tr>
+                            <td>META</td>
+                            <td>Meta</td>
+                            <td>2.79%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 2: 美國公債ETF -->
+        <div class="tab-content">
+            <h2 class="section-title">美國公債ETF概覽</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3 class="card-title">SHY - 1-3年期公債</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">0.7兆 USD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.15%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">2024年報酬</span>
+                            <span class="info-value positive">+3.2%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">殖利率</span>
+                            <span class="info-value">3.90%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">1.94%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">特性</span>
+                            <span class="info-value">保守型</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">IEF - 7-10年期公債</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">1.2兆 USD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.15%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">2024年報酬</span>
+                            <span class="info-value positive">+5.8%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">殖利率</span>
+                            <span class="info-value">4.84%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">7.32%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">特性</span>
+                            <span class="info-value">平衡型</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">TLT - 20+年期公債</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">1.5兆 USD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.15%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">2024年報酬</span>
+                            <span class="info-value positive">+8.5%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">殖利率</span>
+                            <span class="info-value">6.38%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">13.02%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">特性</span>
+                            <span class="info-value">進取型</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">00857B - 永豐20年美公債</h3>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="info-label">規模</span>
+                            <span class="info-value">146億 NTD</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">費用率</span>
+                            <span class="info-value">0.10-0.11%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">配息頻率</span>
+                            <span class="info-value">每季配息</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化配息率</span>
+                            <span class="info-value">5.5%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">年化標準差</span>
+                            <span class="info-value">10.30%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">特性</span>
+                            <span class="info-value">台幣計價</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">債券ETF對比</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ETF</th>
+                            <th>期限</th>
+                            <th>規模</th>
+                            <th>費用率</th>
+                            <th>殖利率</th>
+                            <th>年化標準差</th>
+                            <th>風險等級</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SHY</strong></td>
+                            <td>1-3年</td>
+                            <td>0.7兆 USD</td>
+                            <td>0.15%</td>
+                            <td>3.90%</td>
+                            <td>1.94%</td>
+                            <td>低</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IEF</strong></td>
+                            <td>7-10年</td>
+                            <td>1.2兆 USD</td>
+                            <td>0.15%</td>
+                            <td>4.84%</td>
+                            <td>7.32%</td>
+                            <td>中</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TLT</strong></td>
+                            <td>20年+</td>
+                            <td>1.5兆 USD</td>
+                            <td>0.15%</td>
+                            <td>6.38%</td>
+                            <td>13.02%</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>00857B</strong></td>
+                            <td>20年</td>
+                            <td>146億 NTD</td>
+                            <td>0.10-0.11%</td>
+                            <td>5.5%</td>
+                            <td>10.30%</td>
+                            <td>中高</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-title">風險報酬關係圖</h3>
+            <div class="chart-container">
+                <canvas id="bondRiskChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Tab 3: 投資概念 -->
+        <div class="tab-content">
+            <h2 class="section-title">美股投資核心概念</h2>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h3>美股市場特色</h3>
+                    <ul>
+                        <li>世界最大經濟體（2000兆NTD市值）</li>
+                        <li>市值約佔全球60%</li>
+                        <li>GDP約佔全球25%</li>
+                        <li>最多知名企業聚集</li>
+                        <li>ETF發源地，選擇最多</li>
+                    </ul>
+                </div>
+
+                <div class="concept-card">
+                    <h3>投資規則</h3>
+                    <ul>
+                        <li>交易時間(台灣)：夏令21:30~04:00，冬令延後一小時</li>
+                        <li>交割：隔天(T+1)</li>
+                        <li>個股無漲跌停限制</li>
+                        <li>股票代號為英文字母</li>
+                        <li>約33%公司完全不配息</li>
+                        <li>資本利得免稅，股利預扣30%</li>
+                    </ul>
+                </div>
+
+                <div class="concept-card">
+                    <h3>升息降息與債券</h3>
+                    <ul>
+                        <li>升息時：債券價格下跌，長期債券波動大</li>
+                        <li>降息時：債券價格上漲，長期債券漲幅大</li>
+                        <li>短期債券：較不受利率影響</li>
+                        <li>長期債券：利率敏感度高</li>
+                        <li>債券價格與殖利率呈反向關係</li>
+                    </ul>
+                </div>
+
+                <div class="concept-card">
+                    <h3>風險考慮因素</h3>
+                    <ul>
+                        <li>匯率風險：美元兌台幣波動</li>
+                        <li>市場風險：股市波動不可避免</li>
+                        <li>利率風險：影響債券價格</li>
+                        <li>政治風險：美國政策變動</li>
+                        <li>個股集中風險：科技股佔比高</li>
+                    </ul>
+                </div>
+
+                <div class="concept-card">
+                    <h3>投資管道比較</h3>
+                    <ul>
+                        <li><strong>複委託：</strong>台灣券商代理，交易方便</li>
+                        <li><strong>海外券商：</strong>費用較低，商品更多</li>
+                        <li>複委託手續費約0.15%-0.3%</li>
+                        <li>海外券商可能免手續費</li>
+                        <li>考慮匯款成本與便利性</li>
+                    </ul>
+                </div>
+
+                <div class="concept-card">
+                    <h3>長期投資優勢</h3>
+                    <ul>
+                        <li>時間複利效果顯著</li>
+                        <li>降低短期波動影響</li>
+                        <li>定期定額平均成本</li>
+                        <li>歷史數據支持長期上漲</li>
+                        <li>適合退休金規劃</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: 關鍵數據 -->
+        <div class="tab-content">
+            <h2 class="section-title">關鍵數據分析</h2>
+            
+            <h3 class="section-title">美國經濟規模</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">60%</div>
+                    <div class="stat-label">全球市值占比</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">25%</div>
+                    <div class="stat-label">GDP占比</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">2000兆</div>
+                    <div class="stat-label">市值 (NTD)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">2300+</div>
+                    <div class="stat-label">美股ETF數量</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">2020-2024年度報酬率</h3>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <h3 class="section-title">主要科技股權重</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>股票代碼</th>
+                            <th>公司名稱</th>
+                            <th>SPY權重</th>
+                            <th>VTI權重</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>NVDIA</strong></td>
+                            <td>輝達</td>
+                            <td>7.98%</td>
+                            <td>6.70%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MSFT</strong></td>
+                            <td>微軟</td>
+                            <td>6.75%</td>
+                            <td>5.99%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AAPL</strong></td>
+                            <td>蘋果</td>
+                            <td>6.62%</td>
+                            <td>5.88%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AMZN</strong></td>
+                            <td>亞馬遜</td>
+                            <td>3.74%</td>
+                            <td>3.28%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>META</strong></td>
+                            <td>Meta/Facebook</td>
+                            <td>2.79%</td>
+                            <td>2.48%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-title">VT 區域配置</h3>
+            <div class="chart-container">
+                <canvas id="vtRegionalChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Tab switching
+        let currentTab = 0;
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        function switchTab(index) {
+            tabButtons[currentTab].classList.remove('active');
+            tabContents[currentTab].classList.remove('active');
+            
+            currentTab = index;
+            
+            tabButtons[currentTab].classList.add('active');
+            tabContents[currentTab].classList.add('active');
+        }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('fullscreen-text').textContent = '退出全螢幕';
+                document.getElementById('fullscreen-icon').textContent = '⛶';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.getElementById('fullscreen-text').textContent = '全螢幕';
+                    document.getElementById('fullscreen-icon').textContent = '⛶';
+                }
+            }
+        }
+
+        // Listen for fullscreen changes
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                document.getElementById('fullscreen-text').textContent = '全螢幕';
+                document.getElementById('fullscreen-icon').textContent = '⛶';
+            }
+        });
+
+        // Chart colors
+        const chartColors = ['#1FB8CD', '#FFC185', '#B4413C', '#ECEBD5', '#5D878F', '#DB4545', '#D2BA4C', '#964325', '#944454', '#13343B'];
+
+        // SPY Holdings Chart
+        const spyCtx = document.getElementById('spyChart').getContext('2d');
+        new Chart(spyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['資訊科技', '金融', '非必需消費品', '通訊服務', '健康護理', '工業', '必需消費品', '能源', '公用事業', '不動產', '原物料'],
+                datasets: [{
+                    label: 'SPY 產業配置 (%)',
+                    data: [36.12, 12.85, 10.53, 10.08, 8.96, 8.13, 4.68, 2.79, 2.34, 1.84, 1.66],
+                    backgroundColor: chartColors,
+                    borderColor: chartColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'SPY (S&P 500) 產業分佈',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // VTI Holdings Chart
+        const vtiCtx = document.getElementById('vtiChart').getContext('2d');
+        new Chart(vtiCtx, {
+            type: 'bar',
+            data: {
+                labels: ['科技', '非必需消費品', '工業', '金融', '健康護理', '必需性消費品', '能源', '公用事業', '不動產', '電訊', '基本原物料'],
+                datasets: [{
+                    label: 'VTI 產業配置 (%)',
+                    data: [38.00, 14.30, 12.20, 11.30, 8.90, 3.60, 3.10, 2.70, 2.40, 1.90, 1.50],
+                    backgroundColor: chartColors,
+                    borderColor: chartColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'VTI (全美股票) 產業分佈',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bond Risk Chart
+        const bondCtx = document.getElementById('bondRiskChart').getContext('2d');
+        new Chart(bondCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'SHY',
+                    data: [{x: 1.94, y: 3.90}],
+                    backgroundColor: chartColors[0],
+                    borderColor: chartColors[0],
+                    pointRadius: 10
+                }, {
+                    label: 'IEF',
+                    data: [{x: 7.32, y: 4.84}],
+                    backgroundColor: chartColors[1],
+                    borderColor: chartColors[1],
+                    pointRadius: 10
+                }, {
+                    label: 'TLT',
+                    data: [{x: 13.02, y: 6.38}],
+                    backgroundColor: chartColors[2],
+                    borderColor: chartColors[2],
+                    pointRadius: 10
+                }, {
+                    label: '00857B',
+                    data: [{x: 10.30, y: 5.5}],
+                    backgroundColor: chartColors[3],
+                    borderColor: chartColors[3],
+                    pointRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: '債券ETF風險報酬分析',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '年化標準差 (風險) %'
+                        },
+                        beginAtZero: true
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '殖利率 (報酬) %'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Performance Chart
+        const perfCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(perfCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'SPY',
+                    data: [18.4, 28.7, -18.1, 24.2, 24.0],
+                    backgroundColor: chartColors[0],
+                    borderColor: chartColors[0],
+                    borderWidth: 1
+                }, {
+                    label: 'VTI',
+                    data: [21.1, 25.7, -19.5, 26.0, 25.0],
+                    backgroundColor: chartColors[1],
+                    borderColor: chartColors[1],
+                    borderWidth: 1
+                }, {
+                    label: 'VT',
+                    data: [20.8, 20.5, -19.5, 18.3, 17.5],
+                    backgroundColor: chartColors[2],
+                    borderColor: chartColors[2],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: '2020-2024年度報酬率比較',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // VT Regional Chart
+        const vtRegionalCtx = document.getElementById('vtRegionalChart').getContext('2d');
+        new Chart(vtRegionalCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['美國', '日本', '中國', '英國', '加拿大', '台灣', '法國', '德國', '瑞士', '印度'],
+                datasets: [{
+                    label: 'VT 區域配置 (%)',
+                    data: [63.0, 5.6, 3.6, 3.3, 2.9, 2.2, 2.0, 2.0, 1.9, 1.9],
+                    backgroundColor: chartColors,
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'right'
+                    },
+                    title: {
+                        display: true,
+                        text: 'VT (全世界股票) 區域配置',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
