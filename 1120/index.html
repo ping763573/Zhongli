@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商業保險全攻略 v2.5 (2025新制版)</title>
+    <title>商業保險全攻略 v3.0 (預算策略版)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & ReactDOM -->
@@ -47,14 +47,10 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .badge-new {
-            background-color: #ef4444;
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 6px;
-            vertical-align: middle;
+        .gradient-text {
+            background: linear-gradient(45deg, #059669, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -64,7 +60,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const VERSION = "2.5.0 (2025新制版)";
+        const VERSION = "3.0.0 (預算策略版)";
 
         // --- Icons ---
         const IconWrapper = ({ children, size = 24, className = "" }) => (
@@ -84,8 +80,9 @@
         const Home = (props) => <IconWrapper {...props}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></IconWrapper>;
         const Plane = (props) => <IconWrapper {...props}><path d="M2 12h5l5-8h4l-2 8h6l1-3h3l-3 6-3 6h-3l1-3H7l-2 8H2l3-8-3-8z" /></IconWrapper>;
         const BookOpen = (props) => <IconWrapper {...props}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></IconWrapper>;
-        const Scale = (props) => <IconWrapper {...props}><path d="M18 6h-5l-2 2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z" /><path d="M12 10l4 4" /><path d="M16 10l-4 4" /></IconWrapper>; // Simplified as file icon substitute
         const Info = (props) => <IconWrapper {...props}><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></IconWrapper>;
+        const PieChart = (props) => <IconWrapper {...props}><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></IconWrapper>;
+        const TrendingUp = (props) => <IconWrapper {...props}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></IconWrapper>;
 
         // --- Components ---
 
@@ -111,10 +108,10 @@
 
         const RiskControl = () => {
             const risks = [
-                { title: "迴避 (Avoidance)", icon: <AlertTriangle size={32} />, desc: "不出門就不會被傳染", example: "徹底避開風險源頭", color: "bg-red-50 text-red-600 border-red-200" },
-                { title: "抑制 (Reduction)", icon: <HeartPulse size={32} />, desc: "擔心會確診，先把身體養好", example: "降低發生機率或損害程度", color: "bg-orange-50 text-orange-600 border-orange-200" },
-                { title: "移轉 (Transfer)", icon: <Umbrella size={32} />, desc: "買防疫險，作為替代性收入", example: "透過保險將風險轉嫁", color: "bg-emerald-50 text-emerald-600 border-emerald-200", highlight: true },
-                { title: "自留 (Retention)", icon: <Users size={32} />, desc: "不擔心健康也不擔心經濟", example: "自行承擔損失", color: "bg-blue-50 text-blue-600 border-blue-200" },
+                { title: "迴避 (Avoidance)", icon: <AlertTriangle size={32} />, desc: "完全避免風險發生", example: "例：不出門就不會被傳染", color: "bg-red-50 text-red-600 border-red-200" },
+                { title: "抑制 (Reduction)", icon: <HeartPulse size={32} />, desc: "降低發生機率或損失", example: "例：先把身體養好、戴口罩", color: "bg-orange-50 text-orange-600 border-orange-200" },
+                { title: "移轉 (Transfer)", icon: <Umbrella size={32} />, desc: "將風險轉嫁給第三方", example: "例：買防疫險/商業保險", color: "bg-emerald-50 text-emerald-600 border-emerald-200", highlight: true },
+                { title: "自留 (Retention)", icon: <Users size={32} />, desc: "自行承擔所有損失", example: "例：不買保險，自付醫藥費", color: "bg-blue-50 text-blue-600 border-blue-200" },
             ];
 
             return (
@@ -201,9 +198,10 @@
         };
 
         const InsuranceTabs = () => {
-            const [activeTab, setActiveTab] = useState('regulations');
+            const [activeTab, setActiveTab] = useState('strategy');
 
             const tabs = [
+                { id: 'strategy', label: '投保策略與預算', icon: <PieChart size={18} /> },
                 { id: 'regulations', label: '2025 新制與爭議', icon: <Info size={18} /> },
                 { id: 'personal', label: '人身保險', icon: <Activity size={18} /> },
                 { id: 'auto', label: '車險與酒駕', icon: <Car size={18} /> },
@@ -214,7 +212,7 @@
 
             return (
                 <section className="py-10 px-4 max-w-7xl mx-auto">
-                    <h2 className="text-2xl font-bold text-slate-800 mb-6">商業保險種類與新制詳解</h2>
+                    <h2 className="text-2xl font-bold text-slate-800 mb-6">商業保險種類與策略詳解</h2>
                     
                     {/* Tabs Navigation */}
                     <div className="flex space-x-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
@@ -237,7 +235,112 @@
                     {/* Tab Content Area */}
                     <div className="bg-white rounded-2xl shadow-md border border-slate-100 min-h-[400px] animate-fade-in">
                         
-                        {/* 0. 2025 新制與爭議 (New Tab) */}
+                        {/* --- Strategy Tab (New) --- */}
+                        {activeTab === 'strategy' && (
+                            <div className="p-6 md:p-8">
+                                <h3 className="text-xl font-bold text-emerald-800 mb-2 flex items-center"><PieChart className="mr-2"/> 有限資金下的投保原則</h3>
+                                <p className="text-slate-600 mb-6 text-sm">如何在不影響退休投資的前提下，建構完整的防護網？核心在於「低保費、高保障」。</p>
+
+                                {/* 1. Principles */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                                    <div className="bg-emerald-50 p-5 rounded-xl border border-emerald-100">
+                                        <h4 className="font-bold text-emerald-700 mb-3">原則一：雙十法則 (參考指標)</h4>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center">
+                                                <div className="w-12 h-12 rounded-full bg-white text-emerald-600 font-bold flex items-center justify-center text-lg shadow-sm mr-3">10%</div>
+                                                <div>
+                                                    <p className="font-bold text-slate-800">保費預算</p>
+                                                    <p className="text-xs text-slate-600">年繳保費不超過年收入的 1/10</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <div className="w-12 h-12 rounded-full bg-white text-emerald-600 font-bold flex items-center justify-center text-lg shadow-sm mr-3">10x</div>
+                                                <div>
+                                                    <p className="font-bold text-slate-800">壽險保額</p>
+                                                    <p className="text-xs text-slate-600">身故保額約為年收入的 10 倍 (依家庭責任增減)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-emerald-600 mt-3 bg-emerald-100 p-2 rounded">* 註：這是一個大數法則，若有高額負債(如房貸)需額外疊加。</p>
+                                    </div>
+
+                                    <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                        <h4 className="font-bold text-slate-700 mb-3">原則二：先保障，後理財</h4>
+                                        <ul className="space-y-2 text-sm text-slate-700">
+                                            <li className="flex items-start"><CheckCircle size={16} className="text-emerald-500 mr-2 mt-1 shrink-0"/> <strong>定期險 (Term) 為主：</strong> 年輕或預算有限時，優先買「定期壽險/醫療」，用低保費換取高額度。</li>
+                                            <li className="flex items-start"><CheckCircle size={16} className="text-emerald-500 mr-2 mt-1 shrink-0"/> <strong>投資歸投資：</strong> 儲蓄險/投資型保單費用較高，若目的是「退休規劃」，建議直接使用股票/ETF/基金，將純保險費用壓低，把省下的錢拿去投資 (Buy Term and Invest the Difference)。</li>
+                                            <li className="flex items-start"><CheckCircle size={16} className="text-emerald-500 mr-2 mt-1 shrink-0"/> <strong>風險轉嫁優先級：</strong> 先保「無法承擔的巨大風險」(如身故、癌症、殘廢)，再保「小風險」(如門診、小病)。</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                {/* 2. Scenarios */}
+                                <h4 className="font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">不同族群投保範例 (僅供參考)</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Case A */}
+                                    <div className="border border-slate-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                                        <div className="flex justify-between items-center mb-3">
+                                            <h5 className="font-bold text-blue-700">小資族 / 社會新鮮人</h5>
+                                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">預算極限</span>
+                                        </div>
+                                        <p className="text-xs text-slate-500 mb-3">年收約 40-50 萬 | 責任：照顧自己</p>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                <span>1. 意外險 (高額)</span>
+                                                <span className="text-emerald-600">最優先 (便宜)</span>
+                                            </div>
+                                            <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                <span>2. 實支實付醫療</span>
+                                                <span className="text-emerald-600">必備 (轉嫁高自費)</span>
+                                            </div>
+                                            <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                <span>3. 重大傷病 (定期)</span>
+                                                <span className="text-emerald-600">補強 (一次金)</span>
+                                            </div>
+                                            <div className="flex justify-between opacity-50">
+                                                <span>4. 壽險</span>
+                                                <span>最低額度 (無扶養責任)</span>
+                                            </div>
+                                        </div>
+                                        <div className="mt-3 bg-blue-50 p-2 rounded text-xs text-blue-800">
+                                            <strong>策略：</strong>年輕保費便宜，用定期險拉高醫療與意外保障。省下的錢定期定額投資大盤 ETF。
+                                        </div>
+                                    </div>
+
+                                    {/* Case B */}
+                                    <div className="border border-slate-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                                        <div className="flex justify-between items-center mb-3">
+                                            <h5 className="font-bold text-orange-700">家庭經濟支柱 (三明治族)</h5>
+                                            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">責任重大</span>
+                                        </div>
+                                        <p className="text-xs text-slate-500 mb-3">背房貸、養小孩 | 責任：一旦倒下家庭會崩潰</p>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                <span>1. 定期壽險</span>
+                                                <span className="text-red-600 font-bold">最優先 (覆蓋房貸+生活費)</span>
+                                            </div>
+                                            <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                <span>2. 意外險 + 失能</span>
+                                                <span className="text-emerald-600">高額度 (維持家庭運作)</span>
+                                            </div>
+                                            <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                <span>3. 實支實付 + 重傷</span>
+                                                <span className="text-emerald-600">醫療防護</span>
+                                            </div>
+                                            <div className="flex justify-between opacity-50">
+                                                <span>4. 儲蓄險</span>
+                                                <span>暫緩 (先顧保障)</span>
+                                            </div>
+                                        </div>
+                                        <div className="mt-3 bg-orange-50 p-2 rounded text-xs text-orange-800">
+                                            <strong>策略：</strong>壽險需求極高，絕對不要買終身壽險(太貴買不足額)。善用「定期壽險」覆蓋房貸期間(如20年期)。
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* 0. 2025 新制與爭議 (Regulations) */}
                         {activeTab === 'regulations' && (
                             <div className="p-6 md:p-8">
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
