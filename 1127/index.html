@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保險規劃互動指南 v1.0.0</title>
+    <style>
+        :root {
+            --color-primary: #2d8680;
+            --color-primary-hover: #1d6670;
+            --color-primary-light: #e8f4f2;
+            --color-secondary: #f5f5f5;
+            --color-text: #1f2121;
+            --color-text-light: #626c70;
+            --color-border: #d8d8d8;
+            --color-success: #22b88a;
+            --color-warning: #f5a623;
+            --color-error: #d64545;
+            --color-bg: #fafaf8;
+            --space: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space);
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .version-badge {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .fullscreen-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .fullscreen-btn:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space);
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space);
+            margin-bottom: calc(var(--space) * 2);
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: calc(var(--space) * 1.5);
+            margin-bottom: var(--space);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: var(--space);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-light);
+            margin-bottom: calc(var(--space) * 0.5);
+        }
+
+        .calculation-form {
+            display: grid;
+            gap: var(--space);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: var(--color-error);
+            margin-left: 4px;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: var(--color-primary-light);
+        }
+
+        .btn-calculate {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            align-self: flex-start;
+        }
+
+        .btn-calculate:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .result-box {
+            background: var(--color-primary-light);
+            border: 2px solid var(--color-primary);
+            border-radius: 8px;
+            padding: var(--space);
+            margin-top: var(--space);
+        }
+
+        .result-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space);
+            margin-bottom: var(--space);
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--color-text-light);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: var(--space) 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: var(--color-secondary);
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        tr:hover {
+            background: var(--color-primary-light);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space);
+            margin-top: var(--space);
+        }
+
+        .comparison-item {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: var(--space);
+            text-align: center;
+        }
+
+        .comparison-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: calc(var(--space) * 0.5);
+        }
+
+        .comparison-item p {
+            font-size: 13px;
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 12px;
+            border-left: 4px solid var(--color-warning);
+            border-radius: 4px;
+            margin: var(--space) 0;
+            font-size: 13px;
+            color: var(--color-text);
+        }
+
+        .success {
+            background: #d4edda;
+            border-left-color: var(--color-success);
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left-color: var(--color-error);
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space);
+            margin-top: var(--space);
+        }
+
+        .list-item {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: var(--space);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .list-item-title {
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 6px;
+        }
+
+        .list-item-desc {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .footer {
+            text-align: center;
+            padding: calc(var(--space) * 2);
+            color: var(--color-text-light);
+            font-size: 12px;
+            border-top: 1px solid var(--color-border);
+            margin-top: calc(var(--space) * 2);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: var(--space);
+            }
+
+            .tab-btn {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .result-item {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-wrapper {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: white;
+            overflow: auto;
+        }
+
+        .fullscreen .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            border-radius: 0;
+        }
+
+        .fullscreen .container {
+            margin-top: 70px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1 class="title">💰 保險規劃互動指南</h1>
+            <span class="version-badge">v1.0.0</span>
+        </div>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">📊 規劃儀表板</button>
+            <button class="tab-btn" onclick="switchTab('calculator')">🧮 應備保額計算機</button>
+            <button class="tab-btn" onclick="switchTab('comparison')">⚖️ 定期vs終身</button>
+            <button class="tab-btn" onclick="switchTab('strategy')">📋 保障配置策略</button>
+            <button class="tab-btn" onclick="switchTab('tax')">🏛️ 稅務規劃</button>
+        </div>
+
+        <!-- 儀表板 -->
+        <div id="dashboard" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">保險規劃核心原則</h2>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    保險的根本價值在於作為財務安全網，核心功能是轉嫁個人或家庭無法承受的災難性財務風險。
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">🎯 黃金公式：已備保額 ≈ 應備保額</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>情況</th>
+                            <th>已備保額與應備保額</th>
+                            <th>財務風險</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>理想狀態</strong></td>
+                            <td>已備 ≈ 應備</td>
+                            <td style="color: var(--color-success);">✓ 低風險、合理規劃</td>
+                        </tr>
+                        <tr>
+                            <td><strong>過度保險</strong></td>
+                            <td>已備 > 應備</td>
+                            <td style="color: var(--color-warning);">⚠️ 資源浪費</td>
+                        </tr>
+                        <tr>
+                            <td><strong>保障不足</strong></td>
+                            <td>已備 < 應備</td>
+                            <td style="color: var(--color-error);">✗ 高風險</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">📈 建議保險規劃順序</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <div class="list-item-title">階段一：基礎保障</div>
+                        <div class="list-item-desc">
+                            • 壽險（定期）<br>
+                            • 醫療險（實支實付）<br>
+                            • 意外險
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">階段二：強化保障</div>
+                        <div class="list-item-desc">
+                            • 防癌險<br>
+                            • 重大傷病險<br>
+                            • 長期照護險
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 計算機 -->
+        <div id="calculator" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">應備保額計算機</h2>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    根據您的家庭情況計算合理的應備保額
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">📝 請輸入您的家庭資訊</h3>
+                <form class="calculation-form" onsubmit="calculateInsurance(event)">
+                    <div class="form-group">
+                        <label class="form-label required">子女教育費用（萬元）</label>
+                        <input type="number" id="childEducation" class="form-input" placeholder="例：560" required>
+                        <small style="color: var(--color-text-light);">預期養育至18歲的費用</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">房貸或重大負債（萬元）</label>
+                        <input type="number" id="mortgage" class="form-input" placeholder="例：600" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">勞保身故給付（萬元）</label>
+                        <input type="number" id="laborBenefit" class="form-input" placeholder="例：120" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">勞退新制（萬元）</label>
+                        <input type="number" id="laborPension" class="form-input" placeholder="例：60" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">家庭責任分攤係數</label>
+                        <select id="familyFactor" class="form-input">
+                            <option value="1">1（全由您承擔）</option>
+                            <option value="2" selected>2（配偶分擔一半）</option>
+                            <option value="1.5">1.5（其他配置）</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-calculate">💡 計算應備保額</button>
+                </form>
+
+                <div id="calculatorResult" style="display: none;">
+                    <div class="result-box">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>金額（萬元）</th>
+                                    <th>說明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>A. 遺族生活與教育費用</strong></td>
+                                    <td id="resultChildEdu"></td>
+                                    <td>養育至18歲的所有費用</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>B. 房貸或重大負債</strong></td>
+                                    <td id="resultMortgage"></td>
+                                    <td>確保居住穩定</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>C. 總需求 (A + B)</strong></td>
+                                    <td id="resultTotal"></td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D. 家庭分攤責任 (C ÷ 係數)</strong></td>
+                                    <td id="resultShared"></td>
+                                    <td>您應承擔的部分</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>E. 既有保障扣除</strong></td>
+                                    <td id="resultExisting"></td>
+                                    <td>勞保 + 勞退</td>
+                                </tr>
+                                <tr style="background: var(--color-primary-light);">
+                                    <td><strong>F. 建議壽險淨差額</strong></td>
+                                    <td id="resultFinal" style="color: var(--color-primary); font-weight: 700;"></td>
+                                    <td><strong>您需要購買的壽險保額</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="highlight success" style="margin-top: var(--space);">
+                            ✓ 計算完成！請根據上述結果規劃您的壽險保額。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 定期vs終身比較 -->
+        <div id="comparison" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">定期險 VS 終身險</h2>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    在確定應備保額後，選擇合適的產品結構是下一步決策
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">📊 詳細比較表</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>特性</th>
+                                <th>終身險</th>
+                                <th>定期險</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>保障期間</strong></td>
+                                <td>長期穩定（99～110歲）</td>
+                                <td>特定期間（75～85歲）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>費率結構</strong></td>
+                                <td>平準費率（固定不變）</td>
+                                <td>自然費率（隨年齡遞增）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>保費（同保額）</strong></td>
+                                <td>較高（約2～8倍）</td>
+                                <td>較低</td>
+                            </tr>
+                            <tr>
+                                <td><strong>保障槓桿（同保費）</strong></td>
+                                <td>較低</td>
+                                <td>較高（約2～8倍）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>財務彈性</strong></td>
+                                <td>較低</td>
+                                <td>較高</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">🎯 BTID策略（定期險取代終身險）</h3>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    用定期險的低保費搭配投資，作為退休後的醫療與長照基金
+                </p>
+                <div class="highlight">
+                    ⚠️ <strong>BTID成功的5大先決條件：</strong><br>
+                    1️⃣ 高度資產管理能力<br>
+                    2️⃣ 長期投資知識<br>
+                    3️⃣ 專業協助與信任<br>
+                    4️⃣ 體況風險認知<br>
+                    5️⃣ 退休基金準備充足
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">💡 選擇建議</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <h4>✓ 選定期險若您：</h4>
+                        <p>
+                            • 退休前責任最重<br>
+                            • 資產管理能力強<br>
+                            • 追求高保障槓桿<br>
+                            • 有投資規劃
+                        </p>
+                    </div>
+                    <div class="comparison-item">
+                        <h4>✓ 選終身險若您：</h4>
+                        <p>
+                            • 希望長期穩定保障<br>
+                            • 資產已相當充足<br>
+                            • 不願自行投資<br>
+                            • 偏好定額支出
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 保障配置策略 -->
+        <div id="strategy" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">核心保障配置策略</h2>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    科學的保障順序確保有限的預算先覆蓋最核心、影響最大的風險
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">🏗️ 階段一：基礎保障（建立防線）</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <div class="list-item-title">💼 壽險</div>
+                        <div class="list-item-desc">
+                            <strong>保額：</strong>應備保額缺口<br>
+                            <strong>形式：</strong>定期壽險（家庭責任重時）<br>
+                            <strong>目的：</strong>填補收入中斷風險
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">🏥 醫療險</div>
+                        <div class="list-item-desc">
+                            <strong>保額：</strong>20萬/次以上<br>
+                            <strong>形式：</strong>實支實付<br>
+                            <strong>目的：</strong>填平高額住院雜費
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">🚨 意外險</div>
+                        <div class="list-item-desc">
+                            <strong>保額：</strong>視家庭需求<br>
+                            <strong>形式：</strong>日常意外事故保險<br>
+                            <strong>目的：</strong>補充身故或失能保障
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">⭐ 階段二：重點強化保障</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <div class="list-item-title">🔬 重大傷病險(CI/CD)</div>
+                        <div class="list-item-desc">
+                            <strong>保額：</strong>1～3年收入合計<br>
+                            <strong>特點：</strong>一次性給付<br>
+                            <strong>用途：</strong>支撐黃金治療期支出
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">🏥 長期照護險</div>
+                        <div class="list-item-desc">
+                            <strong>保額：</strong>36萬/年<br>
+                            <strong>風險：</strong>高齡生理或認知衰退<br>
+                            <strong>特點：</strong>長期、高額費用
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">🩹 失能扶助險</div>
+                        <div class="list-item-desc">
+                            <strong>保額：</strong>30萬/年<br>
+                            <strong>覆蓋：</strong>工作階段失能<br>
+                            <strong>功能：</strong>收入替代
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">🎗️ 防癌險</div>
+                        <div class="list-item-desc">
+                            <strong>日額：</strong>2,000元/日<br>
+                            <strong>手術/門診：</strong>5萬/次<br>
+                            <strong>針對：</strong>國人常見疾病
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">📊 醫療風險量化原則</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>建議額度</th>
+                            <th>計算基礎</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>住院日額</strong></td>
+                            <td>4,000元/日</td>
+                            <td>看護費2千 + 薪資損失3千 - 勞保1千</td>
+                        </tr>
+                        <tr>
+                            <td><strong>長照年額</strong></td>
+                            <td>36萬/年</td>
+                            <td>發生機率低但影響甚鉅、餘命長</td>
+                        </tr>
+                        <tr>
+                            <td><strong>實支實付保額</strong></td>
+                            <td>至少20萬/次</td>
+                            <td>高額自費醫材與新式療法</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 稅務規劃 -->
+        <div id="tax" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">保單稅務與資產傳承規劃</h2>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    人壽保險的身故保險金具有特殊的法律與稅務優勢，但須嚴格遵循規範
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">⚖️ 法律特殊性與傳承優勢</h3>
+                <div class="highlight success">
+                    <strong>保險法第112條：</strong>有指定受益人的死亡保險金不計入被保險人遺產
+                </div>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <div class="list-item-title">1️⃣ 預留稅源</div>
+                        <div class="list-item-desc">
+                            死亡保險金可在繳納遺產稅前迅速領到，提供流動資金支付稅款
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">2️⃣ 對抗特留分</div>
+                        <div class="list-item-desc">
+                            指定受益人機制類似遺囑，不受應繼分與特留分限制
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">3️⃣ 受益權獨立性</div>
+                        <div class="list-item-desc">
+                            受益人可拋棄繼承遺產，但仍可領取身故保險金
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">🏛️ 保單關係人配置與稅務風險</h3>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    要保人(P)、被保險人(I)、受益人(B) 的配置直接影響稅務結果
+                </p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>要保人</th>
+                                <th>被保險人</th>
+                                <th>受益人</th>
+                                <th>遺產稅</th>
+                                <th>贈與稅</th>
+                                <th>最低稅負</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: var(--color-primary-light); font-weight: 600;">
+                                <td>父</td>
+                                <td>父</td>
+                                <td>子</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✓</td>
+                            </tr>
+                            <tr>
+                                <td>父</td>
+                                <td>子</td>
+                                <td>父</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                            </tr>
+                            <tr>
+                                <td>子</td>
+                                <td>父</td>
+                                <td>子</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                            </tr>
+                            <tr style="background: #f8d7da;">
+                                <td>子</td>
+                                <td>父</td>
+                                <td>母</td>
+                                <td>✗</td>
+                                <td>✓</td>
+                                <td>✓</td>
+                            </tr>
+                            <tr style="background: #f8d7da;">
+                                <td>子</td>
+                                <td>子</td>
+                                <td>父</td>
+                                <td>✗</td>
+                                <td>✗</td>
+                                <td>✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="highlight">
+                    💡 <strong>核心原則：</strong>採取「P=I」（要保人與被保險人同一人）的設定，能最簡化稅務結構
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">⚠️ 實質課稅原則的防範</h3>
+                <p style="color: var(--color-text-light); margin-bottom: var(--space);">
+                    國稅局可依實質課稅原則，以實質經濟利益判斷課稅標準
+                </p>
+                <div class="highlight error">
+                    <strong>關鍵：</strong>購買保險的目的必須是風險保障，非單純資產移轉。否則保險金將被視為遺產課稅。
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">🚨 國稅局認定「避稅」的8大常見態樣</h3>
+                <div class="list-grid">
+                    <div class="list-item">
+                        <div class="list-item-title">1️⃣ 高齡投保</div>
+                        <div class="list-item-desc">投保年齡已超過70歲</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">2️⃣ 躉繳保費</div>
+                        <div class="list-item-desc">一次性繳交大筆現金</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">3️⃣ 短期投保</div>
+                        <div class="list-item-desc">身故發生在投保後短期內</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">4️⃣ 密集投保</div>
+                        <div class="list-item-desc">短期間內密集投保多張</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">5️⃣ 舉債投保</div>
+                        <div class="list-item-desc">向銀行貸款購買保單</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">6️⃣ 帶病投保</div>
+                        <div class="list-item-desc">健康狀況極差時投保</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">7️⃣ 鉅額投保</div>
+                        <div class="list-item-desc">保額明顯超出收入資產</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">8️⃣ 資金流動異常</div>
+                        <div class="list-item-desc">保費來源不符正常收入</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-subtitle">✅ 合規對策：建立長期規律歷史</h3>
+                <div class="highlight success">
+                    <strong>核心要素：</strong><br>
+                    ✓ 及早規劃<br>
+                    ✓ 定期繳費<br>
+                    ✓ 長期持有<br>
+                    → 證明非避稅意圖，體現對長期風險轉嫁的承諾
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>💼 保險規劃互動指南 v1.0.0 | 基於台灣保險與稅務法規 | 資料來源：劉威澤《理財規劃實務與案例》</p>
+        <p style="margin-top: 8px; font-size: 11px;">⚠️ 本工具為教育用途，非專業諮詢。重要決策請洽專業顧問。</p>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // 隱藏所有標籤內容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 移除所有標籤按鈕的active狀態
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // 顯示選中標籤
+            document.getElementById(tabName).classList.add('active');
+            
+            // 標記選中按鈕
+            event.target.classList.add('active');
+        }
+
+        function calculateInsurance(event) {
+            event.preventDefault();
+            
+            const childEducation = parseFloat(document.getElementById('childEducation').value);
+            const mortgage = parseFloat(document.getElementById('mortgage').value);
+            const laborBenefit = parseFloat(document.getElementById('laborBenefit').value);
+            const laborPension = parseFloat(document.getElementById('laborPension').value);
+            const familyFactor = parseFloat(document.getElementById('familyFactor').value);
+            
+            // 計算
+            const total = childEducation + mortgage;
+            const shared = total / familyFactor;
+            const existing = laborBenefit + laborPension;
+            const final = shared - existing;
+            
+            // 顯示結果
+            document.getElementById('resultChildEdu').textContent = childEducation;
+            document.getElementById('resultMortgage').textContent = mortgage;
+            document.getElementById('resultTotal').textContent = total;
+            document.getElementById('resultShared').textContent = shared.toFixed(0);
+            document.getElementById('resultExisting').textContent = existing;
+            document.getElementById('resultFinal').textContent = Math.max(final, 0).toFixed(0);
+            
+            document.getElementById('calculatorResult').style.display = 'block';
+            
+            // 滾動到結果
+            document.getElementById('calculatorResult').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleFullscreen() {
+            const container = document.querySelector('.container');
+            const body = document.body;
+            
+            if (body.classList.contains('fullscreen')) {
+                body.classList.remove('fullscreen');
+                document.querySelector('.fullscreen-btn').textContent = '🖥️ 全螢幕';
+            } else {
+                body.classList.add('fullscreen');
+                document.querySelector('.fullscreen-btn').textContent = '✕ 退出全螢幕';
+            }
+        }
+    </script>
+</body>
+</html>
