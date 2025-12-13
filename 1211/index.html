@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>綜合所得稅拆解視覺化 | 版本 1.0.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #4a8cff;
+            --accent-color: #ff6b6b;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --gray-color: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 版本標示 */
+        .version-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        
+        /* 全螢幕按鈕 */
+        .fullscreen-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .fullscreen-toggle:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+        
+        /* 頂部標題區 */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 主內容區 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        /* 導航標籤 */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        /* 標籤內容區 */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 卡片設計 */
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h2 i {
+            margin-right: 12px;
+            color: var(--secondary-color);
+        }
+        
+        /* 公式視覺化 */
+        .formula-visual {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .formula-step {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .formula-step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .formula-step h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .formula-step p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .formula-arrow {
+            font-size: 1.8rem;
+            color: var(--gray-color);
+        }
+        
+        /* 表格樣式 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        /* 稅率視覺化 */
+        .tax-rate-visual {
+            margin: 30px 0;
+        }
+        
+        .tax-bar {
+            height: 60px;
+            background: linear-gradient(to right, #e3f2fd, #bbdefb, #90caf9, #64b5f6, #42a5f5);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tax-segment {
+            height: 100%;
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tax-segment-label {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        /* 計算機區域 */
+        .calculator {
+            background-color: #f0f8ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .calculator h3 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(74, 140, 255, 0.3);
+        }
+        
+        .btn-calculate {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .result-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 5px solid var(--success-color);
+            display: none;
+        }
+        
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-box h4 {
+            color: var(--success-color);
+            margin-bottom: 15px;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        /* 頁尾 */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: var(--dark-color);
+            color: white;
+            margin-top: 50px;
+        }
+        
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .formula-visual {
+                flex-direction: column;
+            }
+            
+            .formula-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: left;
+                padding-left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 版本標示 -->
+    <div class="version-badge">版本 1.0.0</div>
+    
+    <!-- 全螢幕切換按鈕 -->
+    <div class="fullscreen-toggle" id="fullscreenToggle">
+        <i class="fas fa-expand"></i>
+    </div>
+    
+    <!-- 頁首 -->
+    <header class="header">
+        <h1><i class="fas fa-calculator"></i> 個人綜合所得稅拆解視覺化</h1>
+        <p>中壢社區大學 - 理財規劃實務與案例 | 第十五週 | 劉威澤 2025/12/11</p>
+    </header>
+    
+    <!-- 主內容區 -->
+    <main class="container">
+        <!-- 導航標籤 -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="overview">綜合所得稅概覽</button>
+            <button class="tab-btn" data-tab="formula">稅額計算公式</button>
+            <button class="tab-btn" data-tab="rates">稅率級距</button>
+            <button class="tab-btn" data-tab="deductions">扣除額說明</button>
+            <button class="tab-btn" data-tab="amt">最低稅負制</button>
+            <button class="tab-btn" data-tab="calculator">稅額試算</button>
+        </div>
+        
+        <!-- 標籤內容 -->
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-info-circle"></i> 綜合所得稅概覽</h2>
+                <p>綜合所得稅是對個人在一定期間內（通常為一年）的各種所得，減除免稅額、扣除額後的淨額，按累進稅率課徵的稅捐。</p>
+                
+                <div class="formula-visual">
+                    <div class="formula-step">
+                        <h3>綜合所得總額</h3>
+                        <p>10類所得總和</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>免稅額</h3>
+                        <p>每人97,000元<br>70歲以上145,500元</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>扣除額</h3>
+                        <p>標準/列舉扣除額<br>特別扣除額</p>
+                    </div>
+                    <div class="formula-arrow">=</div>
+                    <div class="formula-step">
+                        <h3>綜合所得淨額</h3>
+                        <p>課稅基礎</p>
+                    </div>
+                </div>
+                
+                <p>所得淨額再按累進稅率計算應納稅額，並與扣繳稅額、可扣抵稅額比較後，得出應退(補)稅額。</p>
+            </div>
+        </div>
+        
+        <div id="formula" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-calculator"></i> 稅額計算公式</h2>
+                <p>綜合所得稅計算流程：</p>
+                
+                <div class="formula-visual">
+                    <div class="formula-step">
+                        <h3>綜合所得總額</h3>
+                        <p>營利、薪資、利息等10類所得</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>免稅額</h3>
+                        <p>個人、配偶、扶養親屬</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>扣除額</h3>
+                        <p>一般扣除額<br>特別扣除額</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>基本生活費差額</h3>
+                        <p>保障基本生活所需</p>
+                    </div>
+                    <div class="formula-arrow">=</div>
+                    <div class="formula-step">
+                        <h3>綜合所得淨額</h3>
+                        <p>課稅基礎</p>
+                    </div>
+                </div>
+                
+                <div class="formula-visual" style="margin-top: 40px;">
+                    <div class="formula-step">
+                        <h3>綜合所得淨額</h3>
+                        <p>× 稅率</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>累進差額</h3>
+                        <p>速算用</p>
+                    </div>
+                    <div class="formula-arrow">=</div>
+                    <div class="formula-step">
+                        <h3>應納稅額</h3>
+                        <p>基本稅額</p>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 30px;">最後比較「應納稅額」與「最低稅負制」計算出的「基本稅額」，取較高者繳納。</p>
+            </div>
+        </div>
+        
+        <div id="rates" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-chart-bar"></i> 稅率級距 (113年度)</h2>
+                <p>綜合所得淨額按下列級距課稅：</p>
+                
+                <div class="tax-rate-visual">
+                    <div class="tax-bar">
+                        <div class="tax-segment" style="background-color: #c8e6c9; width: 10%; left: 0%; color: #333;">5%</div>
+                        <div class="tax-segment" style="background-color: #a5d6a7; width: 15%; left: 10%; color: #333;">12%</div>
+                        <div class="tax-segment" style="background-color: #81c784; width: 25%; left: 25%; color: #333;">20%</div>
+                        <div class="tax-segment" style="background-color: #4caf50; width: 30%; left: 50%; color: white;">30%</div>
+                        <div class="tax-segment" style="background-color: #388e3c; width: 20%; left: 80%; color: white;">40%</div>
+                    </div>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>綜合所得淨額</th>
+                            <th>稅率</th>
+                            <th>累進差額</th>
+                            <th>速算公式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0 ~ 590,000元</td>
+                            <td>5%</td>
+                            <td>0元</td>
+                            <td>淨額 × 5%</td>
+                        </tr>
+                        <tr>
+                            <td>590,001 ~ 1,330,000元</td>
+                            <td>12%</td>
+                            <td>41,300元</td>
+                            <td>淨額 × 12% - 41,300</td>
+                        </tr>
+                        <tr>
+                            <td>1,330,001 ~ 2,660,000元</td>
+                            <td>20%</td>
+                            <td>147,700元</td>
+                            <td>淨額 × 20% - 147,700</td>
+                        </tr>
+                        <tr>
+                            <td>2,660,001 ~ 4,980,000元</td>
+                            <td>30%</td>
+                            <td>413,700元</td>
+                            <td>淨額 × 30% - 413,700</td>
+                        </tr>
+                        <tr>
+                            <td>4,980,001元以上</td>
+                            <td>40%</td>
+                            <td>911,700元</td>
+                            <td>淨額 × 40% - 911,700</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="calculator">
+                    <h3>累進差額計算範例</h3>
+                    <p>所得淨額100萬元：</p>
+                    <p>1. 100萬 × 12% = 12萬</p>
+                    <p>2. 12萬 - 4.13萬(累進差額) = 7.87萬 (應納稅額)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="deductions" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-receipt"></i> 扣除額說明 (113年度)</h2>
+                <p>納稅義務人可減除下列扣除額以降低稅負：</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>扣除額類型</th>
+                            <th>金額/條件</th>
+                            <th>說明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>免稅額</strong></td>
+                            <td>一般：97,000元<br>70歲以上：145,500元</td>
+                            <td>納稅義務人、配偶及受扶養親屬</td>
+                        </tr>
+                        <tr>
+                            <td><strong>標準扣除額</strong></td>
+                            <td>單身：131,000元<br>有配偶：262,000元</td>
+                            <td>不需檢附證明文件</td>
+                        </tr>
+                        <tr>
+                            <td><strong>薪資所得特別扣除額</strong></td>
+                            <td>218,000元</td>
+                            <td>每人上限，核實扣除</td>
+                        </tr>
+                        <tr>
+                            <td><strong>儲蓄投資特別扣除額</strong></td>
+                            <td>270,000元</td>
+                            <td>金融機構存款利息等</td>
+                        </tr>
+                        <tr>
+                            <td><strong>身心障礙特別扣除額</strong></td>
+                            <td>218,000元</td>
+                            <td>須領有身心障礙手冊</td>
+                        </tr>
+                        <tr>
+                            <td><strong>教育學費特別扣除額</strong></td>
+                            <td>每人25,000元</td>
+                            <td>限子女，空中大學、五專前三年除外</td>
+                        </tr>
+                        <tr>
+                            <td><strong>幼兒學前特別扣除額</strong></td>
+                            <td>每人150,000元<br>(特定條件225,000元)</td>
+                            <td>限5歲以下子女</td>
+                        </tr>
+                        <tr>
+                            <td><strong>長期照顧特別扣除額</strong></td>
+                            <td>120,000元</td>
+                            <td>符合長照資格者</td>
+                        </tr>
+                        <tr>
+                            <td><strong>房屋租金支出特別扣除額</strong></td>
+                            <td>每戶180,000元</td>
+                            <td>無自用住宅者，先減除租金補貼</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="calculator">
+                    <h3>「名模條款」薪資所得核實減除</h3>
+                    <p>薪資收入超過243萬元者可選擇核實減除：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>職業專用服裝費 (上限薪資3%)</li>
+                        <li>進修訓練費 (上限薪資3%)</li>
+                        <li>職業工具支出 (上限薪資3%)</li>
+                        <li>三項合計上限為薪資9% (最高21.8萬元)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="amt" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-balance-scale"></i> 最低稅負制 (基本所得稅額)</h2>
+                <p>為使高所得者繳納合理稅負，設有最低稅負制，計算基本所得額與基本稅額。</p>
+                
+                <div class="formula-visual">
+                    <div class="formula-step">
+                        <h3>基本所得額</h3>
+                        <p>7大項加總</p>
+                    </div>
+                    <div class="formula-arrow">-</div>
+                    <div class="formula-step">
+                        <h3>免稅額</h3>
+                        <p>每戶750萬元</p>
+                    </div>
+                    <div class="formula-arrow">×</div>
+                    <div class="formula-step">
+                        <h3>稅率20%</h3>
+                        <p>固定稅率</p>
+                    </div>
+                    <div class="formula-arrow">=</div>
+                    <div class="formula-step">
+                        <h3>基本稅額</h3>
+                        <p>最低稅負</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px;">7大計入項目：</h3>
+                <ol style="margin-left: 20px; margin-top: 15px;">
+                    <li>海外所得 (超過100萬元需全額計入)</li>
+                    <li>特定保險給付 (要保人與受益人非同一人，超過3,740萬元部分)</li>
+                    <li>未上市櫃股票交易所得</li>
+                    <li>非現金捐贈列舉扣除額</li>
+                    <li>私募證券投資信託基金受益憑證交易所得</li>
+                    <li>個人綜合所得淨額</li>
+                    <li>分開計稅的股利所得 (按28%稅率分開計稅者)</li>
+                </ol>
+                
+                <div class="calculator" style="margin-top: 25px;">
+                    <h3>與綜合所得稅比較</h3>
+                    <p>比較「綜合所得稅額」與「基本稅額」，取較高者繳納。</p>
+                    <p style="margin-top: 10px;">若基本稅額 > 綜合所得稅額，需補繳差額。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="calculator" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-calculator"></i> 綜合所得稅試算</h2>
+                <p>請輸入相關資料進行稅額試算：</p>
+                
+                <div class="calculator">
+                    <div class="input-group">
+                        <label for="income">綜合所得總額 (元)</label>
+                        <input type="number" id="income" min="0" value="1500000" placeholder="請輸入所得總額">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="exemptCount">免稅額人數 (一般)</label>
+                        <input type="number" id="exemptCount" min="0" max="20" value="2" placeholder="一般免稅額人數">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="exemptSeniorCount">免稅額人數 (70歲以上)</label>
+                        <input type="number" id="exemptSeniorCount" min="0" max="20" value="0" placeholder="70歲以上免稅額人數">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="deductionType">扣除額類型</label>
+                        <select id="deductionType">
+                            <option value="standard">標準扣除額 (單身131,000元)</option>
+                            <option value="standard_couple">標準扣除額 (有配偶262,000元)</option>
+                            <option value="itemized">列舉扣除額 (請輸入金額)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group" id="itemizedGroup" style="display: none;">
+                        <label for="itemizedAmount">列舉扣除額金額 (元)</label>
+                        <input type="number" id="itemizedAmount" min="0" value="0" placeholder="請輸入列舉扣除額金額">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="specialDeduction">特別扣除額總額 (元)</label>
+                        <input type="number" id="specialDeduction" min="0" value="218000" placeholder="薪資、儲投、身心障礙等特別扣除額總和">
+                    </div>
+                    
+                    <button class="btn btn-calculate" id="calculateBtn">計算應納稅額</button>
+                    
+                    <div class="result-box" id="resultBox">
+                        <h4><i class="fas fa-file-invoice-dollar"></i> 計算結果</h4>
+                        <p>綜合所得淨額：<span class="result-value" id="netIncome">0</span> 元</p>
+                        <p>應納稅額：<span class="result-value" id="taxAmount">0</span> 元</p>
+                        <p>適用稅率：<span id="taxRate">0%</span></p>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: var(--gray-color);">以上計算為概估值，實際稅額請以國稅局核定為準。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <p>中壢社區大學 - 理財規劃實務與案例 | 第十五週 拆解個人綜合所得稅</p>
+        <p>講師：劉威澤 | 資料來源：財政部臺北國稅局</p>
+        <p style="margin-top: 15px; font-size: 0.9rem;">© 2025 綜合所得稅拆解視覺化系統 | 版本 1.0.0</p>
+    </footer>
+
+    <script>
+        // 全局變數
+        let isFullscreen = false;
+        
+        // DOM 元素
+        const fullscreenToggle = document.getElementById('fullscreenToggle');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const deductionType = document.getElementById('deductionType');
+        const itemizedGroup = document.getElementById('itemizedGroup');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultBox = document.getElementById('resultBox');
+        
+        // 稅率級距資料 (113年度)
+        const taxBrackets = [
+            { min: 0, max: 590000, rate: 0.05, deduction: 0 },
+            { min: 590001, max: 1330000, rate: 0.12, deduction: 41300 },
+            { min: 1330001, max: 2660000, rate: 0.20, deduction: 147700 },
+            { min: 2660001, max: 4980000, rate: 0.30, deduction: 413700 },
+            { min: 4980001, max: Infinity, rate: 0.40, deduction: 911700 }
+        ];
+        
+        // 全螢幕切換功能
+        fullscreenToggle.addEventListener('click', toggleFullscreen);
+        
+        function toggleFullscreen() {
+            if (!isFullscreen) {
+                // 進入全螢幕
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-compress"></i>';
+                isFullscreen = true;
+            } else {
+                // 退出全螢幕
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+                isFullscreen = false;
+            }
+        }
+        
+        // 監聽全螢幕狀態變化
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+            fullscreenToggle.innerHTML = isFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+        }
+        
+        // 標籤頁切換功能
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有按鈕的 active 類別
+                tabBtns.forEach(b => b.classList.remove('active'));
+                // 隱藏所有內容
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // 啟用當前按鈕
+                btn.classList.add('active');
+                // 顯示對應內容
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 扣除額類型切換
+        deductionType.addEventListener('change', function() {
+            if (this.value === 'itemized') {
+                itemizedGroup.style.display = 'block';
+            } else {
+                itemizedGroup.style.display = 'none';
+            }
+        });
+        
+        // 稅額計算功能
+        calculateBtn.addEventListener('click', calculateTax);
+        
+        function calculateTax() {
+            // 取得輸入值
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const exemptCount = parseInt(document.getElementById('exemptCount').value) || 0;
+            const exemptSeniorCount = parseInt(document.getElementById('exemptSeniorCount').value) || 0;
+            const deductionTypeValue = document.getElementById('deductionType').value;
+            const itemizedAmount = parseFloat(document.getElementById('itemizedAmount').value) || 0;
+            const specialDeduction = parseFloat(document.getElementById('specialDeduction').value) || 0;
+            
+            // 計算免稅額
+            const exemptAmount = exemptCount * 97000 + exemptSeniorCount * 145500;
+            
+            // 計算一般扣除額
+            let generalDeduction = 0;
+            switch(deductionTypeValue) {
+                case 'standard':
+                    generalDeduction = 131000;
+                    break;
+                case 'standard_couple':
+                    generalDeduction = 262000;
+                    break;
+                case 'itemized':
+                    generalDeduction = itemizedAmount;
+                    break;
+            }
+            
+            // 計算綜合所得淨額
+            const netIncome = Math.max(0, income - exemptAmount - generalDeduction - specialDeduction);
+            
+            // 計算應納稅額
+            let taxAmount = 0;
+            let taxRate = 0;
+            
+            for (const bracket of taxBrackets) {
+                if (netIncome > bracket.min) {
+                    const taxableInBracket = Math.min(netIncome, bracket.max) - bracket.min;
+                    taxAmount += taxableInBracket * bracket.rate;
+                    taxRate = bracket.rate * 100;
+                } else {
+                    break;
+                }
+            }
+            
+            // 應用累進差額
+            for (const bracket of taxBrackets) {
+                if (netIncome >= bracket.min && netIncome <= bracket.max) {
+                    taxAmount -= bracket.deduction;
+                    break;
+                }
+            }
+            
+            // 確保稅額不為負數
+            taxAmount = Math.max(0, taxAmount);
+            
+            // 顯示結果
+            document.getElementById('netIncome').textContent = formatNumber(netIncome);
+            document.getElementById('taxAmount').textContent = formatNumber(taxAmount);
+            document.getElementById('taxRate').textContent = `${taxRate}%`;
+            
+            resultBox.classList.add('show');
+            
+            // 滾動到結果區域
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // 數字格式化函數
+        function formatNumber(num) {
+            return num.toLocaleString('zh-TW', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+        
+        // 初始化頁面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 預設計算一次
+            calculateTax();
+            
+            // 為所有數字輸入框添加千分位顯示
+            const numberInputs = document.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value) {
+                        const num = parseFloat(this.value.replace(/,/g, ''));
+                        if (!isNaN(num)) {
+                            this.value = formatNumber(num);
+                        }
+                    }
+                });
+                
+                input.addEventListener('focus', function() {
+                    this.value = this.value.replace(/,/g, '');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
