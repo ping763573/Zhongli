@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夫妻剩餘財產差額分配請求權 - 互動視覺化教學平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #4a7bc1;
+            --accent-color: #ff7e5f;
+            --light-color: #f5f8ff;
+            --dark-color: #1a2b4c;
+            --text-color: #333;
+            --light-gray: #e9eef7;
+            --medium-gray: #b0b8cc;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f9fafd;
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* 頂部導航列 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+
+        .logo-text .subtitle {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .version-badge {
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .fullscreen-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .fullscreen-btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* 主內容區 */
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 0 5%;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            width: 25%;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .sidebar h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .chapter-list {
+            list-style: none;
+        }
+
+        .chapter-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chapter-item:hover {
+            background-color: var(--light-gray);
+        }
+
+        .chapter-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .chapter-icon {
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .content-header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .content-subtitle {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .content-body {
+            margin-bottom: 30px;
+        }
+
+        .concept-card {
+            background-color: var(--light-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+        }
+
+        .concept-card h3 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .interactive-section {
+            margin: 40px 0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .section-title i {
+            font-size: 1.5rem;
+        }
+
+        /* 計算器區域 */
+        .calculator {
+            background-color: var(--light-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .input-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(44, 90, 160, 0.2);
+        }
+
+        .calculator-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d8dfee;
+        }
+
+        .result-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-header {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .result-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .result-box.blue {
+            background-color: #e6f0ff;
+            border: 1px solid #b3d1ff;
+        }
+
+        .result-box.orange {
+            background-color: #fff0e6;
+            border: 1px solid #ffccaa;
+        }
+
+        .result-box.green {
+            background-color: #e6ffe6;
+            border: 1px solid #aaffaa;
+        }
+
+        .result-title {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        /* 視覺化圖表 */
+        .visualization {
+            margin: 40px 0;
+            padding: 25px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            padding: 0 20px;
+        }
+
+        .chart-bar {
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bar {
+            width: 80px;
+            border-radius: 5px 5px 0 0;
+            transition: height 1s ease;
+        }
+
+        .bar-husband {
+            background-color: var(--primary-color);
+        }
+
+        .bar-wife {
+            background-color: var(--accent-color);
+        }
+
+        .bar-difference {
+            background-color: #4cd964;
+        }
+
+        .bar-label {
+            margin-top: 10px;
+            font-weight: 600;
+            color: var(--dark-color);
+            text-align: center;
+        }
+
+        /* 版本歷史區域 */
+        .version-history {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid var(--light-gray);
+        }
+
+        .version-item {
+            padding: 15px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .version-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .version-date {
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
+
+        .version-number {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* 全螢幕樣式 */
+        body.fullscreen {
+            padding-top: 0;
+        }
+
+        body.fullscreen .navbar {
+            display: none;
+        }
+
+        body.fullscreen .container {
+            height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        body.fullscreen .sidebar {
+            display: none;
+        }
+
+        body.fullscreen .main-content {
+            border-radius: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* 動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .input-field {
+                min-width: 100%;
+            }
+            
+            .result-box {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            
+            .container {
+                padding: 0 20px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .chart-container {
+                flex-direction: column;
+                height: auto;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .chart-bar {
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .bar {
+                width: 100%;
+                height: 80px !important;
+                border-radius: 5px;
+            }
+            
+            .bar-label {
+                margin-top: 0;
+                min-width: 120px;
+                text-align: left;
+            }
+        }
+
+        /* 頁尾 */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航列 -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <i class="fas fa-balance-scale logo-icon"></i>
+            <div class="logo-text">
+                <h1>夫妻剩餘財產差額分配請求權</h1>
+                <div class="subtitle">互動視覺化教學平台</div>
+            </div>
+        </div>
+        <div class="nav-controls">
+            <div class="version-badge">
+                <i class="fas fa-code-branch"></i>
+                <span id="current-version">1.0.0</span>
+            </div>
+            <button class="fullscreen-btn" id="fullscreen-toggle">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <div class="container">
+        <!-- 側邊欄 -->
+        <aside class="sidebar">
+            <h2><i class="fas fa-book-open"></i> 課程章節</h2>
+            <ul class="chapter-list">
+                <li class="chapter-item active" data-chapter="1">
+                    <i class="fas fa-question-circle chapter-icon"></i>
+                    <span>基本概念與問題思考</span>
+                </li>
+                <li class="chapter-item" data-chapter="2">
+                    <i class="fas fa-gem chapter-icon"></i>
+                    <span>夫妻財產制介紹</span>
+                </li>
+                <li class="chapter-item" data-chapter="3">
+                    <i class="fas fa-heart chapter-icon"></i>
+                    <span>婚前與婚後財產</span>
+                </li>
+                <li class="chapter-item" data-chapter="4">
+                    <i class="fas fa-gavel chapter-icon"></i>
+                    <span>請求時機與時效</span>
+                </li>
+                <li class="chapter-item" data-chapter="5">
+                    <i class="fas fa-calculator chapter-icon"></i>
+                    <span>計算案例與實務</span>
+                </li>
+                <li class="chapter-item" data-chapter="6">
+                    <i class="fas fa-chart-bar chapter-icon"></i>
+                    <span>視覺化計算器</span>
+                </li>
+                <li class="chapter-item" data-chapter="7">
+                    <i class="fas fa-history chapter-icon"></i>
+                    <span>版本更新歷史</span>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- 主要內容區域 - 這裡會由JavaScript動態載入內容 -->
+        <main class="main-content" id="main-content">
+            <!-- 初始內容 - 第1章 -->
+            <div class="content-header">
+                <h2>基本概念與問題思考</h2>
+                <div class="content-subtitle">民法第1030條之1 | 中壢社區大學 理財規劃實務與案例</div>
+            </div>
+            
+            <div class="content-body">
+                <div class="concept-card">
+                    <h3>什麼是夫妻剩餘財產差額分配請求權？</h3>
+                    <p>根據民法第1030條之1規定，法定財產制關係消滅時（如離婚或一方死亡），夫或妻現存的「婚後財產」，扣除婚姻關係存續中所負債務後，如有剩餘，其雙方剩餘財產的差額，應平均分配。少的一方可以向多的一方請求差額的一半。</p>
+                </div>
+                
+                <p><strong>重要觀念：</strong>這項權利是「債權」而非「物權」，必須透過請求才能實現，並非自動分得一半財產。</p>
+                
+                <div class="interactive-section">
+                    <div class="section-title">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>問題思考：真的是「領一半」嗎？</h3>
+                    </div>
+                    <p>案例：小劉與妻子離婚，小劉總資產有1000萬，劉妻可以拿多少？</p>
+                    
+                    <div class="calculator">
+                        <div class="input-group">
+                            <div class="input-field">
+                                <label for="husband-assets">丈夫婚後財產（萬元）</label>
+                                <input type="number" id="husband-assets" value="1000" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label for="wife-assets">妻子婚後財產（萬元）</label>
+                                <input type="number" id="wife-assets" value="200" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label for="husband-debt">丈夫婚後負債（萬元）</label>
+                                <input type="number" id="husband-debt" value="100" min="0">
+                            </div>
+                            <div class="input-field">
+                                <label for="wife-debt">妻子婚後負債（萬元）</label>
+                                <input type="number" id="wife-debt" value="50" min="0">
+                            </div>
+                        </div>
+                        
+                        <div class="calculator-controls">
+                            <button class="btn btn-primary" id="calculate-btn">
+                                <i class="fas fa-calculator"></i> 計算分配結果
+                            </button>
+                            <button class="btn btn-secondary" id="reset-btn">
+                                <i class="fas fa-redo"></i> 重設
+                            </button>
+                        </div>
+                        
+                        <div class="result-container" id="result-container">
+                            <div class="result-header">
+                                <i class="fas fa-file-contract"></i>
+                                <h3>剩餘財產分配計算結果</h3>
+                            </div>
+                            <div class="result-details">
+                                <div class="result-box blue">
+                                    <div class="result-title">丈夫剩餘財產</div>
+                                    <div class="result-value" id="husband-remaining">0</div>
+                                </div>
+                                <div class="result-box orange">
+                                    <div class="result-title">妻子剩餘財產</div>
+                                    <div class="result-value" id="wife-remaining">0</div>
+                                </div>
+                                <div class="result-box green">
+                                    <div class="result-title">差額分配請求權</div>
+                                    <div class="result-value" id="difference-amount">0</div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                                <i class="fas fa-info-circle"></i> 注意：此為簡化計算，實際案例需考慮更多因素（如繼承、贈與取得財產不計入等）。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 版本歷史區 -->
+            <div class="version-history" id="version-history-section">
+                <div class="section-title">
+                    <i class="fas fa-history"></i>
+                    <h3>版本更新歷史</h3>
+                </div>
+                <div id="version-list">
+                    <!-- 版本項目會透過JavaScript動態生成 -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer>
+        <p>中壢社區大學 理財規劃實務與案例 | 夫妻剩餘財產差額分配請求權教學平台</p>
+        <div class="footer-info">
+            <span>講師：劉威澤</span>
+            <span>最後更新：2025/12/18</span>
+        </div>
+    </footer>
+
+    <script>
+        // 當前版本
+        let currentVersion = "1.0.0";
+        let versionHistory = [
+            { version: "1.0.0", date: "2025-12-18", description: "初始版本發布，包含基本概念與計算器功能" },
+            { version: "1.0.1", date: "2025-12-19", description: "修復章節切換功能，優化視覺化圖表" },
+            { version: "1.1.0", date: "2025-12-20", description: "新增夫妻財產制介紹章節與互動圖表" },
+            { version: "1.2.0", date: "2025-12-21", description: "新增婚前婚後財產章節與案例解析" }
+        ];
+
+        // 章節內容數據
+        const chapterData = {
+            1: {
+                title: "基本概念與問題思考",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>什麼是夫妻剩餘財產差額分配請求權？</h3>
+                            <p>根據民法第1030條之1規定，法定財產制關係消滅時（如離婚或一方死亡），夫或妻現存的「婚後財產」，扣除婚姻關係存續中所負債務後，如有剩餘，其雙方剩餘財產的差額，應平均分配。少的一方可以向多的一方請求差額的一半。</p>
+                        </div>
+                        
+                        <p><strong>重要觀念：</strong>這項權利是「債權」而非「物權」，必須透過請求才能實現，並非自動分得一半財產。</p>
+                        
+                        <div class="interactive-section">
+                            <div class="section-title">
+                                <i class="fas fa-lightbulb"></i>
+                                <h3>問題思考：真的是「領一半」嗎？</h3>
+                            </div>
+                            <p>案例：小劉與妻子離婚，小劉總資產有1000萬，劉妻可以拿多少？</p>
+                            
+                            <div class="calculator">
+                                <div class="input-group">
+                                    <div class="input-field">
+                                        <label for="husband-assets">丈夫婚後財產（萬元）</label>
+                                        <input type="number" id="husband-assets" value="1000" min="0">
+                                    </div>
+                                    <div class="input-field">
+                                        <label for="wife-assets">妻子婚後財產（萬元）</label>
+                                        <input type="number" id="wife-assets" value="200" min="0">
+                                    </div>
+                                    <div class="input-field">
+                                        <label for="husband-debt">丈夫婚後負債（萬元）</label>
+                                        <input type="number" id="husband-debt" value="100" min="0">
+                                    </div>
+                                    <div class="input-field">
+                                        <label for="wife-debt">妻子婚後負債（萬元）</label>
+                                        <input type="number" id="wife-debt" value="50" min="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="calculator-controls">
+                                    <button class="btn btn-primary" id="calculate-btn">
+                                        <i class="fas fa-calculator"></i> 計算分配結果
+                                    </button>
+                                    <button class="btn btn-secondary" id="reset-btn">
+                                        <i class="fas fa-redo"></i> 重設
+                                    </button>
+                                </div>
+                                
+                                <div class="result-container" id="result-container">
+                                    <div class="result-header">
+                                        <i class="fas fa-file-contract"></i>
+                                        <h3>剩餘財產分配計算結果</h3>
+                                    </div>
+                                    <div class="result-details">
+                                        <div class="result-box blue">
+                                            <div class="result-title">丈夫剩餘財產</div>
+                                            <div class="result-value" id="husband-remaining">0</div>
+                                        </div>
+                                        <div class="result-box orange">
+                                            <div class="result-title">妻子剩餘財產</div>
+                                            <div class="result-value" id="wife-remaining">0</div>
+                                        </div>
+                                        <div class="result-box green">
+                                            <div class="result-title">差額分配請求權</div>
+                                            <div class="result-value" id="difference-amount">0</div>
+                                        </div>
+                                    </div>
+                                    <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                                        <i class="fas fa-info-circle"></i> 注意：此為簡化計算，實際案例需考慮更多因素（如繼承、贈與取得財產不計入等）。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                title: "夫妻財產制介紹",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>夫妻財產制類型</h3>
+                            <p>我國民法規定夫妻財產制分為「法定財產制」與「約定財產制」，約定財產制又分為「共同財產制」與「分別財產制」。</p>
+                        </div>
+                        
+                        <div class="visualization">
+                            <div class="section-title">
+                                <i class="fas fa-sitemap"></i>
+                                <h3>夫妻財產制架構圖</h3>
+                            </div>
+                            <div style="text-align: center; margin: 30px 0;">
+                                <div style="display: inline-block; background: var(--primary-color); color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; margin-bottom: 20px;">
+                                    夫妻財產制
+                                </div>
+                                <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                                    <div style="text-align: center;">
+                                        <div style="background: var(--secondary-color); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; margin-bottom: 10px;">
+                                            法定財產制
+                                        </div>
+                                        <p style="max-width: 200px; font-size: 0.9rem;">(預設制度，適用於未約定財產制的夫妻)</p>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="background: var(--accent-color); color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; margin-bottom: 10px;">
+                                            約定財產制
+                                        </div>
+                                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                                            <div style="background: #ffcc00; color: #333; padding: 8px 15px; border-radius: 6px; font-weight: bold;">
+                                                共同財產制
+                                            </div>
+                                            <div style="background: #4cd964; color: white; padding: 8px 15px; border-radius: 6px; font-weight: bold;">
+                                                分別財產制
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin: 25px 0 15px; color: var(--primary-color);">各種財產制特點</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                            <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                                <h4 style="color: var(--primary-color); margin-bottom: 10px;">法定財產制</h4>
+                                <p>• 婚前財產各自所有</p>
+                                <p>• 婚後財產各自管理、使用、收益</p>
+                                <p>• 剩餘財產差額分配請求權的適用基礎</p>
+                            </div>
+                            <div style="background: #fff5f0; padding: 20px; border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                                <h4 style="color: var(--accent-color); margin-bottom: 10px;">共同財產制</h4>
+                                <p>• 夫妻財產及所得合為共同財產</p>
+                                <p>• 由夫妻共同管理</p>
+                                <p>• 婚姻關係消滅時各得共同財產的一半</p>
+                            </div>
+                            <div style="background: #f0fff4; padding: 20px; border-radius: 8px; border-left: 4px solid #4cd964;">
+                                <h4 style="color: #4cd964; margin-bottom: 10px;">分別財產制</h4>
+                                <p>• 夫妻財產完全分開</p>
+                                <p>• 各自管理、使用、收益及處分</p>
+                                <p>• 不適用剩餘財產差額分配請求權</p>
+                            </div>
+                        </div>
+                        
+                        <div class="concept-card" style="margin-top: 30px;">
+                            <h3>實務提醒</h3>
+                            <p>根據統計，台灣超過95%的夫妻採用「法定財產制」（未特別約定），因此「剩餘財產差額分配請求權」對大多數夫妻具有重要意義。</p>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "婚前與婚後財產",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>婚後財產認定標準</h3>
+                            <p>婚後財產指婚姻關係存續中，夫或妻所取得的財產。但有些財產不計入婚後財產範圍。</p>
+                        </div>
+                        
+                        <div style="display: flex; flex-wrap: wrap; gap: 30px; margin: 30px 0;">
+                            <div style="flex: 1; min-width: 300px;">
+                                <h4 style="color: var(--primary-color); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-check-circle" style="color: #4cd964;"></i> 計入婚後財產
+                                </h4>
+                                <ul style="list-style-type: none;">
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-check" style="color: #4cd964; margin-top: 5px;"></i>
+                                        <span>婚後有償取得的財產</span>
+                                    </li>
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-check" style="color: #4cd964; margin-top: 5px;"></i>
+                                        <span>改用法定財產制後的財產</span>
+                                    </li>
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-check" style="color: #4cd964; margin-top: 5px;"></i>
+                                        <span>婚前財產於婚後的孳息（股息、租金）</span>
+                                    </li>
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-check" style="color: #4cd964; margin-top: 5px;"></i>
+                                        <span>無法證明是婚前財產者</span>
+                                    </li>
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-check" style="color: #4cd964; margin-top: 5px;"></i>
+                                        <span>婚後財產清償婚前債務的財產</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 300px;">
+                                <h4 style="color: var(--primary-color); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-times-circle" style="color: #ff3b30;"></i> 不計入婚後財產
+                                </h4>
+                                <ul style="list-style-type: none;">
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-times" style="color: #ff3b30; margin-top: 5px;"></i>
+                                        <span>繼承取得的財產</span>
+                                    </li>
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-times" style="color: #ff3b30; margin-top: 5px;"></i>
+                                        <span>無償受贈的財產</span>
+                                    </li>
+                                    <li style="padding: 8px 0; border-bottom: 1px dashed #ddd; display: flex; align-items: flex-start; gap: 8px;">
+                                        <i class="fas fa-times" style="color: #ff3b30; margin-top: 5px;"></i>
+                                        <span>慰撫金（精神賠償）</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="concept-card" style="margin-top: 30px;">
+                            <h3>實務案例：曾馨瑩與郭台銘婚前協議</h3>
+                            <p>曾馨瑩和郭台銘的婚前協議內容寫道「如果離婚，郭名下股權不分割，不影響到清海估值和未來經營發展」，代表假如兩人離婚，曾馨瑩無法拿到郭台銘鉅額財產，女方放棄民法剩餘財產分配請求權。</p>
+                            <p style="margin-top: 10px; font-size: 0.95rem; color: #666;">
+                                <i class="fas fa-info-circle"></i> 這顯示透過婚前協議，可以排除剩餘財產差額分配請求權的適用。
+                            </p>
+                        </div>
+                        
+                        <div class="interactive-section">
+                            <div class="section-title">
+                                <i class="fas fa-question-circle"></i>
+                                <h3>思考問題：以下哪些應計入婚後財產？</h3>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+                                <div style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;" class="quiz-option" data-answer="yes">
+                                    <p>婚後工作薪資所得</p>
+                                </div>
+                                <div style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;" class="quiz-option" data-answer="no">
+                                    <p>婚後繼承父親的遺產</p>
+                                </div>
+                                <div style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;" class="quiz-option" data-answer="yes">
+                                    <p>婚前房屋在婚後的租金收入</p>
+                                </div>
+                                <div style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;" class="quiz-option" data-answer="no">
+                                    <p>婚後朋友贈送的生日禮物</p>
+                                </div>
+                            </div>
+                            <div id="quiz-feedback" style="margin-top: 20px; display: none; padding: 15px; background-color: #f0f7ff; border-radius: 8px;"></div>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                title: "請求時機與時效",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>法定財產制關係消滅的時機</h3>
+                            <p>夫妻剩餘財產差額分配請求權的行使時機，是在「法定財產制關係消滅時」。</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
+                            <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px;">
+                                    <i class="fas fa-heart-broken"></i>
+                                </div>
+                                <h4 style="color: var(--primary-color); margin-bottom: 10px;">離婚</h4>
+                                <p>最常見的請求時機，婚姻關係經由離婚而消滅。</p>
+                            </div>
+                            
+                            <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px;">
+                                    <i class="fas fa-restroom"></i>
+                                </div>
+                                <h4 style="color: var(--primary-color); margin-bottom: 10px;">一方死亡</h4>
+                                <p>配偶死亡時，生存配偶可行使請求權。</p>
+                            </div>
+                            
+                            <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px;">
+                                    <i class="fas fa-ban"></i>
+                                </div>
+                                <h4 style="color: var(--primary-color); margin-bottom: 10px;">婚姻無效</h4>
+                                <p>婚姻經法院判決無效確定時。</p>
+                            </div>
+                            
+                            <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px;">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <h4 style="color: var(--primary-color); margin-bottom: 10px;">婚姻撤銷</h4>
+                                <p>婚姻經法院判決撤銷確定時。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="concept-card">
+                            <h3>請求權時效</h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-top: 15px;">
+                                <div style="flex: 1; min-width: 250px;">
+                                    <h4 style="color: var(--primary-color); margin-bottom: 10px;">
+                                        <i class="fas fa-clock"></i> 短期時效：2年
+                                    </h4>
+                                    <p>自知有剩餘財產差額時起，2年內必須行使請求權。</p>
+                                </div>
+                                <div style="flex: 1; min-width: 250px;">
+                                    <h4 style="color: var(--primary-color); margin-bottom: 10px;">
+                                        <i class="fas fa-hourglass-end"></i> 長期時效：5年
+                                    </h4>
+                                    <p>自法定財產制關係消滅時起，超過5年請求權消滅。</p>
+                                </div>
+                            </div>
+                            <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                                <i class="fas fa-exclamation-triangle"></i> 注意：時效完成後，債務人得拒絕給付，請求權並非自動消滅，但債務人可主張時效抗辯。
+                            </p>
+                        </div>
+                        
+                        <div class="interactive-section">
+                            <div class="section-title">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h3>時效計算器</h3>
+                            </div>
+                            <div style="background: #f9f9f9; padding: 25px; border-radius: 8px;">
+                                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+                                    <div style="flex: 1; min-width: 200px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">法定財產制關係消滅日期</label>
+                                        <input type="date" id="termination-date" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
+                                    <div style="flex: 1; min-width: 200px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">知悉剩餘財產差額日期</label>
+                                        <input type="date" id="awareness-date" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" id="calculate-deadline" style="margin-top: 10px;">
+                                    <i class="fas fa-calculator"></i> 計算請求權時效期限
+                                </button>
+                                <div id="deadline-result" style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px; display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                title: "計算案例與實務",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>國稅局計算案例</h3>
+                            <p>依民法第1030條之1規定，夫妻法定財產制關係消滅時，夫或妻現存的「婚後財產」，扣除婚姻關係存續中所負債務後，如有剩餘，其雙方剩餘財產之差額，應平均分配。</p>
+                        </div>
+                        
+                        <div class="interactive-section">
+                            <div class="section-title">
+                                <i class="fas fa-calculator"></i>
+                                <h3>案例計算：甲先生與配偶</h3>
+                            </div>
+                            
+                            <div style="background: #f9f9f9; padding: 25px; border-radius: 8px; margin: 20px 0;">
+                                <h4 style="color: var(--primary-color); margin-bottom: 15px;">案例背景</h4>
+                                <p>甲與其配偶於民國63年3月1日結婚，甲過世後，其於結婚後取得的財產有900萬元，其配偶結婚後取得的財產有400萬元。</p>
+                                
+                                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin: 25px 0;">
+                                    <div style="flex: 1; min-width: 200px;">
+                                        <div style="background: var(--primary-color); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 0.9rem;">甲先生婚後財產</div>
+                                            <div style="font-size: 1.8rem; font-weight: bold;">900萬</div>
+                                        </div>
+                                    </div>
+                                    <div style="flex: 1; min-width: 200px;">
+                                        <div style="background: var(--accent-color); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 0.9rem;">配偶婚後財產</div>
+                                            <div style="font-size: 1.8rem; font-weight: bold;">400萬</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h4 style="color: var(--primary-color); margin: 25px 0 15px;">計算公式</h4>
+                                <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd; text-align: center;">
+                                    <div style="font-size: 1.2rem; font-family: monospace; color: var(--dark-color);">
+                                        差額分配請求權 = (900萬 - 400萬) ÷ 2 = <span style="color: var(--primary-color); font-weight: bold;">250萬</span>
+                                    </div>
+                                </div>
+                                
+                                <p style="margin-top: 20px; padding: 15px; background: #e6ffe6; border-radius: 8px; border-left: 4px solid #4cd964;">
+                                    <strong>結果：</strong>配偶可以主張250萬元的剩餘財產差額分配請求權，且該250萬元金額可以自被繼承人遺產總額中扣除，減少遺產稅負擔。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="concept-card" style="margin-top: 30px;">
+                            <h3>王永慶遺產案例</h3>
+                            <p>王永慶留下528億遺產，依據繼承人寄給法院的和解內容，先扣除夫妻剩餘財產分配額，大房王月蘭先分到264億，另外一半264億，要繳120億遺產稅，剩下144億，再平分給十名繼承人。</p>
+                            
+                            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
+                                <div style="flex: 1; min-width: 150px; text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">528億</div>
+                                    <div style="font-size: 0.85rem;">總遺產</div>
+                                </div>
+                                <div style="flex: 1; min-width: 150px; text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-color);">264億</div>
+                                    <div style="font-size: 0.85rem;">配偶分配額</div>
+                                </div>
+                                <div style="flex: 1; min-width: 150px; text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #4cd964;">120億</div>
+                                    <div style="font-size: 0.85rem;">遺產稅</div>
+                                </div>
+                                <div style="flex: 1; min-width: 150px; text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #ff9500;">14.4億</div>
+                                    <div style="font-size: 0.85rem;">每位繼承人</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="concept-card" style="margin-top: 30px;">
+                            <h3>賈靜雯與孫志浩離婚案例</h3>
+                            <p>藝人賈靜雯在離婚官司中，被孫志浩訴請依「夫妻剩餘財產分配」，要求支付兩千六百萬元。孫志浩主張他自己沒什麼財產，月薪僅三萬五千元人民幣，但賈靜雯自嫁到孫家後，拍廣告共賺進一億多台幣，必須分配給他一半。</p>
+                            <p style="margin-top: 10px; font-size: 0.95rem; color: #666;">
+                                <i class="fas fa-gavel"></i> 此案例顯示，即使一方收入較高，也可能需要將婚後財產差額的一半分配給對方。
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            6: {
+                title: "視覺化計算器",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>互動式財產分配計算器</h3>
+                            <p>使用下方的計算器，輸入夫妻雙方的婚後財產與負債，系統將自動計算剩餘財產差額分配請求權的金額，並以視覺化圖表呈現。</p>
+                        </div>
+                        
+                        <div class="interactive-section">
+                            <div class="calculator">
+                                <div class="input-group">
+                                    <div class="input-field">
+                                        <label for="vis-husband-assets">丈夫婚後財產（萬元）</label>
+                                        <input type="number" id="vis-husband-assets" value="1500" min="0">
+                                    </div>
+                                    <div class="input-field">
+                                        <label for="vis-wife-assets">妻子婚後財產（萬元）</label>
+                                        <input type="number" id="vis-wife-assets" value="500" min="0">
+                                    </div>
+                                    <div class="input-field">
+                                        <label for="vis-husband-debt">丈夫婚後負債（萬元）</label>
+                                        <input type="number" id="vis-husband-debt" value="200" min="0">
+                                    </div>
+                                    <div class="input-field">
+                                        <label for="vis-wife-debt">妻子婚後負債（萬元）</label>
+                                        <input type="number" id="vis-wife-debt" value="100" min="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="calculator-controls">
+                                    <button class="btn btn-primary" id="vis-calculate-btn">
+                                        <i class="fas fa-chart-bar"></i> 計算並視覺化
+                                    </button>
+                                    <button class="btn btn-secondary" id="vis-reset-btn">
+                                        <i class="fas fa-redo"></i> 重設
+                                    </button>
+                                </div>
+                                
+                                <div class="visualization" id="visualization-container">
+                                    <div class="section-title">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <h3>財產分配視覺化圖表</h3>
+                                    </div>
+                                    <div class="chart-container" id="chart-container">
+                                        <div class="chart-bar">
+                                            <div class="bar bar-husband" id="husband-bar" style="height: 60%; background-color: var(--primary-color);"></div>
+                                            <div class="bar-label">丈夫剩餘財產<br><span id="husband-bar-value">0</span></div>
+                                        </div>
+                                        <div class="chart-bar">
+                                            <div class="bar bar-wife" id="wife-bar" style="height: 40%; background-color: var(--accent-color);"></div>
+                                            <div class="bar-label">妻子剩餘財產<br><span id="wife-bar-value">0</span></div>
+                                        </div>
+                                        <div class="chart-bar">
+                                            <div class="bar bar-difference" id="difference-bar" style="height: 20%; background-color: #4cd964;"></div>
+                                            <div class="bar-label">差額分配請求權<br><span id="difference-bar-value">0</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="result-container" id="vis-result-container">
+                                    <div class="result-header">
+                                        <i class="fas fa-file-contract"></i>
+                                        <h3>剩餘財產分配計算結果</h3>
+                                    </div>
+                                    <div class="result-details">
+                                        <div class="result-box blue">
+                                            <div class="result-title">丈夫剩餘財產</div>
+                                            <div class="result-value" id="vis-husband-remaining">0</div>
+                                        </div>
+                                        <div class="result-box orange">
+                                            <div class="result-title">妻子剩餘財產</div>
+                                            <div class="result-value" id="vis-wife-remaining">0</div>
+                                        </div>
+                                        <div class="result-box green">
+                                            <div class="result-title">差額分配請求權</div>
+                                            <div class="result-value" id="vis-difference-amount">0</div>
+                                        </div>
+                                    </div>
+                                    <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                                        <i class="fas fa-info-circle"></i> 計算公式：差額分配請求權 = (較高剩餘財產 - 較低剩餘財產) ÷ 2
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="concept-card" style="margin-top: 30px;">
+                            <h3>重要提醒</h3>
+                            <p>此計算器為簡化版本，實際案例中還需考慮以下因素：</p>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>繼承、受贈財產不計入婚後財產</li>
+                                <li>婚前財產及其孳息的認定</li>
+                                <li>惡意處分財產的追加計算</li>
+                                <li>特殊財產類型的處理方式</li>
+                                <li>不同夫妻財產制的適用差異</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            7: {
+                title: "版本更新歷史",
+                content: `
+                    <div class="content-body">
+                        <div class="concept-card">
+                            <h3>平台版本管理</h3>
+                            <p>本平台採用版本管理系統，每次修正或更新都會產生一個新的版本檔案，保留舊版本記錄，不覆蓋舊檔。</p>
+                        </div>
+                        
+                        <div class="version-history">
+                            <div class="section-title">
+                                <i class="fas fa-code-branch"></i>
+                                <h3>版本更新歷史</h3>
+                            </div>
+                            <div id="dynamic-version-list">
+                                <!-- 版本項目會透過JavaScript動態生成 -->
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 40px; padding: 25px; background: #f0f7ff; border-radius: 8px;">
+                            <h3 style="color: var(--primary-color); margin-bottom: 15px;">版本編號規則</h3>
+                            <p>版本編號遵循「主版本.次版本.修訂版」格式：</p>
+                            <ul style="margin: 15px 0 15px 20px;">
+                                <li><strong>主版本</strong>：重大功能更新或架構變更時增加</li>
+                                <li><strong>次版本</strong>：新增功能或改進時增加</li>
+                                <li><strong>修訂版</strong>：錯誤修正或小幅調整時增加</li>
+                            </ul>
+                            <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                                <i class="fas fa-exclamation-circle"></i> 當前版本：<span id="current-version-display">1.0.0</span>
+                            </p>
+                        </div>
+                        
+                        <div style="margin-top: 30px; padding: 20px; background: #fff5f0; border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                            <h3 style="color: var(--accent-color); margin-bottom: 10px;">未來更新計劃</h3>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>更多實際案例分析與互動問答</li>
+                                <li>進階計算功能（考慮繼承、贈與等特殊情況）</li>
+                                <li>模擬法庭判決流程與結果預測</li>
+                                <li>不同夫妻財產制的比較分析工具</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // DOM元素
+        const currentVersionElement = document.getElementById('current-version');
+        const fullscreenToggle = document.getElementById('fullscreen-toggle');
+        const chapterItems = document.querySelectorAll('.chapter-item');
+        const mainContent = document.getElementById('main-content');
+        const versionList = document.getElementById('version-list');
+        const dynamicVersionList = document.getElementById('dynamic-version-list');
+
+        // 初始化版本顯示
+        currentVersionElement.textContent = currentVersion;
+
+        // 全螢幕切換功能
+        fullscreenToggle.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`全螢幕請求錯誤: ${err.message}`);
+                });
+                document.body.classList.add('fullscreen');
+                fullscreenToggle.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.body.classList.remove('fullscreen');
+                    fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            }
+        });
+
+        // 章節切換功能
+        function loadChapter(chapterNumber) {
+            const chapter = chapterData[chapterNumber];
+            if (!chapter) return;
+            
+            // 建立新的HTML結構
+            const newContent = `
+                <div class="content-header">
+                    <h2>${chapter.title}</h2>
+                    <div class="content-subtitle">民法第1030條之1 | 中壢社區大學 理財規劃實務與案例</div>
+                </div>
+                ${chapter.content}
+                ${chapterNumber !== 7 ? `
+                <div class="version-history" id="version-history-section">
+                    <div class="section-title">
+                        <i class="fas fa-history"></i>
+                        <h3>版本更新歷史</h3>
+                    </div>
+                    <div id="version-list">
+                        <!-- 版本項目會透過JavaScript動態生成 -->
+                    </div>
+                </div>
+                ` : ''}
+            `;
+            
+            // 更新主內容
+            mainContent.innerHTML = newContent;
+            
+            // 更新章節選單狀態
+            chapterItems.forEach(item => {
+                if (parseInt(item.getAttribute('data-chapter')) === chapterNumber) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // 如果是第6章（視覺化計算器），初始化計算器
+            if (chapterNumber === 6) {
+                initializeVisualCalculator();
+            }
+            
+            // 如果是第7章（版本歷史），載入版本列表
+            if (chapterNumber === 7) {
+                loadVersionHistory();
+            }
+            
+            // 如果是第1章，初始化計算器
+            if (chapterNumber === 1) {
+                initializeCalculator();
+            }
+            
+            // 如果是第3章，初始化測驗功能
+            if (chapterNumber === 3) {
+                initializeQuiz();
+            }
+            
+            // 如果是第4章，初始化時效計算器
+            if (chapterNumber === 4) {
+                initializeDeadlineCalculator();
+            }
+            
+            // 載入版本列表（除了第7章，因為第7章有自己的版本列表）
+            if (chapterNumber !== 7) {
+                loadVersionHistory();
+            }
+        }
+
+        // 章節點擊事件
+        chapterItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const chapterNumber = parseInt(item.getAttribute('data-chapter'));
+                loadChapter(chapterNumber);
+            });
+        });
+
+        // 計算器功能
+        function initializeCalculator() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultContainer = document.getElementById('result-container');
+            
+            if (!calculateBtn) return;
+            
+            calculateBtn.addEventListener('click', () => {
+                // 獲取輸入值
+                const husbandAssets = parseFloat(document.getElementById('husband-assets').value) || 0;
+                const wifeAssets = parseFloat(document.getElementById('wife-assets').value) || 0;
+                const husbandDebt = parseFloat(document.getElementById('husband-debt').value) || 0;
+                const wifeDebt = parseFloat(document.getElementById('wife-debt').value) || 0;
+                
+                // 計算剩餘財產
+                const husbandRemaining = Math.max(0, husbandAssets - husbandDebt);
+                const wifeRemaining = Math.max(0, wifeAssets - wifeDebt);
+                
+                // 計算差額分配請求權
+                let differenceAmount = 0;
+                if (husbandRemaining > wifeRemaining) {
+                    differenceAmount = (husbandRemaining - wifeRemaining) / 2;
+                } else {
+                    differenceAmount = (wifeRemaining - husbandRemaining) / 2;
+                }
+                
+                // 更新結果
+                document.getElementById('husband-remaining').textContent = husbandRemaining.toLocaleString();
+                document.getElementById('wife-remaining').textContent = wifeRemaining.toLocaleString();
+                document.getElementById('difference-amount').textContent = differenceAmount.toLocaleString();
+                
+                // 顯示結果
+                resultContainer.classList.add('show');
+                
+                // 更新版本（模擬計算後的小版本更新）
+                updateMinorVersion("計算器功能優化");
+            });
+            
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    document.getElementById('husband-assets').value = 1000;
+                    document.getElementById('wife-assets').value = 200;
+                    document.getElementById('husband-debt').value = 100;
+                    document.getElementById('wife-debt').value = 50;
+                    resultContainer.classList.remove('show');
+                });
+            }
+            
+            // 初始計算一次
+            if (calculateBtn) calculateBtn.click();
+        }
+
+        // 視覺化計算器功能
+        function initializeVisualCalculator() {
+            const visCalculateBtn = document.getElementById('vis-calculate-btn');
+            const visResetBtn = document.getElementById('vis-reset-btn');
+            const visResultContainer = document.getElementById('vis-result-container');
+            
+            if (!visCalculateBtn) return;
+            
+            visCalculateBtn.addEventListener('click', () => {
+                // 獲取輸入值
+                const husbandAssets = parseFloat(document.getElementById('vis-husband-assets').value) || 0;
+                const wifeAssets = parseFloat(document.getElementById('vis-wife-assets').value) || 0;
+                const husbandDebt = parseFloat(document.getElementById('vis-husband-debt').value) || 0;
+                const wifeDebt = parseFloat(document.getElementById('vis-wife-debt').value) || 0;
+                
+                // 計算剩餘財產
+                const husbandRemaining = Math.max(0, husbandAssets - husbandDebt);
+                const wifeRemaining = Math.max(0, wifeAssets - wifeDebt);
+                
+                // 計算差額分配請求權
+                let differenceAmount = 0;
+                if (husbandRemaining > wifeRemaining) {
+                    differenceAmount = (husbandRemaining - wifeRemaining) / 2;
+                } else {
+                    differenceAmount = (wifeRemaining - husbandRemaining) / 2;
+                }
+                
+                // 找到最大值以設定圖表比例
+                const maxValue = Math.max(husbandRemaining, wifeRemaining, differenceAmount);
+                const scaleFactor = maxValue > 0 ? 180 / maxValue : 0;
+                
+                // 更新圖表
+                document.getElementById('husband-bar').style.height = `${Math.max(20, husbandRemaining * scaleFactor)}px`;
+                document.getElementById('wife-bar').style.height = `${Math.max(20, wifeRemaining * scaleFactor)}px`;
+                document.getElementById('difference-bar').style.height = `${Math.max(20, differenceAmount * scaleFactor)}px`;
+                
+                // 更新圖表數值
+                document.getElementById('husband-bar-value').textContent = husbandRemaining.toLocaleString();
+                document.getElementById('wife-bar-value').textContent = wifeRemaining.toLocaleString();
+                document.getElementById('difference-bar-value').textContent = differenceAmount.toLocaleString();
+                
+                // 更新結果
+                document.getElementById('vis-husband-remaining').textContent = husbandRemaining.toLocaleString();
+                document.getElementById('vis-wife-remaining').textContent = wifeRemaining.toLocaleString();
+                document.getElementById('vis-difference-amount').textContent = differenceAmount.toLocaleString();
+                
+                // 顯示結果
+                visResultContainer.classList.add('show');
+                
+                // 更新版本（模擬計算後的小版本更新）
+                updateMinorVersion("視覺化計算器功能優化");
+            });
+            
+            if (visResetBtn) {
+                visResetBtn.addEventListener('click', () => {
+                    document.getElementById('vis-husband-assets').value = 1500;
+                    document.getElementById('vis-wife-assets').value = 500;
+                    document.getElementById('vis-husband-debt').value = 200;
+                    document.getElementById('vis-wife-debt').value = 100;
+                    visResultContainer.classList.remove('show');
+                });
+            }
+            
+            // 初始計算一次
+            if (visCalculateBtn) visCalculateBtn.click();
+        }
+
+        // 測驗功能（第3章）
+        function initializeQuiz() {
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            const quizFeedback = document.getElementById('quiz-feedback');
+            
+            if (!quizOptions.length) return;
+            
+            quizOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const isCorrect = this.getAttribute('data-answer') === 'yes';
+                    
+                    // 重置所有選項樣式
+                    quizOptions.forEach(opt => {
+                        opt.style.borderColor = '#ddd';
+                        opt.style.backgroundColor = '';
+                    });
+                    
+                    // 設置當前選項樣式
+                    if (isCorrect) {
+                        this.style.borderColor = '#4cd964';
+                        this.style.backgroundColor = '#e6ffe6';
+                        quizFeedback.innerHTML = '<i class="fas fa-check-circle" style="color:#4cd964;"></i> 正確！此項目應計入婚後財產。';
+                        quizFeedback.style.display = 'block';
+                        quizFeedback.style.backgroundColor = '#e6ffe6';
+                    } else {
+                        this.style.borderColor = '#ff3b30';
+                        this.style.backgroundColor = '#ffe6e6';
+                        quizFeedback.innerHTML = '<i class="fas fa-times-circle" style="color:#ff3b30;"></i> 不正確！此項目不計入婚後財產。';
+                        quizFeedback.style.display = 'block';
+                        quizFeedback.style.backgroundColor = '#ffe6e6';
+                    }
+                });
+            });
+        }
+
+        // 時效計算器（第4章）
+        function initializeDeadlineCalculator() {
+            const calculateDeadlineBtn = document.getElementById('calculate-deadline');
+            const deadlineResult = document.getElementById('deadline-result');
+            
+            if (!calculateDeadlineBtn) return;
+            
+            calculateDeadlineBtn.addEventListener('click', () => {
+                const terminationDate = document.getElementById('termination-date').value;
+                const awarenessDate = document.getElementById('awareness-date').value;
+                
+                if (!terminationDate || !awarenessDate) {
+                    deadlineResult.innerHTML = '<p style="color:#ff3b30;">請輸入完整日期</p>';
+                    deadlineResult.style.display = 'block';
+                    return;
+                }
+                
+                const termination = new Date(terminationDate);
+                const awareness = new Date(awarenessDate);
+                
+                // 計算2年時效（從知悉日起算）
+                const twoYearDeadline = new Date(awareness);
+                twoYearDeadline.setFullYear(twoYearDeadline.getFullYear() + 2);
+                
+                // 計算5年時效（從法定財產制關係消滅日起算）
+                const fiveYearDeadline = new Date(termination);
+                fiveYearDeadline.setFullYear(fiveYearDeadline.getFullYear() + 5);
+                
+                // 確定最終時效（取較早者）
+                const finalDeadline = twoYearDeadline < fiveYearDeadline ? twoYearDeadline : fiveYearDeadline;
+                
+                deadlineResult.innerHTML = `
+                    <h4 style="color:var(--primary-color); margin-bottom:10px;">請求權時效計算結果</h4>
+                    <p><strong>2年時效期限：</strong>${twoYearDeadline.toLocaleDateString('zh-TW')}</p>
+                    <p><strong>5年時效期限：</strong>${fiveYearDeadline.toLocaleDateString('zh-TW')}</p>
+                    <p style="margin-top:10px; padding:10px; background-color:#f0f7ff; border-radius:5px;">
+                        <strong>最終請求期限：</strong> <span style="color:var(--accent-color); font-weight:bold;">${finalDeadline.toLocaleDateString('zh-TW')}</span>
+                    </p>
+                    <p style="margin-top:10px; font-size:0.9rem; color:#666;">
+                        <i class="fas fa-info-circle"></i> 注意：請求權時效為「從知悉時起2年」與「從關係消滅時起5年」兩者中較早到期者。
+                    </p>
+                `;
+                deadlineResult.style.display = 'block';
+            });
+            
+            // 設置預設日期（今天和一個月前）
+            const today = new Date();
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(today.getMonth() - 1);
+            
+            document.getElementById('termination-date').value = oneMonthAgo.toISOString().split('T')[0];
+            document.getElementById('awareness-date').value = today.toISOString().split('T')[0];
+        }
+
+        // 載入版本歷史
+        function loadVersionHistory() {
+            // 更新主內容的版本列表
+            const mainVersionList = document.getElementById('version-list');
+            if (mainVersionList) {
+                mainVersionList.innerHTML = '';
+                versionHistory.forEach(version => {
+                    const versionItem = document.createElement('div');
+                    versionItem.className = 'version-item';
+                    versionItem.innerHTML = `
+                        <div class="version-info">
+                            <h4>${version.description}</h4>
+                            <div class="version-date">${version.date}</div>
+                        </div>
+                        <div class="version-number">v${version.version}</div>
+                    `;
+                    mainVersionList.appendChild(versionItem);
+                });
+            }
+            
+            // 更新第7章的版本列表
+            if (dynamicVersionList) {
+                dynamicVersionList.innerHTML = '';
+                versionHistory.forEach(version => {
+                    const versionItem = document.createElement('div');
+                    versionItem.className = 'version-item';
+                    versionItem.innerHTML = `
+                        <div class="version-info">
+                            <h4>${version.description}</h4>
+                            <div class="version-date">${version.date}</div>
+                        </div>
+                        <div class="version-number">v${version.version}</div>
+                    `;
+                    dynamicVersionList.appendChild(versionItem);
+                });
+            }
+            
+            // 更新當前版本顯示
+            const currentVersionDisplay = document.getElementById('current-version-display');
+            if (currentVersionDisplay) {
+                currentVersionDisplay.textContent = currentVersion;
+            }
+        }
+
+        // 更新小版本（模擬功能）
+        function updateMinorVersion(description) {
+            // 只有在特定情況下才更新版本
+            if (Math.random() > 0.7) { // 30%機率觸發版本更新
+                const versionParts = currentVersion.split('.').map(Number);
+                versionParts[2] += 1; // 增加修訂版號
+                currentVersion = versionParts.join('.');
+                
+                // 更新版本顯示
+                currentVersionElement.textContent = currentVersion;
+                
+                // 添加到版本歷史
+                const today = new Date().toISOString().split('T')[0];
+                versionHistory.unshift({
+                    version: currentVersion,
+                    date: today,
+                    description: description
+                });
+                
+                // 更新版本歷史顯示
+                loadVersionHistory();
+                
+                // 顯示更新通知
+                showNotification(`系統已更新至版本 v${currentVersion}`);
+            }
+        }
+
+        // 顯示通知
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: var(--primary-color);
+                color: white;
+                padding: 15px 20px;
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-sync-alt"></i>
+                    <div>${message}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加動畫樣式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始化：載入第1章
+        loadChapter(1);
+    </script>
+</body>
+</html>
