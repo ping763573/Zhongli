@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="studio">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="程序員無名的個人電子名片：程序員 / AI影視創作者。">
+  <title>程序員無名 | 個人電子名片</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f7;
+      --bg-2: #ffffff;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --line: rgba(0, 0, 0, .08);
+      --accent: #0071e3;
+      --accent-2: #65b8ff;
+      --panel: rgba(255, 255, 255, .72);
+      --panel-strong: rgba(255, 255, 255, .92);
+      --shadow: 0 28px 80px rgba(0, 0, 0, .13);
+      --avatar-glow: rgba(0, 113, 227, .2);
+      --chip: rgba(0, 113, 227, .09);
+      --chip-text: #0759a8;
+      --ring: rgba(0, 113, 227, .28);
+    }
+
+    html[data-theme="cinema"] {
+      color-scheme: dark;
+      --bg: #09090b;
+      --bg-2: #15151a;
+      --text: #f5f5f7;
+      --muted: #a1a1aa;
+      --line: rgba(255, 255, 255, .12);
+      --accent: #f5c16c;
+      --accent-2: #8a7cff;
+      --panel: rgba(24, 24, 29, .72);
+      --panel-strong: rgba(30, 30, 36, .92);
+      --shadow: 0 28px 90px rgba(0, 0, 0, .46);
+      --avatar-glow: rgba(245, 193, 108, .22);
+      --chip: rgba(245, 193, 108, .13);
+      --chip-text: #ffdc9c;
+      --ring: rgba(245, 193, 108, .35);
+    }
+
+    html[data-theme="neon"] {
+      color-scheme: dark;
+      --bg: #030711;
+      --bg-2: #07121c;
+      --text: #f7fbff;
+      --muted: #9eb3c7;
+      --line: rgba(125, 255, 234, .16);
+      --accent: #25f4d0;
+      --accent-2: #58a6ff;
+      --panel: rgba(8, 20, 31, .76);
+      --panel-strong: rgba(10, 28, 43, .94);
+      --shadow: 0 28px 90px rgba(0, 244, 208, .14);
+      --avatar-glow: rgba(37, 244, 208, .26);
+      --chip: rgba(37, 244, 208, .12);
+      --chip-text: #8ffff0;
+      --ring: rgba(37, 244, 208, .34);
+    }
+
+    html[data-theme="warm"] {
+      color-scheme: light;
+      --bg: #f7f3ee;
+      --bg-2: #fffaf3;
+      --text: #221b16;
+      --muted: #766b61;
+      --line: rgba(86, 55, 27, .12);
+      --accent: #c35f35;
+      --accent-2: #e8a24d;
+      --panel: rgba(255, 250, 243, .75);
+      --panel-strong: rgba(255, 252, 247, .94);
+      --shadow: 0 28px 80px rgba(121, 71, 37, .18);
+      --avatar-glow: rgba(195, 95, 53, .18);
+      --chip: rgba(195, 95, 53, .1);
+      --chip-text: #8f3f22;
+      --ring: rgba(195, 95, 53, .28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background:
+        radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 24%, transparent), transparent 30rem),
+        radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 28rem),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      color: var(--text);
+      transition: background .35s ease, color .25s ease;
+      overflow-x: hidden;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      min-height: 100vh;
+      margin: 0 auto;
+      display: grid;
+      align-items: center;
+      padding: 28px 0;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(280px, .92fr) minmax(360px, 1.08fr);
+      gap: 18px;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .identity,
+    .details {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(26px) saturate(150%);
+      -webkit-backdrop-filter: blur(26px) saturate(150%);
+      min-width: 0;
+    }
+
+    .identity {
+      min-height: 620px;
+      border-radius: 34px 10px 10px 34px;
+      padding: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .identity::after {
+      content: "";
+      position: absolute;
+      inset: auto -18% -22% 22%;
+      height: 260px;
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--avatar-glow), transparent 70%);
+      pointer-events: none;
+    }
+
+    .avatar-wrap {
+      width: min(100%, 350px);
+      aspect-ratio: 1;
+      margin: 0 auto 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 38px;
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--panel-strong) 84%, var(--accent)), var(--panel)),
+        radial-gradient(circle, var(--avatar-glow), transparent 60%);
+      border: 1px solid var(--line);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .34), 0 24px 64px var(--avatar-glow);
+      overflow: hidden;
+    }
+
+    .avatar {
+      width: 92%;
+      height: 92%;
+      display: block;
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .16));
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.65rem, 6vw, 5.2rem);
+      line-height: .98;
+      letter-spacing: 0;
+      max-width: 7em;
+    }
+
+    .role {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.4vw, 1.35rem);
+      line-height: 1.55;
+      font-weight: 600;
+    }
+
+    .details {
+      border-radius: 10px 34px 34px 10px;
+      padding: 34px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 38px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-strong);
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 18px var(--accent);
+    }
+
+    .theme-switcher {
+      display: grid;
+      grid-template-columns: repeat(4, 34px);
+      gap: 8px;
+      padding: 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+    }
+
+    .theme-btn {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      background: var(--swatch);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .46);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .theme-btn[aria-pressed="true"] {
+      box-shadow: 0 0 0 3px var(--ring), inset 0 0 0 1px rgba(255, 255, 255, .66);
+    }
+
+    .theme-btn:focus-visible,
+    .action:focus-visible {
+      outline: 3px solid var(--ring);
+      outline-offset: 3px;
+    }
+
+    .studio-swatch {
+      --swatch: linear-gradient(135deg, #ffffff 0 45%, #0071e3 45% 100%);
+    }
+
+    .cinema-swatch {
+      --swatch: linear-gradient(135deg, #09090b 0 48%, #f5c16c 48% 100%);
+    }
+
+    .neon-swatch {
+      --swatch: linear-gradient(135deg, #030711 0 48%, #25f4d0 48% 100%);
+    }
+
+    .warm-swatch {
+      --swatch: linear-gradient(135deg, #fffaf3 0 48%, #c35f35 48% 100%);
+    }
+
+    .intro {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+      padding: 20px 0 4px;
+    }
+
+    .quote {
+      margin: 0;
+      font-size: clamp(1.6rem, 3.4vw, 3.35rem);
+      line-height: 1.08;
+      font-weight: 760;
+      letter-spacing: 0;
+      max-width: 10.5em;
+    }
+
+    .bio {
+      margin: 0;
+      max-width: 44rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.86;
+      font-weight: 520;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .action {
+      max-width: 100%;
+      min-width: 0;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      background: var(--panel-strong);
+      text-decoration: none;
+      font: inherit;
+      font-size: .96rem;
+      font-weight: 720;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .action:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 52%, var(--line));
+    }
+
+    .action.primary {
+      color: #fff;
+      border-color: color-mix(in srgb, var(--accent) 84%, #fff);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .skill {
+      min-height: 76px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--chip);
+      color: var(--chip-text);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .skill strong {
+      color: var(--text);
+      font-size: .98rem;
+    }
+
+    .skill span {
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.4;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      z-index: 5;
+      transform: translate(-50%, 16px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: opacity .2s ease, transform .2s ease;
+      font-size: .92rem;
+      font-weight: 680;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        width: min(100% - 28px, 620px);
+        align-items: start;
+        padding: 14px 0;
+      }
+
+      .shell {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .identity,
+      .details {
+        border-radius: 26px;
+      }
+
+      .identity {
+        min-height: auto;
+        padding: 28px;
+      }
+
+      .avatar-wrap {
+        width: min(82vw, 300px);
+        margin-bottom: 22px;
+        border-radius: 30px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .details {
+        padding: 24px;
+      }
+
+      .intro {
+        padding-top: 0;
+      }
+
+      .quote {
+        max-width: 11em;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .action {
+        width: 100%;
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        width: min(100% - 20px, 460px);
+      }
+
+      .identity,
+      .details {
+        padding: 20px;
+        border-radius: 22px;
+      }
+
+      .theme-switcher {
+        grid-template-columns: repeat(4, 32px);
+      }
+
+      .theme-btn {
+        width: 32px;
+        height: 32px;
+      }
+
+      .skills {
+        grid-template-columns: 1fr;
+      }
+
+      .action {
+        padding-inline: 12px;
+        font-size: .92rem;
+      }
+
+      h1 {
+        font-size: clamp(2.35rem, 15vw, 3.45rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="shell" aria-label="程序員無名個人電子名片">
+      <aside class="identity">
+        <div>
+          <div class="avatar-wrap" aria-hidden="true">
+            <svg class="avatar" viewBox="0 0 420 420" role="img" aria-label="卡通風格的 AI 影視創作者頭像" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bgGrad" x1="68" y1="34" x2="362" y2="384" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#DDF3FF"/>
+                  <stop offset=".52" stop-color="#F4F7FF"/>
+                  <stop offset="1" stop-color="#C8FCEB"/>
+                </linearGradient>
+                <linearGradient id="hoodie" x1="139" y1="270" x2="303" y2="398" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#202533"/>
+                  <stop offset="1" stop-color="#303B54"/>
+                </linearGradient>
+                <linearGradient id="screen" x1="86" y1="66" x2="194" y2="165" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#62F5DD"/>
+                  <stop offset="1" stop-color="#4C8DFF"/>
+                </linearGradient>
+                <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="15" flood-color="#17315E" flood-opacity=".22"/>
+                </filter>
+              </defs>
+              <rect x="20" y="20" width="380" height="380" rx="92" fill="url(#bgGrad)"/>
+              <circle cx="324" cy="93" r="44" fill="#fff" opacity=".66"/>
+              <path d="M79 110c38-35 92-58 151-50 71 9 109 62 118 120 11 74-31 140-91 159-69 23-154-2-188-66-27-52-30-125 10-163z" fill="#fff" opacity=".42"/>
+
+              <g filter="url(#soft)">
+                <rect x="68" y="67" width="132" height="94" rx="20" fill="#17202F"/>
+                <rect x="82" y="82" width="104" height="64" rx="12" fill="url(#screen)"/>
+                <path d="M101 113l18-16m-18 16l18 16M166 113l-18-16m18 16l-18 16" stroke="#F8FBFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M127 133l15-40" stroke="#17202F" stroke-width="7" stroke-linecap="round"/>
+                <path d="M233 70h72c11 0 20 9 20 20v41c0 11-9 20-20 20h-72c-11 0-20-9-20-20V90c0-11 9-20 20-20z" fill="#111827"/>
+                <circle cx="267" cy="111" r="23" fill="#202A3A"/>
+                <circle cx="267" cy="111" r="13" fill="#5CA9FF"/>
+                <circle cx="267" cy="111" r="6" fill="#E9FFFB"/>
+                <path d="M322 94h30l25-17v68l-25-17h-30V94z" fill="#111827"/>
+                <path d="M238 176c33-36 90-32 118 5" stroke="#202A3A" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="239" cy="175" r="8" fill="#25F4D0"/>
+                <circle cx="356" cy="181" r="8" fill="#25F4D0"/>
+              </g>
+
+              <path d="M129 383c7-73 48-117 86-117h16c38 0 79 44 86 117H129z" fill="url(#hoodie)"/>
+              <path d="M177 313c10 22 27 34 46 34s36-12 46-34" fill="none" stroke="#6D7FA5" stroke-width="8" stroke-linecap="round"/>
+              <path d="M170 380l27-90h55l27 90H170z" fill="#F9FAFB" opacity=".96"/>
+              <path d="M203 314h40l-14 24 17 42h-47l17-42-13-24z" fill="#2585FF"/>
+              <path d="M187 288c8 24 22 37 36 37s28-13 36-37v-32h-72v32z" fill="#F2B898"/>
+              <path d="M187 286c12 18 23 27 36 27s25-9 36-27v-27h-72v27z" fill="#E6A98A"/>
+
+              <path d="M145 177c5-49 35-83 78-83s73 34 78 83l-8 53c-7 45-33 71-70 71s-63-26-70-71l-8-53z" fill="#F6C3A3"/>
+              <path d="M152 190c-22-2-34 16-27 38 6 20 22 31 36 25l-9-63zM294 190c22-2 34 16 27 38-6 20-22 31-36 25l9-63z" fill="#E8AD8D"/>
+              <path d="M167 185c12-7 29-7 41 1M238 186c13-8 31-7 43 1" stroke="#422817" stroke-width="8" stroke-linecap="round"/>
+              <circle cx="191" cy="210" r="8" fill="#271711"/>
+              <circle cx="254" cy="210" r="8" fill="#271711"/>
+              <path d="M225 209l-8 32h17" stroke="#B97963" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M199 259c16 13 35 13 50 0" stroke="#7D372D" stroke-width="7" stroke-linecap="round"/>
+              <path d="M157 165c-4-40 19-82 66-84 41-2 81 28 78 87-19-18-42-28-72-31-32-3-55 7-72 28z" fill="#23212A"/>
+              <path d="M159 166c25-32 67-48 117-21 9 5 16 13 25 24-6-58-43-91-83-89-45 2-72 39-59 86z" fill="#2D2A35"/>
+              <path d="M170 151c17-32 44-51 82-45" stroke="#474150" stroke-width="9" stroke-linecap="round" opacity=".55"/>
+              <path d="M142 205c-7-1-14 5-16 16M303 205c7-1 14 5 16 16" stroke="#B97963" stroke-width="6" stroke-linecap="round"/>
+
+              <path d="M118 375c8-43 23-72 46-90 12 44 32 77 59 99H118zM328 375c-8-43-23-72-46-90-12 44-32 77-59 99h105z" fill="#1E2433"/>
+              <path d="M135 383h176" stroke="#536381" stroke-width="10" stroke-linecap="round"/>
+              <path d="M109 319c21-5 41 8 46 29M338 319c-21-5-41 8-46 29" stroke="#4C8DFF" stroke-width="7" stroke-linecap="round"/>
+              <path d="M73 253c15-11 33-15 51-11M326 244c18-8 38-7 55 2" stroke="#25F4D0" stroke-width="8" stroke-linecap="round"/>
+              <circle cx="83" cy="254" r="6" fill="#25F4D0"/>
+              <circle cx="378" cy="246" r="6" fill="#4C8DFF"/>
+            </svg>
+          </div>
+          <p class="eyebrow">Personal Card</p>
+          <h1>程序員無名</h1>
+          <p class="role">程序員 / AI影視創作者</p>
+        </div>
+      </aside>
+
+      <section class="details">
+        <header class="topbar">
+          <div class="status"><span class="status-dot"></span> 自主創業中</div>
+          <div class="theme-switcher" role="group" aria-label="切換網站主題">
+            <button class="theme-btn studio-swatch" type="button" data-theme-choice="studio" aria-label="Studio Light 主題" aria-pressed="true"></button>
+            <button class="theme-btn cinema-swatch" type="button" data-theme-choice="cinema" aria-label="Cinema Dark 主題" aria-pressed="false"></button>
+            <button class="theme-btn neon-swatch" type="button" data-theme-choice="neon" aria-label="AI Neon 主題" aria-pressed="false"></button>
+            <button class="theme-btn warm-swatch" type="button" data-theme-choice="warm" aria-label="Warm Creator 主題" aria-pressed="false"></button>
+          </div>
+        </header>
+
+        <div class="intro">
+          <div>
+            <p class="eyebrow">AI Film Builder</p>
+            <p class="quote">把程式、影像與教學產品，做成可以被看見的創作系統。</p>
+          </div>
+          <p class="bio">中訊影視開發，現自主創業，帶團隊製作 AI 影視與教導等產品。專注把技術流程、敘事節奏與視覺產出整合成可落地的創作服務。</p>
+          <div class="actions" aria-label="聯繫方式">
+            <button class="action primary" type="button" id="copyLine" data-copy-value="1234567">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 8.5h9.5v9.5H8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M5.5 15.5H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8.5a2 2 0 0 1 2 2v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              複製 Line：1234567
+            </button>
+            <a class="action" href="#" aria-label="部落格 ping">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07L10.9 5.03" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M14 11a5 5 0 0 0-7.07 0L4.81 13.12a5 5 0 0 0 7.07 7.07l1.22-1.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              部落格：ping
+            </a>
+          </div>
+        </div>
+
+        <ul class="skills" aria-label="專長">
+          <li class="skill"><strong>AI 影視製作</strong><span>概念、流程、視覺生成與團隊交付</span></li>
+          <li class="skill"><strong>程式開發</strong><span>產品化思維與自動化工具整合</span></li>
+          <li class="skill"><strong>影視開發</strong><span>從開發經驗延伸到創作系統</span></li>
+          <li class="skill"><strong>教導產品</strong><span>把方法整理成可學、可用的內容</span></li>
+        </ul>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">已複製 Line ID</div>
+
+  <script>
+    const root = document.documentElement;
+    const themeButtons = Array.from(document.querySelectorAll("[data-theme-choice]"));
+    const copyButton = document.getElementById("copyLine");
+    const toast = document.getElementById("toast");
+    const themes = new Set(["studio", "cinema", "neon", "warm"]);
+
+    function applyTheme(theme) {
+      const safeTheme = themes.has(theme) ? theme : "studio";
+      root.dataset.theme = safeTheme;
+      themeButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.themeChoice === safeTheme));
+      });
+      localStorage.setItem("business-card-theme", safeTheme);
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => applyTheme(button.dataset.themeChoice));
+    });
+
+    copyButton.addEventListener("click", async () => {
+      const value = copyButton.dataset.copyValue;
+      try {
+        await navigator.clipboard.writeText(value);
+        showToast("已複製 Line ID：1234567");
+      } catch (error) {
+        showToast("Line ID：1234567");
+      }
+    });
+
+    applyTheme(localStorage.getItem("business-card-theme") || "studio");
+  </script>
+</body>
+</html>
