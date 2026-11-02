@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT 生活生圖提示詞互動庫</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar:focus {
+      border-color: var(--primary);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid var(--border);
+      background: #f1f5f9;
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .tag {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    .desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .prompt-box {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.85rem;
+      color: #334155;
+      white-space: pre-wrap;
+      word-break: break-word;
+      flex-grow: 1;
+      max-height: 180px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      font-family: inherit;
+      border: 1px solid #e2e8f0;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .copy-btn.copied {
+      background: var(--accent);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>ChatGPT 生活生圖提示詞互動庫</h1>
+      <p>精選 30 組涵蓋月曆、旅遊手帳、貼圖設計與雜誌封面的生圖指令</p>
+    </header>
+
+    <div class="controls">
+      <input type="text" id="searchInput" class="search-bar" placeholder="搜尋主題、關鍵字或提示詞內容...">
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-category="all">全部 (30)</button>
+        <button class="filter-btn" data-category="生活規劃類">生活規劃類</button>
+        <button class="filter-btn" data-category="讀書筆記類">讀書筆記類</button>
+        <button class="filter-btn" data-category="餐飲與氣象類">餐飲與氣象類</button>
+        <button class="filter-btn" data-category="角色與貼圖創作類">角色與貼圖創作類</button>
+        <button class="filter-btn" data-category="封面與邀請卡設計類">封面與邀請卡設計類</button>
+      </div>
+    </div>
+
+    <div class="grid" id="promptsGrid"></div>
+  </div>
+
+  <div id="toast" class="toast">已成功複製提示詞！</div>
+
+  <script>
+    const promptsData = [
+      // 一、生活規劃類
+      {
+        id: 1,
+        title: "季節月曆",
+        image: "001.jpg",
+        category: "生活規劃類",
+        desc: "製作手機桌布或紙本月曆，指定季節主題、色彩與日期排版。",
+        prompt: `請幫我生成一張春季主題月曆設計，畫面包含月份日期排版、櫻花枝、柔和天空與可愛小插圖。整體使用粉色、米白與淺綠色，版面清楚好讀，適合做成手機桌布、桌曆或社群圖片。\n\n請依照指定的【年份】與【月份】正確排列日期，不要自行增加或省略日期。`
+      },
+      {
+        id: 2,
+        title: "旅遊行程規劃表",
+        image: "002.jpg",
+        category: "生活規劃類",
+        desc: "結合行程規劃、攻略文章與直式旅遊雜誌拼貼海報。",
+        prompt: `先完整規劃「釜山 4 天 3 夜自由行行程」，再將內容改寫成具畫面感的旅遊雜誌風格攻略文章，最後生成一張直式旅遊雜誌拼貼風海報。\n\n【任務目標】\n規劃適合連假期間的釜山 4 天 3 夜行程，融合海景、咖啡廳與美食。先輸出日程表，再寫成攻略文章，最後生成海報。\n\n【生成海報設定】\n生成「釜山海景療癒旅行」9:16 直式旅遊海報。\n視覺風格：韓系插畫、旅遊雜誌拼貼、自然光攝影風格。\n配色：白色、海洋藍、奶油色與珊瑚橘。\n整體風格：premium Korean travel magazine collage style, aesthetic editorial layout, cozy travel atmosphere.`
+      },
+      {
+        id: 3,
+        title: "時間管理規劃圖",
+        image: "003.jpg",
+        category: "生活規劃類",
+        desc: "將一天 24 小時視覺化分配成色塊與時間軸。",
+        prompt: `請幫我把一天 24 小時做成時間分配圖，區分工作、學習、運動、娛樂與休息時間。使用時間軸與色塊設計，像 productivity app 的介面。\n\n請依照我提供的各項時間長度製作，確認總時數為 24 小時，並清楚標示每個項目的時數。`
+      },
+      {
+        id: 4,
+        title: "一週習慣追蹤表",
+        image: "004.jpg",
+        category: "生活規劃類",
+        desc: "簡潔療癒文具風 Habit Tracker，包含勾選框與小圖示。",
+        prompt: `請幫我設計一張一週 habit tracker，包含運動、閱讀、喝水、冥想、早睡與學習等欄位。版面簡潔療癒，搭配小圖示與打勾區域，像文具品牌會推出的生活規劃模板。`
+      },
+      {
+        id: 5,
+        title: "家電保養提醒表",
+        image: "005.jpg",
+        category: "生活規劃類",
+        desc: "居家家電保養維護檢核表，適合列印張貼於冰箱。",
+        prompt: `請設計一張「家電保養提醒表」，整體風格清爽、實用、好閱讀，適合日常居家使用與列印張貼。\n\n【版面設定】\nA4 直式或 3:4 直式資訊表格設計，使用米白、淡藍與淺綠配色。\n【表格欄位】家電名稱、保養項目、建議頻率、上次保養日期、下次提醒、備註。\n保留適合手寫的空白區域與小勾選框。`
+      },
+      {
+        id: 6,
+        title: "幼兒每日作息表",
+        image: "006.jpg",
+        category: "生活規劃類",
+        desc: "可裁切圖卡式幼兒作息表，適合磁鐵貼或魔鬼氈重複使用。",
+        prompt: `幫我生成一張幼兒每日作息表，A4 橫式，彩色版。上半部為作息表，共 7 個空白格，每個空白格上方中央預留一個小框，框內只顯示「:」，讓小朋友填寫時間。下半部為可剪下的作息圖卡，附文字與剪裁虛線。圖卡包含：起床、刷牙、吃早餐、上學、午餐、午睡、閱讀、睡覺等。`
+      },
+      {
+        id: 7,
+        title: "一週菜單規劃表",
+        image: "007.jpg",
+        category: "生活規劃類",
+        desc: "日系廚房規劃紙風格，含早中晚餐與採買清單。",
+        prompt: `請幫我設計一張一週菜單規劃表，直式 A4，欄位包含星期一到星期日七欄、早餐／午餐／晚餐三列，右側加一欄「本週採買清單」留白給手寫。使用米白底、淺橘與鼠尾草綠配色，搭配簡單食材小圖示與圓角表格，文字為繁體中文。`
+      },
+      {
+        id: 8,
+        title: "植物照顧卡",
+        image: "008.jpg",
+        category: "生活規劃類",
+        desc: "清新植栽照顧說明卡，含澆水、光照與施肥指南。",
+        prompt: `請幫我設計一組居家植物照顧卡，一張圖放 4 張卡片，每張卡包含植物名稱、澆水頻率、光照需求、施肥週期與注意事項欄位，並搭配該植物的簡約手繪插圖。植物為龜背芋、虎尾蘭、黃金葛、琴葉榕。整體使用米白底與多層次綠色，風格清新。`
+      },
+
+      // 二、讀書筆記類
+      {
+        id: 9,
+        title: "讀書筆記風",
+        image: "009.jpg",
+        category: "讀書筆記類",
+        desc: "質感學習筆記手帳，帶有手寫標題、重點底線與便利貼感。",
+        prompt: `請將這張圖片或主題內容轉化為讀書筆記風。整體版面請像一本有質感的學習筆記頁，包含手寫感標題、重點底線、簡單框線、小箭頭、便利貼感區塊與清楚的段落分類。避免過度制式的簡報感，文字排版清楚自然，帶有知識感與手作溫度。`
+      },
+      {
+        id: 10,
+        title: "日系白邊手繪風",
+        image: "010.jpg",
+        category: "讀書筆記類",
+        desc: "在日常照片周圍加入白色描邊手繪線條與日文日記感短句。",
+        prompt: `請觀察照片中出現的元素，並為每個元素加入有意義的手繪註解。\n【描寫規則】使用像白色筆畫出的細手繪線條，隨性、沿著物件外輪廓加上描邊。\n【文字規則】使用日文手寫字風格，平假名約 7 成、簡單漢字約 3 成，語氣帶有日記感短句。\n請盡量保留原始照片的人物、主體、構圖與色彩。`
+      },
+      {
+        id: 11,
+        title: "電影觀後感筆記",
+        image: "011.jpg",
+        category: "讀書筆記類",
+        desc: "影評帳號常用的圖卡視覺，包含評分、台詞與心得分析。",
+        prompt: `請幫我製作一張電影觀後感卡片，內容包含電影評分、角色分析、經典台詞與心得。畫面帶有電影感與文青風格，像影評帳號分享圖卡。電影名稱、評分、台詞與心得請以我提供的資料為準。`
+      },
+      {
+        id: 12,
+        title: "旅行日記插畫",
+        image: "012.jpg",
+        category: "讀書筆記類",
+        desc: "旅人隨身筆記本風格，結合車票、地圖與沿途插圖。",
+        prompt: `請幫我生成一頁旅行日記風格插畫，包含地圖、車票、手寫字與沿途風景，像旅人隨身筆記本。`
+      },
+
+      // 三、餐飲與氣象類
+      {
+        id: 13,
+        title: "菜單設計",
+        image: "013.jpg",
+        category: "餐飲與氣象類",
+        desc: "獨立咖啡店紙本菜單風格，乾淨溫暖手繪感。",
+        prompt: `請幫我製作一張文青風咖啡館菜單，版面包含飲品、甜點、價格與簡單插畫。使用奶油色背景、手寫字體、咖啡杯與植物元素，整體乾淨溫暖，像小型獨立咖啡店的紙本菜單。`
+      },
+      {
+        id: 14,
+        title: "美食插圖",
+        image: "014.jpg",
+        category: "餐飲與氣象類",
+        desc: "日系水彩與色鉛筆美食插畫，溫暖細膩手作感。",
+        prompt: `請幫我繪製一張草莓鬆餅手繪插畫，採用日系咖啡廳菜單插畫風格，結合透明水彩、色鉛筆與細膩的鉛筆線稿，呈現溫暖、自然且富有手作溫度的畫面。`
+      },
+      {
+        id: 15,
+        title: "食譜步驟圖卡",
+        image: "015.jpg",
+        category: "餐飲與氣象類",
+        desc: "四格步驟食譜圖卡，方便料理時滑手機隨時查看。",
+        prompt: `請幫我把「日式玉子燒」的作法做成一張食譜步驟圖卡，直式 4:5。上方放成品插圖、料理名稱與材料清單：雞蛋 3 顆、高湯 2 大匙、糖 1 小匙、醬油少許。下方分成 4 格步驟，每格有簡約插圖與一句繁體中文說明。日系食譜書內頁風格。`
+      },
+      {
+        id: 16,
+        title: "編織小人氣象圖",
+        image: "016.jpg",
+        category: "餐飲與氣象類",
+        desc: "立體毛線鉤針質感的微縮城市氣象資訊圖卡。",
+        prompt: `主題：【台北】編織小人氣象圖\n請先查詢當天最新天氣資訊放入中央氣象牌。\n【視覺風格】編織、鉤針、毛線、立體玩偶、微縮模型感。\n【畫面內容】中央大型毛線氣象牌，呈現當地特色地標、交通工具與在地美食。\n【英文風格關鍵字】crochet art style, amigurumi, knitted texture, yarn city, handcrafted miniature world, weather board, cozy atmosphere.`
+      },
+
+      // 四、角色與貼圖創作類
+      {
+        id: 17,
+        title: "LINE 貼圖角色",
+        image: "017.jpg",
+        category: "角色與貼圖創作類",
+        desc: "四格常用情緒（開心、無奈、生氣、驚訝）Q 版角色貼圖。",
+        prompt: `請幫我設計一組 Q 版角色貼圖，角色表情誇張可愛，包含開心、無奈、生氣與驚訝四種情緒，風格簡單乾淨，適合聊天使用。請維持四張貼圖的角色外觀、配色與服裝一致，每個表情清楚區分，並保留適合後續裁切的空間。`
+      },
+      {
+        id: 18,
+        title: "四格漫畫",
+        image: "018.jpg",
+        category: "角色與貼圖創作類",
+        desc: "日系輕鬆詼諧風格，呈現職場或日常崩潰日常。",
+        prompt: `請幫我把「每天開會的崩潰日常」做成四格漫畫，用幽默方式呈現上班族心聲，角色可愛、節奏輕鬆、有日系漫畫感。請依照四格漫畫的閱讀順序安排故事，包含開場、發展、轉折與結尾，角色外觀保持一致。`
+      },
+      {
+        id: 19,
+        title: "黏土 Q 版角色",
+        image: "019.jpg",
+        category: "角色與貼圖創作類",
+        desc: "立體 3D 黏土公仔踏出手機螢幕的超立體透視效果。",
+        prompt: `Q 版角色公仔從巨大手機螢幕中走出來，形成「踏出手機畫面」的立體效果。背景是與角色主題相關的迷你場景與日系街景，周圍漂浮可愛立體物件。風格為 Japanese kawaii toy aesthetic、3D clay art、miniature diorama、collectible figurine style、暖色陽光、柔和景深。`
+      },
+      {
+        id: 20,
+        title: "寵物走出 IG 拍照框",
+        image: "020.jpg",
+        category: "角色與貼圖創作類",
+        desc: "寵物跨出 Instagram UI 框，呈現超廣角近距離萌感。",
+        prompt: `超可愛【貓咪】從巨大 Instagram 拍照框中走出來，前腳超近距離伸向鏡頭，帶有強烈透視感與廣角效果，露出開心表情。背景是陽光燦爛的花園小徑，中央有白色 IG 相框與按讚留言圖示。超寫實毛髮細節、淺景深、夢幻春日氛圍。`
+      },
+      {
+        id: 21,
+        title: "寵物 Q 版頭像貼圖",
+        image: "021.jpg",
+        category: "角色與貼圖創作類",
+        desc: "根據上傳照片製作 2x3 網格、共 6 種表情的文具風貼圖。",
+        prompt: `請根據我上傳的寵物照片，設計一組 6 張的 Q 版頭像貼圖，保留牠的毛色、花紋與臉部特徵。六張分別是：開心、想睡、討食、生氣、驚訝、撒嬌。頭身比例約 2 頭身，每張加上一句簡短繁體中文對白，白色背景，排成 2×3 網格。`
+      },
+      {
+        id: 22,
+        title: "扭蛋包裝風",
+        image: "022.jpg",
+        category: "角色與貼圖創作類",
+        desc: "秋葉原玩具店風格，包含展示卡、扭蛋機與透明蛋殼。",
+        prompt: `超寫實日本扭蛋玩具包裝設計（Japanese Capsule Toy Package Design），日系軟膠公仔與扭蛋收藏展示板風格。包含中央主體角色、扭蛋機、透明扭蛋球、多種姿勢款式、日文介紹文字。4:5 直式構圖，棚拍柔光質感。`
+      },
+
+      // 五、封面與邀請卡設計類
+      {
+        id: 23,
+        title: "黑膠唱片封面",
+        image: "023.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "低飽和文藝攝影風格，獨立音樂 Indie 專輯質感。",
+        prompt: `請幫我設計一張獨立樂團風格黑膠唱片封面，畫面帶有情緒感、低飽和色調與文藝攝影氛圍，像 indie music 專輯。`
+      },
+      {
+        id: 24,
+        title: "漫畫封面設計",
+        image: "024.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "少年熱血冒險漫畫風格，強烈動態構圖與標題排版。",
+        prompt: `請幫我製作一張冒險漫畫封面，主角站在壯闊山脈與天空前方，畫面中有標題區、集數編號與強烈動態構圖。風格熱血、有故事張力，像少年冒險漫畫第一集封面。`
+      },
+      {
+        id: 25,
+        title: "世界觀書封設計",
+        image: "025.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "壯闊古城與夜空神秘角色，奇幻文學小說封面。",
+        prompt: `請幫我生成一本奇幻小說書封，畫面有巨大古城、夜空與神秘角色，整體像奇幻文學封面設計。`
+      },
+      {
+        id: 26,
+        title: "復古雜誌封面",
+        image: "026.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "90 年代日本生活生活風格雜誌，大標題與多欄復古文字。",
+        prompt: `請幫我設計一張 90 年代日本生活風格雜誌封面，整體像日本 old school lifestyle magazine。使用大面積雜誌標題、復古排版、多欄文字設計與大量日文標題，畫面帶有懷舊感與生活氣息。`
+      },
+      {
+        id: 27,
+        title: "時尚雜誌封面",
+        image: "027.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "東京街頭自然光街拍，日系都會極簡雜誌排版。",
+        prompt: `日系時尚雜誌封面風格，一位有氣質的模特站在東京街頭，穿著簡約高級感穿搭。自然神情，柔和自然光、低飽和色調，真實雜誌封面排版含刊名、文案與條碼。整體時髦成熟有質感。`
+      },
+      {
+        id: 28,
+        title: "IG 精選動態封面",
+        image: "028.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "品牌社群統一視覺規劃（市集、商品、評價等）。",
+        prompt: `請根據這個手作品牌的視覺風格，規劃一系列 IG 精選動態封面主題，包括市集資訊、商品介紹、色系靈感、購買方式、價格資訊與顧客評價等內容，整體希望維持統一且溫暖的品牌調性。`
+      },
+      {
+        id: 29,
+        title: "Podcast 節目封面",
+        image: "029.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "1:1 正方形醒目標題排版，手機縮小列表也能辨識。",
+        prompt: `請幫我設計一張 Podcast 節目封面，正方形 1:1。節目名稱：「下班後的咖啡時間」，副標：「一週一集，聊職場與生活」。畫面以一杯咖啡、耳機與夜晚窗景為元素，深藍底配暖橘點綴，名稱置中大字，風格溫暖簡潔。`
+      },
+      {
+        id: 30,
+        title: "派對邀請卡",
+        image: "030.jpg",
+        category: "封面與邀請卡設計類",
+        desc: "手繪童趣邀請函，留有時間、地點手寫空白線。",
+        prompt: `請幫我設計一張生日派對邀請卡，直式 4:5。包含「You're Invited」標題、壽星名字、日期、時間、地點與回覆方式等欄位留白手寫線。畫面以氣球、彩帶與蛋糕為元素，奶油黃與粉藍配色，童趣手作感。`
+      }
+    ];
+
+    const grid = document.getElementById('promptsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const toast = document.getElementById('toast');
+
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function renderCards() {
+      grid.innerHTML = '';
+      const filtered = promptsData.filter(item => {
+        const matchCategory = currentCategory === 'all' || item.category === currentCategory;
+        const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            item.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            item.prompt.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchCategory && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">找不到符合條件的提示詞</p>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img class="card-img" src="${item.image}" alt="${item.title}" loading="lazy">
+          <div class="card-body">
+            <span class="tag">${item.category}</span>
+            <h3>${item.id}. ${item.title}</h3>
+            <p class="desc">${item.desc}</p>
+            <div class="prompt-box">${item.prompt}</div>
+            <button class="copy-btn" onclick="copyPrompt(this, \`${escapeQuotes(item.prompt)}\`)">複製提示詞</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function escapeQuotes(str) {
+      return str.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    }
+
+    function copyPrompt(button, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.innerText;
+        button.innerText = '已複製！';
+        button.classList.add('copied');
+        showToast();
+
+        setTimeout(() => {
+          button.innerText = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function showToast() {
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        renderCards();
+      });
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      renderCards();
+    });
+
+    // 初始載入
+    renderCards();
+  </script>
+</body>
+</html>
