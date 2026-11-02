@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatGPT 生活生圖提示詞互動庫</title>
+  <title>ChatGPT 生活與官方指南生圖提示詞互動庫</title>
   <style>
     :root {
       --primary: #2563eb;
@@ -31,13 +31,13 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
     }
 
     header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     header h1 {
@@ -49,6 +49,48 @@
     header p {
       color: var(--text-muted);
       font-size: 1rem;
+    }
+
+    /* 萬用公式導引區塊 */
+    .formula-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+    }
+
+    .formula-section h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .formula-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .formula-card strong {
+      color: var(--primary);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
     }
 
     .controls {
@@ -146,7 +188,7 @@
     }
 
     .card h3 {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       margin-bottom: 8px;
       color: #0f172a;
     }
@@ -155,6 +197,7 @@
       font-size: 0.9rem;
       color: var(--text-muted);
       margin-bottom: 16px;
+      min-height: 2.7em;
     }
 
     .prompt-box {
@@ -171,6 +214,7 @@
       margin-bottom: 16px;
       font-family: inherit;
       border: 1px solid #e2e8f0;
+      line-height: 1.5;
     }
 
     .copy-btn {
@@ -205,13 +249,15 @@
       font-size: 0.9rem;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s, transform 0.3s;
+      transform: translateY(10px);
       z-index: 1000;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .toast.show {
       opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -219,22 +265,56 @@
 
   <div class="container">
     <header>
-      <h1>ChatGPT 生活生圖提示詞互動庫</h1>
-      <p>精選 30 組涵蓋月曆、旅遊手帳、貼圖設計與雜誌封面的生圖指令</p>
+      <h1>ChatGPT 生活與官方指南生圖提示詞互動庫</h1>
+      <p>精選 52 組涵蓋生活風格、筆記手帳、角色創作與官方生圖修圖 Prompt 指令</p>
     </header>
 
+    <!-- 核心公式指引 -->
+    <section class="formula-section">
+      <h3>💡 官方萬用 Prompt 核心公式結構</h3>
+      <div class="formula-grid">
+        <div class="formula-card">
+          <strong>1. 從零生圖公式：</strong>
+          製作一張【成品類型】。<br>
+          主體：【人物／商品／物件】<br>
+          場景構圖：【位置、鏡位、景深】<br>
+          風格：【光線、材質、色彩】<br>
+          限制：不要【不需要的內容】
+        </div>
+        <div class="formula-card">
+          <strong>2. 既有修圖公式：</strong>
+          只修改：【真正要改的東西】<br>
+          保留：【人物身份／五官／姿勢／背景】<br>
+          不要：【AI可能自行增加或修改的內容】
+        </div>
+        <div class="formula-card">
+          <strong>3. 多張參考圖公式：</strong>
+          圖片1：作為【人物】參考<br>
+          圖片2：作為【服裝】參考<br>
+          圖片3：作為【場景背景】參考<br>
+          （明確分配每張圖角色，避免混淆）
+        </div>
+      </div>
+    </section>
+
+    <!-- 搜尋與分類控制項 -->
     <div class="controls">
       <input type="text" id="searchInput" class="search-bar" placeholder="搜尋主題、關鍵字或提示詞內容...">
       <div class="filters" id="filters">
-        <button class="filter-btn active" data-category="all">全部 (30)</button>
+        <button class="filter-btn active" data-category="all">全部 (52)</button>
         <button class="filter-btn" data-category="生活規劃類">生活規劃類</button>
         <button class="filter-btn" data-category="讀書筆記類">讀書筆記類</button>
         <button class="filter-btn" data-category="餐飲與氣象類">餐飲與氣象類</button>
         <button class="filter-btn" data-category="角色與貼圖創作類">角色與貼圖創作類</button>
         <button class="filter-btn" data-category="封面與邀請卡設計類">封面與邀請卡設計類</button>
+        <button class="filter-btn" data-category="從零生圖">從零生圖</button>
+        <button class="filter-btn" data-category="局部修圖">局部修圖</button>
+        <button class="filter-btn" data-category="連續修圖">連續修圖</button>
+        <button class="filter-btn" data-category="實用案例">實用案例</button>
       </div>
     </div>
 
+    <!-- 卡片網格 -->
     <div class="grid" id="promptsGrid"></div>
   </div>
 
@@ -242,7 +322,7 @@
 
   <script>
     const promptsData = [
-      // 一、生活規劃類
+      // 一、生活規劃類 (001 - 008)
       {
         id: 1,
         title: "季節月曆",
@@ -308,7 +388,7 @@
         prompt: `請幫我設計一組居家植物照顧卡，一張圖放 4 張卡片，每張卡包含植物名稱、澆水頻率、光照需求、施肥週期與注意事項欄位，並搭配該植物的簡約手繪插圖。植物為龜背芋、虎尾蘭、黃金葛、琴葉榕。整體使用米白底與多層次綠色，風格清新。`
       },
 
-      // 二、讀書筆記類
+      // 二、讀書筆記類 (009 - 012)
       {
         id: 9,
         title: "讀書筆記風",
@@ -342,7 +422,7 @@
         prompt: `請幫我生成一頁旅行日記風格插畫，包含地圖、車票、手寫字與沿途風景，像旅人隨身筆記本。`
       },
 
-      // 三、餐飲與氣象類
+      // 三、餐飲與氣象類 (013 - 016)
       {
         id: 13,
         title: "菜單設計",
@@ -376,7 +456,7 @@
         prompt: `主題：【台北】編織小人氣象圖\n請先查詢當天最新天氣資訊放入中央氣象牌。\n【視覺風格】編織、鉤針、毛線、立體玩偶、微縮模型感。\n【畫面內容】中央大型毛線氣象牌，呈現當地特色地標、交通工具與在地美食。\n【英文風格關鍵字】crochet art style, amigurumi, knitted texture, yarn city, handcrafted miniature world, weather board, cozy atmosphere.`
       },
 
-      // 四、角色與貼圖創作類
+      // 四、角色與貼圖創作類 (017 - 022)
       {
         id: 17,
         title: "LINE 貼圖角色",
@@ -426,7 +506,7 @@
         prompt: `超寫實日本扭蛋玩具包裝設計（Japanese Capsule Toy Package Design），日系軟膠公仔與扭蛋收藏展示板風格。包含中央主體角色、扭蛋機、透明扭蛋球、多種姿勢款式、日文介紹文字。4:5 直式構圖，棚拍柔光質感。`
       },
 
-      // 五、封面與邀請卡設計類
+      // 五、封面與邀請卡設計類 (023 - 030)
       {
         id: 23,
         title: "黑膠唱片封面",
@@ -456,7 +536,7 @@
         title: "復古雜誌封面",
         image: "026.jpg",
         category: "封面與邀請卡設計類",
-        desc: "90 年代日本生活生活風格雜誌，大標題與多欄復古文字。",
+        desc: "90 年代日本生活風格雜誌，大標題與多欄復古文字。",
         prompt: `請幫我設計一張 90 年代日本生活風格雜誌封面，整體像日本 old school lifestyle magazine。使用大面積雜誌標題、復古排版、多欄文字設計與大量日文標題，畫面帶有懷舊感與生活氣息。`
       },
       {
@@ -490,6 +570,190 @@
         category: "封面與邀請卡設計類",
         desc: "手繪童趣邀請函，留有時間、地點手寫空白線。",
         prompt: `請幫我設計一張生日派對邀請卡，直式 4:5。包含「You're Invited」標題、壽星名字、日期、時間、地點與回覆方式等欄位留白手寫線。畫面以氣球、彩帶與蛋糕為元素，奶油黃與粉藍配色，童趣手作感。`
+      },
+
+      // 六、官方指南：從零生圖 (031 - 039)
+      {
+        id: 31,
+        title: "寫實照片：年長水手",
+        image: "031.jpg",
+        category: "從零生圖",
+        desc: "把主體、鏡位、光線和質感一起寫進去，拆解為可視化條件。",
+        prompt: `生成一張寫實、自然抓拍感的照片，一名年長的水手站在一艘小漁船上。\n\n他的皮膚因長年風吹日曬而顯得粗糙，可以看見皺紋、毛孔與曬過的肌膚質感，手臂上有幾個已經褪色的傳統水手刺青。\n\n他正平靜地整理漁網，狗坐在附近的甲板上。畫面呈現35mm底片攝影質感，以視線平視角度拍攝中近景，呈現50mm鏡頭的視覺效果。\n\n使用柔和的海岸自然光、淺景深、細微底片顆粒與自然色彩平衡。\n\n整體應該真實、不刻意擺拍，保留真實皮膚紋理、磨損材質與日常細節。不要美化，也不要過度修圖。`
+      },
+      {
+        id: 32,
+        title: "資訊圖：全自動咖啡機",
+        image: "032.jpg",
+        category: "從零生圖",
+        desc: "說明流程、受眾與技術環節，明確傳遞視覺與邏輯流程。",
+        prompt: `製作一張詳細的資訊圖，說明類似Jura全自動咖啡機的運作方式與流程。\n\n從咖啡豆槽開始，依序呈現研磨、秤重、水箱、鍋爐等環節。\n\n我希望能透過這張圖，在技術與視覺上理解整部咖啡機的運作流程。`
+      },
+      {
+        id: 33,
+        title: "指定文字廣告：潮流品牌",
+        image: "033.jpg",
+        category: "從零生圖",
+        desc: "要求標語出現次數、位置及可讀性，並明確禁止額外文字。",
+        prompt: `為一個名為Thread的品牌製作一張具有潮流文化感的時尚廣告照片。\n\n這是一個年輕、有街頭感的品牌。廣告中是一群朋友一起相處的畫面，並加入標語「由你創造」。\n\n整體要像一張完整而成熟的年輕街頭服飾品牌廣告：時尚、現代、有活力，但仍然有品味。\n\n使用乾淨的構圖、明確的色彩方向、自然的人物姿勢，以及高質感時尚攝影的視覺效果。\n\n標語「由你創造」只出現一次，必須清楚、容易閱讀，並自然融入廣告版面。\n\n不要加入其他文字、浮水印或無關Logo。`
+      },
+      {
+        id: 34,
+        title: "原創 Logo：Field & Flour",
+        image: "034.jpg",
+        category: "從零生圖",
+        desc: "透明背景、極簡線條、向量風格且大小尺寸皆清晰。",
+        prompt: `為一家名為Field & Flour的在地烘焙店設計一款原創、不侵權的Logo。\n\nLogo的感覺應該溫暖、簡潔且經典耐看。使用乾淨、接近向量圖形的造型、清楚有力的輪廓，以及平衡的留白。\n\n以簡單為優先，不要堆疊太多細節，讓Logo無論縮小或放大都能清楚辨識。採用扁平化設計與極少線條，除非必要，不使用漸層。\n\n背景完全透明。只呈現一個置中的Logo，周圍保留足夠空間，邊緣乾淨，不要加入實色背景、場景、透明棋盤格或浮水印。`
+      },
+      {
+        id: 35,
+        title: "歷史場景：紐約戶外聚會",
+        image: "035.jpg",
+        category: "從零生圖",
+        desc: "列出精確的時間、地點與時代準確性要求，減少多餘形容詞。",
+        prompt: `生成一張1969年8月16日美國紐約州Bethel戶外人群聚集的寫實場景。\n\n採用真實攝影風格，服裝、場景配置與周遭環境都要符合當時年代。`
+      },
+      {
+        id: 36,
+        title: "四格漫畫：寵物在家的一天",
+        image: "036.jpg",
+        category: "從零生圖",
+        desc: "拆成清楚的視覺分鏡節點，直接指定每格發生的事件。",
+        prompt: `製作一個直式、4格的短篇漫畫。\n\n第1格：主人從前門離開。寵物在主人身後的窗戶裡，看起來隔著玻璃顯得很小，雙眼睜大，兩隻前腳高高貼在窗戶上，屋內突然安靜下來。\n\n第2格：門喀一聲關上，寂靜被打破。寵物慢慢轉身看向空無一人的家，姿勢開始改變，眼神充滿「機會來了」的感覺。\n\n第3格：家裡完全變了樣。寵物像屋主一樣大剌剌躺在沙發上，旁邊散落一些食物碎屑，陽光斜射進房間，像聚光燈一樣照著牠。\n\n第4格：門重新打開。寵物已經端端正正坐在玄關，警覺又鎮定，彷彿什麼事情都沒發生過。`
+      },
+      {
+        id: 37,
+        title: "App UI 介面：農夫市集",
+        image: "037.jpg",
+        category: "從零生圖",
+        desc: "具體描述資訊層級、白色背景、排版與 iPhone 外框 Mockup。",
+        prompt: `製作一張寫實的在地農夫市集手機App UI Mockup。\n\n畫面顯示今天的市集資訊，上方使用簡單的標題區，下面列出少量攤商，每個攤商附上小圖片與分類；另外加入一個小型「今日特價」區塊，以及市集地點與營業時間等基本資訊。\n\n整體設計要實用、容易操作。使用白色背景、低調自然的強調色、清楚的字體，以及極少量裝飾。\n\n它應該看起來像一款真正已經完成、設計良好而且漂亮的小型在地市集App。\n\n把UI Mockup放在iPhone外框中。`
+      },
+      {
+        id: 38,
+        title: "科學教材：細胞呼吸作用",
+        image: "038.jpg",
+        category: "從零生圖",
+        desc: "先定義教學目標與指定分子標籤，著重資訊正確性。",
+        prompt: `製作一張適合高中生閱讀的簡單生物學示意圖，標題為「細胞呼吸作用一覽」。\n\n說明葡萄糖如何在細胞中轉換成能量。內容包含糖解作用、克氏循環與電子傳遞鏈。\n\n使用箭頭連接各個步驟，並標示主要分子：葡萄糖、丙酮酸、ATP、NADH、FADH2、CO2、O2與H2O。\n\n整體像是一張乾淨的課堂講義或簡報：白色背景、簡單圖示、清楚標籤，而且文字容易閱讀。\n\n避免過小的文字、額外裝飾，以及任何會降低示意圖理解度的元素。`
+      },
+      {
+        id: 39,
+        title: "募資簡報：市場機會",
+        image: "039.jpg",
+        category: "從零生圖",
+        desc: "規格書級別 Prompt，指定數據、字體、長條圖與同心圓圖。",
+        prompt: `製作一頁標題為「市場機會」的募資簡報，整體質感要像拿到Pre-A輪投資的台灣新創團隊，在跟投資人簡報時真正會拿出來用的投影片。\n\n版面採用乾淨的白色背景、類似思源黑體的現代無襯線字體，排版俐落、簡潔。\n\n投影片需包含以下內容：\n・一張以低飽和藍色與灰色呈現的TAM／SAM／SOM同心圓圖\n・具體且合理的市場規模：TAM新台幣1兆3,400億元、SAM新台幣2,780億元、SOM新台幣109億元\n・下方搭配一張乾淨的長條圖，呈現2021年至2026年市場成長，走勢為緩步上升\n・小字註腳：「本土市場研究，2024」與「內部分析」\n・右下角預留公司Logo版位\n\n整體呈現要有「這份簡報真的談成了這輪投資」的說服力：文字清晰易讀、數據層級分明、留白與間距成熟，視覺語言專業、貼近台灣新創團隊調性。\n\n請避免使用剪貼藝術、圖庫照片、漸層、陰影、純裝飾元素，以及任何過度設計或罐頭感的視覺。`
+      },
+
+      // 七、官方指南：局部修圖 (040 - 047)
+      {
+        id: 40,
+        title: "文字翻譯：保留原始排版",
+        image: "040.jpg",
+        category: "局部修圖",
+        desc: "只改語言文字，嚴格保留排版、圖示、配色與箭頭構圖。",
+        prompt: `將這張資訊圖中的所有文字翻譯成繁體中文。\n\n保留原本的字體風格、文字位置、排版、配色、圖示、箭頭與整體構圖。不要修改圖片中的其他任何部分，也不要新增文字。`
+      },
+      {
+        id: 41,
+        title: "風格遷移：像素摩托車手",
+        image: "041.jpg",
+        category: "局部修圖",
+        desc: "明確指定參考圖僅提供像素風格與色彩，不複製原本主體。",
+        prompt: `參考輸入圖片的像素藝術風格、色彩表現、輪廓與細節密度。\n\n在白色背景上生成一名騎摩托車的男子。只參考輸入圖片的視覺風格，不要複製其中的人物、物件、文字或構圖。`
+      },
+      {
+        id: 42,
+        title: "局部更換：精準換衣服",
+        image: "042.jpg",
+        category: "局部修圖",
+        desc: "換服裝但逐一列出臉部、身形、姿勢、表情與背景不得改變。",
+        prompt: `編輯這張圖片，讓女性穿上所提供服裝參考圖片中的衣物。\n\n不要以任何方式改變她的臉、五官、膚色、身形、姿勢或人物身份。完整保留她原本的長相、表情、髮型與身體比例。\n\n只更換服裝，依照她現有的姿勢與身體結構，自然地讓衣服貼合身形，並呈現真實合理的布料效果。\n\n讓服裝的光線、陰影與色溫配合原始照片，使衣服自然融入畫面，看起來像真正穿在身上，而不是後製貼上去的。\n\n不要更改背景、攝影角度、畫面構圖或圖片品質，也不要新增配件、文字、Logo或浮水印。`
+      },
+      {
+        id: 43,
+        title: "雙圖合成：人與寵物同行",
+        image: "043.jpg",
+        category: "局部修圖",
+        desc: "圖1作為主要場景與人物，圖2提供寵物，要求自然陰影與透視。",
+        prompt: `以第一張圖片作為主要場景，保留其中的人物、背景、光線、攝影角度與構圖。\n\n將第二張圖片中的狗放到女人旁邊，讓狗的比例、透視、光線與接觸陰影符合第一張圖片的環境。\n\n不要修改女人的外觀、姿勢或表情，也不要改變背景與其他物件。`
+      },
+      {
+        id: 44,
+        title: "商品去背：Alpha 透明背景",
+        image: "044.jpg",
+        category: "局部修圖",
+        desc: "擷取商品獨立放置透明背景，保留完整幾何形狀與標籤。",
+        prompt: `從輸入圖片中擷取商品，並將它獨立放在完全透明的背景上。\n\n輸出結果：商品置中、輪廓乾淨清楚，不要有白邊、暈邊或毛邊。\n\n完整保留商品原本的幾何形狀與標籤文字可讀性。\n\n只進行輕微修整。不要加入實色背景、透明棋盤格、場景或陰影。\n\n不要重新設計商品，只移除背景並保留乾淨的Alpha透明效果。`
+      },
+      {
+        id: 45,
+        title: "草圖彩現：手繪轉寫實",
+        image: "045.jpg",
+        category: "局部修圖",
+        desc: "將風格轉化與保留結構分開寫，維持比例與透視關係。",
+        prompt: `把這張草圖轉換成寫實照片。\n\n完整保留原本的畫面配置、比例與透視關係。\n\n根據草圖原本的意圖，選擇合理、真實的材質與光線。\n\n不要加入新的元素或文字。`
+      },
+      {
+        id: 46,
+        title: "物件移除：自然修復遮擋",
+        image: "046.jpg",
+        category: "局部修圖",
+        desc: "移除指定葉子物件，並要求自然補回被遮蔽的手部與衣物細節。",
+        prompt: `移除女子臉上的的葉子，並自然補回被葉子遮住的臉部與臉部節。\n\n保留女子的臉、姿勢、服裝、背景、光線與整體構圖。不要修改其他任何內容。`
+      },
+      {
+        id: 47,
+        title: "情境置換：露營地逃生",
+        image: "047.jpg",
+        category: "局部修圖",
+        desc: "將人物移至優勝美地棕熊攻擊場景，同時指定動作與環境真實感。",
+        prompt: `生成一個高度寫實的動作場景，讓這個人正在逃離一隻攻擊露營地的大型寫實棕熊。\n\n圖片應該像真的有人在現場拍下來的照片，而不是經過大量強化的電影海報或電影劇照。\n\n她位在畫面中央，但視線不是看向鏡頭。她穿著戶外露營服裝，臉上有泥土，衣服也有部分撕裂。她明顯感到害怕，但仍專注於逃跑；身後的棕熊正在破壞露營地。\n\n場景位於優勝美地國家公園，周遭環境必須具有可信的自然細節。時間是黃昏，使用自然光線與真實色彩。\n\n整體應該自然、真實、沒有刻意造型，像是真實事件中的瞬間畫面。\n\n避免電影式燈光、強烈戲劇化調色或過度風格化構圖。`
+      },
+
+      // 八、官方指南：連續修圖 (048 - 049)
+      {
+        id: 48,
+        title: "逐步修改看板：變換氣候環境",
+        image: "048.jpg",
+        category: "連續修圖",
+        desc: "先建構完整看板，第二輪對話僅下達「把場景改成下雪的冬季夜晚」。",
+        prompt: `【第一輪指令】\n使用這瓶洗髮精製作一張寫實的公路廣告看板Mockup，場景時間為夕陽時分。\n\n廣告看板文字（必須完全照寫，不增減任何字元）：\n「清新潔淨」\n\n字體：粗體無襯線字、高對比、置中排列，字距乾淨。\n確保這段文字只出現一次，而且完全清楚可讀。不要加入浮水印或Logo。\n\n【第二輪連續指令】\n把場景改成下雪的冬季夜晚。`
+      },
+      {
+        id: 49,
+        title: "繪本角色延續：重要特徵重複寫",
+        image: "049.jpg",
+        category: "連續修圖",
+        desc: "「跟上一張一樣」不夠，在第二輪將連帽衣、五官比例等特徵重複寫一次。",
+        prompt: `【第一輪：建立人物設定】\n製作一張兒童繪本插畫，介紹故事的主角。\n角色：一名年輕、具有故事書風格的小英雄，靈感來自森林中的小義賊。穿著簡單的綠色連帽上衣、柔軟棕色靴子，腰間帶著一個小袋子。角色有親切的表情、溫柔的眼神，以及勇敢但溫暖的氣質。\n主題：角色會保護與救援松鼠、鳥類和兔子等森林小動物。\n風格：兒童繪本插畫、手繪水彩質感、柔和輪廓。\n\n【第二輪：延續故事畫面】\n使用同一個角色繼續這本兒童繪本的故事。\n場景：同一名年輕森林英雄正在溫柔地幫助一隻受到驚嚇的松鼠，將牠從冬季暴風雪後倒下的樹木中救出來。\n角色一致性：相同的綠色連帽上衣、相同的五官比例與色彩配置。\n限制：不要重新設計角色，不要加入文字。`
+      },
+
+      // 九、官方指南：實用案例 (050 - 052)
+      {
+        id: 50,
+        title: "家具替換：只改椅子不改裝潢",
+        image: "050.jpg",
+        category: "實用案例",
+        desc: "局部精準替換室內單一軟裝，保留原攝影光影與周遭物件。",
+        prompt: `在這張室內照片中，只把白色椅子更換成木製椅子。\n\n保留原本攝影角度、室內光線、地板陰影與周圍物件。\n\n圖片其他部分全部保持不變。\n\n呈現寫實的物體接觸陰影與材質紋理。`
+      },
+      {
+        id: 51,
+        title: "節慶賀卡：懷舊泰迪熊",
+        image: "051.jpg",
+        category: "實用案例",
+        desc: "結構化拆分「場景、情緒、風格、限制」，精準呈現印刷散景質感。",
+        prompt: `製作一張聖誕節賀卡插畫。\n\n場景：一個溫馨的聖誕場景，一隻老泰迪熊坐在紀念收藏盒中。牠的毛稍微磨損，可以看到柔和的縫補痕跡。收藏盒擺在窗戶附近，窗外正在下雪。整個場景暗示孩子已經長大，但回憶仍然存在。\n\n情緒：溫暖、懷舊、溫柔、富有情感。\n\n風格：高級節慶賀卡攝影風格、柔和電影感光線、寫實材質、淺景深，低調散景燈光，適合高品質印刷。\n\n限制：只使用原創內容，不要商標浮水印。\n卡片上只能出現以下文字，完全照寫：\n「聖誕快樂——有些回憶永遠不會褪色。」`
+      },
+      {
+        id: 52,
+        title: "收藏公仔：吸塑包裝設計",
+        image: "052.jpg",
+        category: "實用案例",
+        desc: "細膩描寫塑膠吸塑、烤漆金屬、邊緣磨損與棚拍高級零售感。",
+        prompt: `製作一款復古風玩具螺旋槳飛機收藏模型。\n\n飛機具有圓潤機翼、機頭前方的旋轉螺旋槳、稍微磨損的漆面邊緣，以及經典童年玩具比例。\n\n把它設計成一款具有懷舊節慶感的收藏商品，使用吸塑包裝。\n\n概念：一款懷舊節慶收藏品，靈感來自孩子們過去在冬季假期中玩的小型簡單玩具飛機。整體喚起溫暖、想像力與童年驚喜感。\n\n風格：高級玩具商品攝影，呈現寫實塑膠與烤漆金屬材質，使用棚拍光線與淺景深，包裝印刷清楚銳利。\n\n限制：只使用原創設計，包裝上只能出現以下文字，完全照寫：\n「Christmas Memories Edition」`
       }
     ];
 
@@ -500,6 +764,14 @@
 
     let currentCategory = 'all';
     let searchQuery = '';
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function escapeForAttr(str) {
+      return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    }
 
     function renderCards() {
       grid.innerHTML = '';
@@ -512,7 +784,7 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">找不到符合條件的提示詞</p>';
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 50px 0;">找不到符合條件的提示詞</p>';
         return;
       }
 
@@ -523,32 +795,56 @@
           <img class="card-img" src="${item.image}" alt="${item.title}" loading="lazy">
           <div class="card-body">
             <span class="tag">${item.category}</span>
-            <h3>${item.id}. ${item.title}</h3>
+            <h3>#${String(item.id).padStart(2, '0')}. ${item.title}</h3>
             <p class="desc">${item.desc}</p>
-            <div class="prompt-box">${item.prompt}</div>
-            <button class="copy-btn" onclick="copyPrompt(this, \`${escapeQuotes(item.prompt)}\`)">複製提示詞</button>
+            <div class="prompt-box">${escapeHtml(item.prompt)}</div>
+            <button class="copy-btn" onclick="copyPrompt(this, \`${escapeForAttr(item.prompt)}\`)">複製提示詞</button>
           </div>
         `;
         grid.appendChild(card);
       });
     }
 
-    function escapeQuotes(str) {
-      return str.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    function copyPrompt(button, text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          triggerButtonFeedback(button);
+        }).catch(() => {
+          fallbackCopyText(text, button);
+        });
+      } else {
+        fallbackCopyText(text, button);
+      }
     }
 
-    function copyPrompt(button, text) {
-      navigator.clipboard.writeText(text).then(() => {
-        const originalText = button.innerText;
-        button.innerText = '已複製！';
-        button.classList.add('copied');
-        showToast();
+    function fallbackCopyText(text, button) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        triggerButtonFeedback(button);
+      } catch (err) {
+        console.error('Fallback 複製失敗', err);
+      }
+      document.body.removeChild(textArea);
+    }
 
-        setTimeout(() => {
-          button.innerText = originalText;
-          button.classList.remove('copied');
-        }, 2000);
-      });
+    function triggerButtonFeedback(button) {
+      const originalText = button.innerText;
+      button.innerText = '已成功複製！';
+      button.classList.add('copied');
+      showToast();
+
+      setTimeout(() => {
+        button.innerText = originalText;
+        button.classList.remove('copied');
+      }, 2000);
     }
 
     function showToast() {
@@ -572,7 +868,7 @@
       renderCards();
     });
 
-    // 初始載入
+    // 初始載入渲染
     renderCards();
   </script>
 </body>
