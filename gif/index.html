@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT GIF 動畫教學與實用提示詞展示館</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --highlight: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 2.5rem auto;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.8rem;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* 頂部教學專區樣式 */
+    .tutorial-section {
+      max-width: 1400px;
+      margin: 0 auto 3.5rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .tutorial-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.3);
+    }
+
+    .tutorial-card h2 {
+      font-size: 1.35rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tutorial-card p, .tutorial-card li {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .step-box {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .step-box h3 {
+      font-size: 1.05rem;
+      color: var(--highlight);
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .faq-item {
+      background: #0f172a;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .faq-item strong {
+      color: var(--text-main);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .section-title {
+      max-width: 1400px;
+      margin: 0 auto 1.5rem auto;
+      font-size: 1.6rem;
+      color: var(--text-main);
+      border-bottom: 2px solid rgba(56, 189, 248, 0.3);
+      padding-bottom: 0.5rem;
+    }
+
+    /* 原 3D 提示詞畫廊樣式 */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      perspective: 1200px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      transform-style: preserve-3d;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .card:hover {
+      transform: translateY(-8px) rotateX(4deg) rotateY(-2deg);
+      box-shadow: 0 20px 35px -5px rgba(56, 189, 248, 0.25);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .frame-3d {
+      width: 100%;
+      height: 240px;
+      background: #090d16;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 8px 16px rgba(0, 0, 0, 0.3);
+      transform: translateZ(20px);
+      margin-bottom: 1rem;
+    }
+
+    .frame-3d img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .frame-3d img {
+      transform: scale(1.03);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-index {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .card-usage {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+    }
+
+    .prompt-box {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.85rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      flex-grow: 1;
+      max-height: 110px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+    }
+
+    .copy-btn {
+      background-color: var(--accent);
+      color: #0f172a;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .copy-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .copy-btn:active {
+      transform: scale(0.98);
+    }
+
+    .copy-btn.copied {
+      background-color: #22c55e;
+      color: #ffffff;
+    }
+
+    .prompt-box::-webkit-scrollbar {
+      width: 4px;
+    }
+    .prompt-box::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ChatGPT GIF 動畫教學與實用提示詞精選</h1>
+    <p>整合 OpenAI Images 2.6 動畫製作指南、照片動態化技巧，並提供 10 組 3D 預覽卡片與一鍵複製提示詞。</p>
+  </header>
+
+  <!-- 追加：文章核心教學指南 -->
+  <section class="tutorial-section">
+    <!-- 基礎製作流程 -->
+    <div class="tutorial-card">
+      <h2>🚀 ChatGPT GIF 怎麼做？3 步驟直接生成動畫</h2>
+      <div class="tutorial-grid">
+        <div class="step-box">
+          <h3>步驟 1：輸入動畫需求</h3>
+          <p>開啟 ChatGPT（網頁版或 App），直接在對話框中描述想要的動作、視角與風格。建議包含起始動作、過程與收尾。</p>
+        </div>
+        <div class="step-box">
+          <h3>步驟 2：等待影格運算</h3>
+          <p>ChatGPT 會依照描述建立連續動畫影格並合成為 GIF。若動作或風格有出入，可直接在對話中繼續提出修改調整。</p>
+        </div>
+        <div class="step-box">
+          <h3>步驟 3：下載與分享</h3>
+          <p>預覽無誤後點擊儲存即可下載成 .gif 格式，可直接運用於 LINE 貼圖、簡報、社群貼文或個人網站。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 照片轉動畫與速度調整教學 -->
+    <div class="tutorial-grid">
+      <div class="tutorial-card">
+        <h2>🖼️ 照片轉 GIF 怎麼做？（2步驟）</h2>
+        <ul style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li><strong>上傳照片並指定動態：</strong>點選附件上傳靜態寵物或人物照，明確指示想動的部分（如「讓寵物眨眼、轉頭看向鏡頭」）。</li>
+          <li><strong>強調特徵保留：</strong>提示詞需特別加入「保持臉部特徵、外觀毛色、背景構圖完全一致，鏡頭固定」，以避免畫面跳動或五官變形。</li>
+        </ul>
+      </div>
+
+      <div class="tutorial-card">
+        <h2>⏱️ 速度調整與影格修改技巧</h2>
+        <ul style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li><strong>調整播放速度：</strong>可直接對話要求「放慢動作讓揮手更自然」，或指定影格間隔時間（如每格 200 毫秒）。</li>
+          <li><strong>修改特定影格：</strong>可指定細節修改，例如「讓第 4 格眼睛閉上做眨眼效果，其餘影格保持一致」。</li>
+          <li><strong>無縫循環技巧：</strong>安排「起點動作 → 過程 → 回到起點動作」，確保第一格與最後一格姿勢相近。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 免費版常見問答 -->
+    <div class="tutorial-card">
+      <h2>❓ 免費版能用嗎？常見問答 FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <strong>Q：免費版可以使用 GIF 動畫生成功能嗎？</strong>
+          <p>可以。OpenAI 的 Images 2.6 開放給所有訂閱層級（包含免費版），支援網頁版、電腦桌面版與 App。但免費版受限於日常圖片生成額度，且新功能採批次逐步開放推送。</p>
+        </div>
+        <div class="faq-item">
+          <strong>Q：ChatGPT GIF 與一般 AI 影片有何不同？</strong>
+          <p>GIF 專為輕量、簡短、無聲音且需重複循環播放的場景（如貼圖、UI 載入動畫、商品展示）設計；AI 影片則適用於複雜鏡頭運鏡、多場景切換與配音需求。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 提示詞展示專區 -->
+  <h2 class="section-title">✨ 10 組實用提示詞與 3D 展示框架</h2>
+  <main class="gallery-grid" id="gallery"></main>
+
+  <script>
+    const promptsData = [
+      {
+        id: "001",
+        title: "可愛寵物 GIF",
+        usage: "請幫我製作一張 GIF 動畫。一隻可愛的橘貓坐在桌上，慢慢抬起右腳向鏡頭揮手，接著眨眼並恢復原本的坐姿。背景為暖白色，採用可愛的 3D 黏土插畫風格，鏡頭保持固定，動作自然流暢，動畫可以無縫循環播放。並標註文青溫馨祝福語句比例9:16。"
+      },
+      {
+        id: "002",
+        title: "品牌吉祥物 GIF",
+        usage: "適合用途：品牌網站、活動頁面、電子報",
+        prompt: "請製作一張 GIF 動畫，一隻圓潤可愛的機器人吉祥物站在畫面中央，先微笑眨眼，再抬起右手向觀眾揮手，最後恢復站立姿勢。使用柔和的藍白配色、簡潔 3D 插畫風格，背景灰白。保持角色造型、配色及身體比例一致，鏡頭固定，製作可以無縫循環的動畫。並標註文青溫馨祝福語句(不要加入早安;午安與晚安等語句)比例9:16"
+      },
+      {
+        id: "003",
+        title: "產品展示 GIF",
+        usage: "適合用途：電商商品展示、品牌廣告、行銷素材",
+        prompt: "請製作一張 1:1 的高質感產品展示 GIF。畫面中央是一個【極簡白色無線耳機充電盒】，放置於淡灰色攝影棚背景。動畫從盒蓋關閉開始，接著盒蓋慢慢打開，展示內部耳機，最後緩緩關閉。商品外觀、比例、材質與顏色必須保持一致，鏡頭固定，使用柔和商業攝影光線，製作平滑循環動畫，不要加入文字。"
+      },
+      {
+        id: "004",
+        title: "社群反應 GIF",
+        usage: "適合用途：Threads、Facebook、聊天動態貼圖",
+        prompt: "請製作一張幽默的 GIF 動畫。一名 Q 版上班族坐在電腦前，先露出充滿期待的表情，接著看到螢幕上的工作通知，眼睛瞬間睜大，最後無奈地趴在桌上。使用可愛的日系 3D 插畫風格，背景為簡約辦公室，角色服裝與桌面物品保持一致。鏡頭固定，動作誇張但自然，動畫可以無縫循環，不要加入文字。"
+      },
+      {
+        id: "005",
+        title: "Loading 載入 GIF",
+        usage: "適合用途：網站載入提示、簡報、App 介面示意",
+        prompt: "請設計一張 1:1 極簡風格的 GIF 載入動畫。畫面中央有三顆橘色小圓點，依序從左至右向上跳動，再回到原本位置，形成自然連續的節奏。背景透明，整體使用簡潔的扁平化設計，圓點大小與顏色保持一致。鏡頭固定，動畫無縫循環，不要加入其他裝飾。並標註文青溫馨藝術祝福語句。"
+      },
+      {
+        id: "006",
+        title: "人物照片轉 GIF",
+        usage: "適合用途：社群個人介紹、數位名片、個人網站",
+        prompt: "[image] 請參考我上傳的人物照片，將這張靜態照片製作成自然流暢的 GIF 動畫。完整保留人物的臉部特徵、髮型、服裝、膚色、背景與原始構圖。讓人物先自然眨眼，再露出微笑，接著輕輕向鏡頭揮手，最後回到原本姿勢。相機位置固定，避免臉部變形、五官漂移或背景晃動。整體呈現真實攝影質感，製作約 3 秒、可以無縫循環播放的動畫， 並標註文青溫馨藝術祝福語句。"
+      },
+      {
+        id: "007",
+        title: "咖啡蒸氣生活 GIF",
+        usage: "適合用途：Instagram 貼文、咖啡品牌行銷、生活風格網站",
+        prompt: "請製作一張 1:1 正方形 GIF 動畫。畫面中央是一杯放在木桌上的熱拿鐵，杯中有精緻的愛心拉花，背景是陽光灑落的日系咖啡廳。讓咖啡上方的白色蒸氣緩緩向上飄動，窗邊的薄紗窗簾輕輕晃動，陽光保持溫暖柔和。採用高質感寫實攝影風格，固定鏡頭，杯子、桌面與拉花完全保持靜止。動畫長度約 4 秒，節奏緩慢、自然流暢，適合無縫循環播放，並標註文青溫馨藝術祝福語句。"
+      },
+      {
+        id: "008",
+        title: "節慶祝福蛋糕 GIF",
+        usage: "適合用途：LINE 生日祝福、品牌會員賀卡、社群限時動態",
+        prompt: "請製作一張 直式 4:5、約 4 秒的生日祝福 GIF 動畫，採用溫暖可愛的日系羊毛氈 3D 插畫風格。畫面中央是一個精緻的草莓鮮奶油蛋糕，插著三根點燃的粉色蠟燭。蛋糕右側坐著一隻戴生日帽的奶油色小貓，開心地抱著蛋糕，左側擺放粉色禮物盒。背景搭配三角旗幟、發光星星與木質桌面，使用奶油白、蜜桃粉與暖金色調，呈現溫馨療癒的童話氛圍。動畫效果： 蠟燭火焰輕輕搖曳，星星依序閃爍，最後少量粉色彩紙從上方緩緩飄落。保持角色、蛋糕與背景造型一致，鏡頭固定，動作自然流暢，可無縫循環播放。並標註文青溫馨藝術生日祝福語句。"
+      },
+      {
+        id: "009",
+        title: "數據圖表增長 GIF",
+        usage: "適合用途：商業簡報、財經社群貼文、數據報告展示",
+        prompt: "請製作一張 16:9 橫式 GIF 動畫，主題為企業年度營收成長。畫面使用暖白色背景、深灰色文字與橘色重點配色，呈現簡潔專業的商業資訊圖表風格。中央有四根長條圖，分別代表 2023、2024、2025、2026 年，數值依序為 100、150、210、300，單位為百萬元。動畫開始時所有長條從零逐漸向上延伸，依照年份由左至右依序完成，最後停留在完整圖表畫面。確保年份、數字與長條高度完全對應，所有文字清晰可讀，鏡頭固定。動畫約 5 秒，不要增加其他數據或裝飾元素。"
+      },
+      {
+        id: "010",
+        title: "手繪風景繪本 GIF",
+        usage: "適合用途：社群動態背景、旅遊品牌素材、電子賀卡",
+        prompt: "請製作一張 16:9 橫式 GIF 動畫。畫面是一座日系手繪風格的小鎮，街道兩側有溫暖的木造房屋、綠色植物與盛開的櫻花樹，遠方能看見淡藍色天空。採用柔和水彩與鉛筆線條交織的繪本插畫風格，保留細緻的紙張紋理。動畫中微風吹過，櫻花花瓣緩緩從樹上飄落，街邊植物輕輕搖擺，天空中的白雲緩慢移動。所有建築與街道保持靜止，鏡頭固定，整體氛圍安靜療癒。製作約 5 秒、動作自然且可以無縫循環的 GIF，不要加入任何文字。"
+      }
+    ];
+
+    const galleryContainer = document.getElementById('gallery');
+
+    promptsData.forEach(item => {
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <div class="frame-3d">
+          <img src="${item.id}.GIF" alt="${item.title}" onerror="this.onerror=null; this.src='https://placehold.co/600x400/0b1329/38bdf8?text=${item.id}.GIF';">
+        </div>
+        <div class="card-header">
+          <h2 class="card-title">${item.title}</h2>
+          <span class="card-index">${item.id}.GIF</span>
+        </div>
+        <div class="card-usage">${item.usage}</div>
+        <div class="prompt-box" id="prompt-${item.id}">${item.prompt}</div>
+        <button class="copy-btn" onclick="copyPrompt('${item.id}', this)">
+          <span>複製提示詞</span>
+        </button>
+      `;
+
+      galleryContainer.appendChild(card);
+    });
+
+    async function copyPrompt(id, button) {
+      const textToCopy = document.getElementById(`prompt-${id}`).innerText;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        const originalText = button.innerHTML;
+        button.innerHTML = '<span>已複製！</span>';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        alert('複製失敗，請手動複製文字');
+      }
+    }
+  </script>
+</body>
+</html>
