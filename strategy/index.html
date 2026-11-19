@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>蔓越莓汁公司｜S&amp;OP 供應鏈商戰模擬器（透明參數決策教學版）</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --primary: #9b1b30;
+      --primary-light: #fdf2f4;
+      --primary-dark: #751223;
+      --secondary: #1e3a5f;
+      --accent: #0d9488;
+      --accent-light: #f0fdfa;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 1.48rem;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.92;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .round-badge {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-header {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 0.88rem;
+    }
+
+    .btn-header:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    /* 教學手冊折疊面板 */
+    .guide-drawer {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .guide-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 12px 18px;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 0;
+      border-bottom: 3px solid transparent;
+      font-size: 0.92rem;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: #fff;
+    }
+
+    .guide-content {
+      padding: 18px 22px;
+      display: none;
+      font-size: 0.92rem;
+    }
+
+    .guide-content.active {
+      display: block;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .guide-box {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .guide-box h4 {
+      color: var(--secondary);
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .formula-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      margin: 4px 0;
+    }
+
+    /* 頂部 KPI 卡片列 */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .kpi-card {
+      background: var(--card);
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border-left: 5px solid var(--secondary);
+    }
+
+    .kpi-card.profit { border-left-color: var(--accent); }
+    .kpi-card.raw { border-left-color: var(--warning); }
+    .kpi-card.finished { border-left-color: var(--primary); }
+
+    .kpi-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* 突發事件橫幅 */
+    .event-banner {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-left: 6px solid var(--warning);
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .event-banner.ai-unlocked {
+      background: var(--accent-light);
+      border-color: #5eead4;
+      border-left-color: var(--accent);
+    }
+
+    .event-title {
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: #92400e;
+      margin-bottom: 2px;
+    }
+
+    .event-banner.ai-unlocked .event-title {
+      color: #115e59;
+    }
+
+    .btn-ai {
+      background: linear-gradient(135deg, #0d9488, #0284c7);
+      color: #fff;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      box-shadow: 0 3px 10px rgba(13, 148, 136, 0.3);
+    }
+
+    .btn-ai:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(13, 148, 136, 0.4);
+    }
+
+    /* AI 決策白話文解析卡 */
+    .ai-insight-card {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-left: 6px solid #0d9488;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .ai-insight-card h3 {
+      color: #115e59;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .ai-insight-card ul {
+      padding-left: 20px;
+      font-size: 0.92rem;
+      color: #134e4a;
+    }
+
+    .ai-insight-card li {
+      margin-bottom: 4px;
+    }
+
+    /* 四大部門操作區 */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .dept-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 4px solid var(--secondary);
+    }
+
+    .dept-card.sales { border-top-color: #2563eb; }
+    .dept-card.procurement { border-top-color: #d97706; }
+    .dept-card.production { border-top-color: #9b1b30; }
+    .dept-card.warehouse { border-top-color: #0d9488; }
+
+    .dept-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dept-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .dept-tag {
+      font-size: 0.75rem;
+      background: #f3f4f6;
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* 部門內部參數規則小卡（新增：讓參賽者一目了然） */
+    .spec-sheet {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-bottom: 12px;
+      font-size: 0.81rem;
+      color: #334155;
+    }
+
+    .spec-sheet-title {
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 4px;
+      font-size: 0.82rem;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+      border-bottom: 1px dotted #cbd5e1;
+    }
+
+    .spec-row:last-child {
+      border-bottom: none;
+    }
+
+    .spec-row strong {
+      color: #0f172a;
+    }
+
+    .contract-option {
+      display: block;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .contract-option:hover {
+      border-color: #93c5fd;
+    }
+
+    .contract-option.selected {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+
+    .contract-option input {
+      margin-right: 6px;
+    }
+
+    .contract-meta {
+      font-size: 0.81rem;
+      color: var(--muted);
+      margin-top: 2px;
+      padding-left: 20px;
+    }
+
+    .contract-story {
+      font-size: 0.77rem;
+      color: #4b5563;
+      margin-top: 2px;
+      padding-left: 20px;
+      font-style: italic;
+    }
+
+    .control-group {
+      margin-bottom: 12px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .info-box {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.83rem;
+      color: var(--text);
+      border: 1px solid var(--border);
+      line-height: 1.55;
+    }
+
+    .alert-text {
+      color: var(--danger);
+      font-weight: 600;
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+
+    .ok-text {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+
+    .progress-wrap {
+      background: #e5e7eb;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 6px 0 8px 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* 試算與行動區 */
+    .preview-panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .preview-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .preview-item span {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .preview-item strong {
+      font-size: 1.15rem;
+    }
+
+    .btn-submit {
+      background: var(--primary);
+      color: #fff;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      box-shadow: 0 4px 12px rgba(155, 27, 48, 0.28);
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* 損益表與圖表 */
+    .report-section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .report-header h2 {
+      font-size: 1.15rem;
+      color: var(--secondary);
+    }
+
+    .btn-export {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 7px 14px;
+      font-size: 0.86rem;
+    }
+
+    .btn-export:hover {
+      background: #dbeafe;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+    }
+
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    /* 單輪長條對比＋逐步驟詳細算式對比卡片 */
+    .chart-box {
+      margin-top: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .round-comparison-block {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      background: #fafbfc;
+    }
+
+    .round-comp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .round-comp-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+
+    .gap-badge {
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .gap-badge.perfect {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 120px;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .bar-track {
+      background: #e5e7eb;
+      height: 22px;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--secondary);
+      transition: width 0.5s ease;
+    }
+
+    .bar-fill.ai {
+      background: var(--accent);
+    }
+
+    /* 並列逐步算式拆解區 */
+    .step-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .step-col {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.87rem;
+    }
+
+    .step-col.user-col {
+      border-top: 4px solid var(--secondary);
+    }
+
+    .step-col.ai-col {
+      border-top: 4px solid var(--accent);
+      background: #fcfffe;
+    }
+
+    .step-col-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .step-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .step-list li {
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+
+    .step-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .step-tag {
+      display: inline-block;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-right: 4px;
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .math-line {
+      display: block;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 0.82rem;
+      color: #4b5563;
+      margin-top: 2px;
+      background: #f8fafc;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+
+    .diagnosis-box {
+      margin-top: 12px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.87rem;
+      color: #78350f;
+    }
+
+    /* 彈窗 Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #fff;
+      max-width: 680px;
+      width: 100%;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-card h3 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .modal-body p {
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin: 12px 0;
+      font-size: 0.9rem;
+    }
+
+    .modal-footer {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-primary-modal {
+      background: var(--secondary);
+      color: #fff;
+      padding: 10px 20px;
+    }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 1.25rem; }
+      .btn-submit { width: 100%; }
+      .chart-row { grid-template-columns: 80px 1fr 95px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>🧃 蔓越莓汁公司｜S&amp;OP 供應鏈商戰模擬器</h1>
+        <p>完整參數透明化決策面板：即時掌握原料單價、耗料比、產能極限與倉儲成本</p>
+      </div>
+      <div class="header-actions">
+        <span class="round-badge" id="roundBadge">第 1 / 3 回合</span>
+        <button class="btn-header" onclick="toggleGuideDrawer()">📖 遊戲玩法與 AI 算法說明</button>
+        <button class="btn-header" onclick="resetGame()">🔄 重新抽題重玩</button>
+      </div>
+    </header>
+
+    <!-- 教學手冊與演算法說明折疊區 -->
+    <div class="guide-drawer" id="guideDrawer">
+      <div class="guide-tabs">
+        <button class="tab-btn active" onclick="switchTab('tabRules', this)">1. 遊戲玩法與動態題庫機制</button>
+        <button class="tab-btn" onclick="switchTab('tabMath', this)">2. 核心財務公式與限制條件</button>
+        <button class="tab-btn" onclick="switchTab('tabAiLogic', this)">3. AI 最佳參考之原因與演算法解析</button>
+        <button class="tab-btn" onclick="switchTab('tabClose', this)" style="margin-left:auto; color:#dc2626;">✕ 收合說明面板</button>
+      </div>
+
+      <!-- 分頁 1：玩法說明 -->
+      <div class="guide-content active" id="tabRules">
+        <p><strong>遊戲目標：</strong>你將帶領「蔓越莓汁公司」度過 <strong>3 個營運回合</strong>。系統內建 <strong>15 組商業客戶合約題庫</strong>，每回合會從「保守穩健型（A）」、「標準通路型（B）」、「高價急單型（C）」三大題庫中各隨機抽出 1 張標案，讓每次遊玩都有全新挑戰！</p>
+        <div class="guide-grid">
+          <div class="guide-box">
+            <h4>🔵 業務部門（動態標案選擇）</h4>
+            <p>從當輪隨機釋出的 A、B、C 三張合約中擇一簽署。單價越高的標案，需求量與缺貨違約罰金也越驚人。</p>
+          </div>
+          <div class="guide-box">
+            <h4>🟠 採購部門（上游原料）</h4>
+            <p>向果農購買新鮮蔓越莓（NT$ 80/kg）。受限於<strong>最低起訂量（MOQ = 500 kg）</strong>，只要下單大於 0 但未滿 500 kg，系統一律強制按 500 kg 進貨並扣款。</p>
+          </div>
+          <div class="guide-box">
+            <h4>🔴 製造部門（中游產線）</h4>
+            <p>決定本輪裝瓶生產數量（製造成本 NT$ 12/瓶）。同時受限於<strong>「可用原料總量」</strong>與<strong>「當輪產線最大產能」</strong>（第 2 輪因設備歲修下降 25%）。</p>
+          </div>
+          <div class="guide-box">
+            <h4>🟢 倉儲部門（庫存調節）</h4>
+            <p>未賣完的成品留在倉庫（上限 8,000 瓶），每瓶收取 <strong>NT$ 3 倉租</strong>；若期末庫存超過 8,000 瓶，超出部分每瓶加收 <strong>NT$ 10 爆倉罰金</strong>。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分頁 2：數學與財務規則 -->
+      <div class="guide-content" id="tabMath">
+        <p>系統底層完全依據供應鏈管理的<strong>物料需求計畫（MRP）</strong>與<strong>損益表（P&amp;L）</strong>邏輯即時運算：</p>
+        <div class="guide-grid">
+          <div class="guide-box">
+            <h4>📦 原料與產出換算</h4>
+            <div class="formula-tag">實際進貨 = (下單 &gt; 0) ? max(下單, 500) : 0</div>
+            <div class="formula-tag">每瓶耗料 = 0.10 kg ÷ 良率</div>
+            <p style="margin-top:6px;">第 1、2 輪良率 100%（0.10 kg/瓶）；第 3 輪酸度波動良率降至 80%，每瓶需耗費 <strong>0.125 kg</strong> 原料。</p>
+          </div>
+          <div class="guide-box">
+            <h4>💰 單輪淨損益計算公式</h4>
+            <div class="formula-tag">營收 = 實際交付瓶數 × 合約單價</div>
+            <div class="formula-tag">總支出 = 採購費 + 製造費 + 倉租 + 違約金</div>
+            <p style="margin-top:6px;">實際交付瓶數取「期初成品庫存 + 本輪產出」與「合約需求量」兩者之較小值。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分頁 3：AI 演算法與決策邏輯解析 -->
+      <div class="guide-content" id="tabAiLogic">
+        <p><strong>為什麼每回合合約都會變化，AI 卻總能瞬間找出最佳解？</strong><br>
+        因為 AI 並非背誦固定答案，而是針對當輪隨機抽出的合約條件，即時執行<strong>「限制條件下的狀態空間搜尋（Constrained Grid Search）」</strong>。</p>
+        <div class="guide-grid">
+          <div class="guide-box">
+            <h4>⚙️ 1. 演算法原理：動態目標函數最大化</h4>
+            <p>AI 會即時讀取本輪抽出的 A、B、C 合約參數（需求量、單價、罰金），結合期初庫存與當輪良率，在毫秒內模擬所有合法的「採購量 × 排產量」組合，篩選出淨利最高的全域最佳解。</p>
+          </div>
+          <div class="guide-box">
+            <h4>🧠 2. AI 決策的三大商業權衡邏輯</h4>
+            <ul style="padding-left:18px; margin-top:4px;">
+              <li><strong>跨越 MOQ 門檻效應：</strong>若現有原料已足夠支應訂單，AI 會果斷將採購設為 <code>0 kg</code>，省下 NT$ 40,000 的固定採購門檻。</li>
+              <li><strong>邊際利潤 vs. 違約罰金：</strong>當高價急單（C 類合約）即便小幅缺貨、扣除罰金後的淨利仍高於 B 類合約時，AI 會精算「可容忍缺貨臨界點」。</li>
+              <li><strong>準時生產（JIT）：</strong>在單輪視角下，多生產且未售出的成品會產生 NT$ 3/瓶倉租，因此 AI 精準控制產量不留多餘庫存。</li>
+            </ul>
+          </div>
+          <div class="guide-box">
+            <h4>⚠️ 3. 課堂反思：AI 最佳解的盲點</h4>
+            <p>單輪 AI 最佳解往往會把庫存壓到極低；但在真實企業中，若完全不留安全庫存（Safety Stock），一旦下一季抽到超高需求急單或發生斷鏈，就會錯失商機。這正是人類主管需要跨期權衡的地方！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 即時 KPI -->
+    <div class="kpi-grid">
+      <div class="kpi-card profit">
+        <div class="kpi-label">累計營運資金 / 淨利</div>
+        <div class="kpi-value" id="kpiCash">NT$ 100,000</div>
+        <div class="kpi-sub" id="kpiProfitDelta">初始營運資金：NT$ 100,000</div>
+      </div>
+      <div class="kpi-card raw">
+        <div class="kpi-label">期初原料庫存（新鮮蔓越莓）</div>
+        <div class="kpi-value" id="kpiRaw">300 kg</div>
+        <div class="kpi-sub" id="kpiRawSub">目前可支應約 3,000 瓶基礎產量</div>
+      </div>
+      <div class="kpi-card finished">
+        <div class="kpi-label">期初成品庫存（蔓越莓汁）</div>
+        <div class="kpi-value" id="kpiFinished">1,000 瓶</div>
+        <div class="kpi-sub">倉庫上限 8,000 瓶（超倉罰金 NT$ 10/瓶）</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">本輪產線最大產能 &amp; 耗料比</div>
+        <div class="kpi-value" id="kpiCapacity">6,000 瓶</div>
+        <div class="kpi-sub" id="kpiYieldSub">每瓶耗料：0.100 kg（良率 100%）</div>
+      </div>
+    </div>
+
+    <!-- 當輪市場與突發事件橫幅 -->
+    <div class="event-banner" id="eventBanner">
+      <div>
+        <div class="event-title" id="eventTitle">📢 第 1 回合情資：標準市場營運期</div>
+        <div id="eventDesc" style="font-size:0.9rem;">產線運作正常、原料良率 100%。業務部已抽出本季 3 份新標案（A、B、C），請四部門協商後下單。</div>
+      </div>
+      <div id="aiButtonWrap" style="display:none;">
+        <button class="btn-ai" onclick="applyAiOptimization()">🤖 啟動 AI 最佳化模擬器</button>
+      </div>
+    </div>
+
+    <!-- AI 最佳化決策原因白話文解析卡（第 3 輪啟動 AI 後顯示） -->
+    <div class="ai-insight-card" id="aiInsightCard">
+      <h3>🤖 AI 最佳化模擬器｜針對本輪隨機標案之決策邏輯拆解</h3>
+      <ul id="aiInsightList"></ul>
+    </div>
+
+    <!-- 四大部門決策面板（含完整透明參數規格表與即時換算） -->
+    <div class="dept-grid">
+      <!-- 1. 業務部門 -->
+      <div class="dept-card sales">
+        <div>
+          <div class="dept-header">
+            <span class="dept-title">1. 業務部門</span>
+            <span class="dept-tag">本輪隨機標案 (15組題庫)</span>
+          </div>
+          <div class="spec-sheet">
+            <div class="spec-sheet-title">📋 業務接單規則與毛利基準</div>
+            <div class="spec-row"><span>單瓶總變動成本 (原料+加工)：</span><strong id="specUnitTotalCost">NT$ 20.0 / 瓶</strong></div>
+            <div class="spec-row"><span>交貨計算基準：</span><strong>期初成品 + 本輪產出</strong></div>
+            <div class="spec-row"><span>未達標違約機制：</span><strong>按短缺瓶數逐瓶扣罰</strong></div>
+          </div>
+          <div id="contractList"></div>
+        </div>
+        <div class="info-box" id="salesHint">
+          每簽下一張合約，請先確認「單瓶售價」減去「單瓶總變動成本」後的淨毛利空間。
+        </div>
+      </div>
+
+      <!-- 2. 採購部門 -->
+      <div class="dept-card procurement">
+        <div>
+          <div class="dept-header">
+            <span class="dept-title">2. 採購部門</span>
+            <span class="dept-tag">原料採購與 MOQ 門檻</span>
+          </div>
+          <div class="spec-sheet">
+            <div class="spec-sheet-title">📋 採購計價與耗料換算標準</div>
+            <div class="spec-row"><span>新鮮蔓越莓單價：</span><strong>NT$ 80 / kg</strong></div>
+            <div class="spec-row"><span>最低起訂量 (MOQ)：</span><strong>500 kg（門檻 NT$ 40,000）</strong></div>
+            <div class="spec-row"><span>本輪每瓶生產用量：</span><strong id="specKgPerBottle">0.100 kg / 瓶（良率 100%）</strong></div>
+            <div class="spec-row"><span>單瓶原料成本折算：</span><strong id="specRawCostPerBottle">NT$ 8.0 / 瓶</strong></div>
+          </div>
+          <div class="control-group">
+            <div class="control-label">
+              <span>本輪採購原料 (kg)</span>
+              <span id="procureDisplay">500 kg</span>
+            </div>
+            <input type="range" id="procureSlider" min="0" max="2000" step="50" value="500" oninput="syncInput('procure', this.value)" />
+            <input type="number" id="procureInput" min="0" max="2000" step="10" value="500" oninput="syncInput('procure', this.value)" />
+            <div id="moqAlert" class="alert-text"></div>
+          </div>
+        </div>
+        <div class="info-box" id="procureSummary">
+          計費進貨：500 kg｜採購費：NT$ 40,000<br/>
+          這批進貨可新產出：5,000 瓶
+        </div>
+      </div>
+
+      <!-- 3. 製造部門 -->
+      <div class="dept-card production">
+        <div>
+          <div class="dept-header">
+            <span class="dept-title">3. 製造部門</span>
+            <span class="dept-tag">產線能力與加工成本</span>
+          </div>
+          <div class="spec-sheet">
+            <div class="spec-sheet-title">📋 產線產能上限與製造成本明細</div>
+            <div class="spec-row"><span>本輪產線最大產能上限：</span><strong id="specMaxCap">6,000 瓶 / 輪</strong></div>
+            <div class="spec-row"><span>單瓶加工製造成本：</span><strong>NT$ 12 / 瓶（不含原料）</strong></div>
+            <div class="spec-row"><span>單瓶含料總生產成本：</span><strong id="specFullMfgCost">NT$ 20.0 / 瓶</strong></div>
+            <div class="spec-row"><span>原料瓶頸上限 (含期初)：</span><strong id="specRawBottleCap">8,000 瓶</strong></div>
+          </div>
+          <div class="control-group">
+            <div class="control-label">
+              <span>本輪排產瓶數 (瓶)</span>
+              <span id="prodDisplay">4,000 瓶</span>
+            </div>
+            <input type="range" id="prodSlider" min="0" max="6000" step="100" value="4000" oninput="syncInput('prod', this.value)" />
+            <input type="number" id="prodInput" min="0" max="6000" step="50" value="4000" oninput="syncInput('prod', this.value)" />
+            <div id="prodAlert" class="ok-text"></div>
+          </div>
+        </div>
+        <div class="info-box" id="prodSummary">
+          本輪可用總原料：800 kg｜實際產出：4,000 瓶<br/>
+          本輪加工製造費：NT$ 48,000
+        </div>
+      </div>
+
+      <!-- 4. 倉儲部門 -->
+      <div class="dept-card warehouse">
+        <div>
+          <div class="dept-header">
+            <span class="dept-title">4. 倉儲與交貨試算</span>
+            <span class="dept-tag">庫存容量與履約監控</span>
+          </div>
+          <div class="spec-sheet">
+            <div class="spec-sheet-title">📋 倉庫容量規範與租金罰則</div>
+            <div class="spec-row"><span>成品倉庫安全上限：</span><strong>8,000 瓶</strong></div>
+            <div class="spec-row"><span>一般期末倉儲租金：</span><strong>NT$ 3 / 瓶（依期末結餘計）</strong></div>
+            <div class="spec-row"><span>超倉額外罰金 (&gt;8,000瓶)：</span><strong>+NT$ 10 / 瓶（合計 NT$ 13）</strong></div>
+          </div>
+          <div style="font-size:0.84rem; margin-bottom:6px; line-height:1.6;">
+            <div>可供貨總量（期初+產出）：<strong id="estSupply">5,000 瓶</strong></div>
+            <div>合約交貨達成率：<strong id="estFulfill">100% (5,000 / 5,000 瓶)</strong></div>
+            <div>期末剩餘成品庫存：<strong id="estEndingStock">0 瓶</strong></div>
+          </div>
+          <div class="control-label" style="margin-top:6px;">
+            <span>倉庫容量占用率（上限 8,000 瓶）</span>
+            <span id="whPercent">0%</span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-bar" id="whBar" style="width: 0%;"></div>
+          </div>
+        </div>
+        <div class="info-box" id="whAlert">
+          期末倉租：NT$ 0｜缺貨違約金：NT$ 0
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部預估損益與確認按鈕 -->
+    <div class="preview-panel">
+      <div class="preview-stats">
+        <div class="preview-item">
+          <span>預估銷售營收</span>
+          <strong id="prevRev" style="color:#2563eb;">NT$ 275,000</strong>
+        </div>
+        <div class="preview-item">
+          <span>預估營運總成本（採購+製造+倉儲）</span>
+          <strong id="prevCost" style="color:#d97706;">NT$ 88,000</strong>
+        </div>
+        <div class="preview-item">
+          <span>預估違約與超倉罰款</span>
+          <strong id="prevPenalty" style="color:#dc2626;">NT$ 0</strong>
+        </div>
+        <div class="preview-item">
+          <span>本輪預估淨損益</span>
+          <strong id="prevNet" style="color:#0d9488;">+NT$ 187,000</strong>
+        </div>
+      </div>
+      <button class="btn-submit" id="submitBtn" onclick="commitRound()">✅ 確認本輪決策並結算</button>
+    </div>
+
+    <!-- 歷史回合損益表與逐輪詳細對比 -->
+    <div class="report-section">
+      <div class="report-header">
+        <h2>📊 各回合營運結算與 AI 理論最佳解對照</h2>
+        <button class="btn-export" id="exportBtn" onclick="exportCsvReport()" style="display:none;">📥 匯出戰報 (CSV)</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>回合</th>
+              <th>簽署合約</th>
+              <th>實際出貨 / 需求</th>
+              <th>銷售營收</th>
+              <th>採購+製造成本</th>
+              <th>倉儲+違約金</th>
+              <th>本輪淨利</th>
+              <th>AI 最佳解參考</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr>
+              <td colspan="8" style="text-align:center; color:var(--muted);">尚未進行回合結算，請調整上方四部門參數後點擊「確認本輪決策並結算」。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 單輪淨利對比長條圖 ＋ 一步一步詳細算式拆解區 -->
+      <div class="chart-box" id="chartBox" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- 回合結算與總結彈窗 -->
+  <div class="modal-backdrop" id="resultModal">
+    <div class="modal-card">
+      <h3 id="modalTitle">第 1 回合結算報告</h3>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn-primary-modal" id="modalNextBtn" onclick="closeModal()">進入下一回合</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 基礎遊戲常數（對齊蔓越莓汁公司 S&OP 規則）
+    const INITIAL_CASH = 100000;
+    const INITIAL_RAW = 300;       // kg
+    const INITIAL_FINISHED = 1000; // 瓶
+    const MOQ_KG = 500;            // 採購起訂量
+    const RAW_PRICE = 80;          // NT$/kg
+    const MFG_COST = 12;           // NT$/瓶
+    const WH_RENT = 3;             // NT$/瓶
+    const WH_LIMIT = 8000;         // 倉庫上限
+    const WH_OVER_PENALTY = 10;    // 超倉額外罰金 NT$/瓶
+    const BASE_KG_PER_BOTTLE = 0.1;
+
+    // 擴充合約題庫（共 15 組多樣化商業標案，分為 A 保守型、B 標準型、C 高風險急單型三大池）
+    const CONTRACT_POOL = {
+      A: [
+        {
+          title: "區域超商常態補貨單",
+          demand: 3000,
+          price: 45,
+          penalty: 20,
+          story: "在地連鎖超商穩定拉貨，毛利較低但交貨壓力最小。"
+        },
+        {
+          title: "校園福利社學期合約",
+          demand: 2500,
+          price: 48,
+          penalty: 18,
+          story: "數量精簡、單價略升，適合產線吃緊或清庫存時承接。"
+        },
+        {
+          title: "企業員工餐廳團膳單",
+          demand: 3500,
+          price: 44,
+          penalty: 22,
+          story: "科技園區團膳採購，薄利多銷型入門合約。"
+        },
+        {
+          title: "社區有機超市試賣單",
+          demand: 2800,
+          price: 50,
+          penalty: 25,
+          story: "主打健康客群、單價不錯，但對缺貨罰則較嚴格。"
+        },
+        {
+          title: "地方農會特產展售單",
+          demand: 3200,
+          price: 46,
+          penalty: 15,
+          story: "展售會彈性供貨，違約罰金為所有標案中最低。"
+        }
+      ],
+      B: [
+        {
+          title: "連鎖量販店全國標準單",
+          demand: 5000,
+          price: 55,
+          penalty: 35,
+          story: "主力營收來源，需精準配合採購 MOQ 與產線排程。"
+        },
+        {
+          title: "連鎖早午餐品牌聯名單",
+          demand: 4800,
+          price: 58,
+          penalty: 38,
+          story: "品牌聯名推廣，單價提升至 NT$ 58，缺貨會影響門市檔期。"
+        },
+        {
+          title: "電商平台週末閃購專案",
+          demand: 5500,
+          price: 54,
+          penalty: 32,
+          story: "線上流量集中爆發，需求量達 5,500 瓶，考驗備貨能力。"
+        },
+        {
+          title: "連鎖電影院套餐搭售單",
+          demand: 4500,
+          price: 57,
+          penalty: 36,
+          story: "搭配強檔電影上映，需求適中且單價具備良好獲利空間。"
+        },
+        {
+          title: "百貨美食街聯合採購單",
+          demand: 5200,
+          price: 56,
+          penalty: 40,
+          story: "百貨週年慶前夕備貨，若交貨不足將面臨商場重罰。"
+        }
+      ],
+      C: [
+        {
+          title: "全國量販大促高承諾急單",
+          demand: 7000,
+          price: 68,
+          penalty: 55,
+          story: "超高單價誘惑！但需求高達 7,000 瓶，缺貨罰金極度沉重。"
+        },
+        {
+          title: "航空頭等艙指定飲品急單",
+          demand: 6200,
+          price: 72,
+          penalty: 60,
+          story: "頂級客製化訂單，每瓶售價高達 NT$ 72，延誤交貨天價賠償。"
+        },
+        {
+          title: "海外華人超市貨櫃出口單",
+          demand: 7500,
+          price: 66,
+          penalty: 50,
+          story: "船期固定、需一次裝滿整櫃 7,500 瓶，考驗全廠極限產能。"
+        },
+        {
+          title: "大型音樂祭獨家贊助供貨",
+          demand: 6500,
+          price: 70,
+          penalty: 58,
+          story: "活動期間現場暢飲需求，單價極高但無法分批延遲交貨。"
+        },
+        {
+          title: "直播天王年貨節包銷大單",
+          demand: 6800,
+          price: 69,
+          penalty: 52,
+          story: "秒殺級流量大單，若能 100% 履約將創造驚人單季暴利。"
+        }
+      ]
+    };
+
+    let usedPoolIndices = { A: [], B: [], C: [] };
+
+    function drawRoundContracts() {
+      const tiers = ["A", "B", "C"];
+      return tiers.map(tier => {
+        const list = CONTRACT_POOL[tier];
+        let availableIndices = list.map((_, idx) => idx).filter(idx => !usedPoolIndices[tier].includes(idx));
+        if (availableIndices.length === 0) {
+          usedPoolIndices[tier] = [];
+          availableIndices = list.map((_, idx) => idx);
+        }
+        const pickedIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+        usedPoolIndices[tier].push(pickedIdx);
+        const item = list[pickedIdx];
+
+        return {
+          id: tier,
+          name: `合約 ${tier}｜${item.title}`,
+          demand: item.demand,
+          price: item.price,
+          penalty: item.penalty,
+          story: item.story,
+          desc: `需求 ${item.demand.toLocaleString()} 瓶｜單價 NT$ ${item.price}｜缺貨罰金 NT$ ${item.penalty}/瓶`
+        };
+      });
+    }
+
+    const ROUNDS_CONFIG = [
+      {
+        round: 1,
+        title: "📢 第 1 回合情資：標準市場營運期",
+        desc: "產線運作正常（上限 6,000 瓶）、原料良率 100%（0.10 kg/瓶）。業務部已抽出本季 3 份新標案（A、B、C），請四部門依參數規格協商後下單。",
+        maxCapacity: 6000,
+        yieldRate: 1.0,
+        aiUnlocked: false
+      },
+      {
+        round: 2,
+        title: "⚠️ 第 2 回合突發事件：產線設備歲修保養",
+        desc: "工廠一號裝瓶線進行定期保養，本輪最大產能下降 25%（上限降為 4,500 瓶）！業務部同時收到新一輪 A、B、C 標案，請務必重新精算產能極限。",
+        maxCapacity: 4500,
+        yieldRate: 1.0,
+        aiUnlocked: false
+      },
+      {
+        round: 3,
+        title: "🤖 第 3 回合突發事件：原料酸度波動（良率 80%）＋ AI 模擬器解鎖！",
+        desc: "本季蔓越莓鮮果含水率偏高，生產良率降至 80%（每瓶需耗費 0.125 kg 原料，單瓶原料成本升為 NT$ 10）。本輪已解鎖「AI 最佳化模擬器」！",
+        maxCapacity: 6000,
+        yieldRate: 0.8,
+        aiUnlocked: true
+      }
+    ];
+
+    let state = {
+      round: 1,
+      cash: INITIAL_CASH,
+      raw: INITIAL_RAW,
+      finished: INITIAL_FINISHED,
+      currentContracts: drawRoundContracts(),
+      selectedContract: "B",
+      procureQty: 500,
+      prodQty: 4000,
+      history: [],
+      gameOver: false
+    };
+
+    function toggleGuideDrawer() {
+      const drawer = document.getElementById("guideDrawer");
+      drawer.style.display = drawer.style.display === "none" ? "block" : "none";
+    }
+
+    function switchTab(tabId, btn) {
+      if (tabId === "tabClose") {
+        document.getElementById("guideDrawer").style.display = "none";
+        return;
+      }
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".guide-content").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    }
+
+    function formatMoney(num) {
+      const sign = num < 0 ? "-" : "";
+      return sign + "NT$ " + Math.abs(Math.round(num)).toLocaleString("zh-TW");
+    }
+
+    function getCurrentConfig() {
+      return ROUNDS_CONFIG[state.round - 1];
+    }
+
+    function getEffectiveProcureKg(qty) {
+      if (qty <= 0) return 0;
+      return Math.max(qty, MOQ_KG);
+    }
+
+    function getKgPerBottle() {
+      const cfg = getCurrentConfig();
+      return BASE_KG_PER_BOTTLE / cfg.yieldRate;
+    }
+
+    function renderContracts() {
+      const cfg = getCurrentConfig();
+      const kgPerBottle = getKgPerBottle();
+      const unitTotalCost = kgPerBottle * RAW_PRICE + MFG_COST;
+
+      const container = document.getElementById("contractList");
+      container.innerHTML = state.currentContracts.map(c => {
+        const unitMargin = (c.price - unitTotalCost).toFixed(1);
+        return `
+          <label class="contract-option ${state.selectedContract === c.id ? "selected" : ""}" onclick="selectContract('${c.id}')">
+            <input type="radio" name="contract" value="${c.id}" ${state.selectedContract === c.id ? "checked" : ""} />
+            <strong>${c.name}</strong>
+            <div class="contract-meta">${c.desc}</div>
+            <div class="contract-meta" style="color:#1d4ed8; font-weight:600;">
+              → 單瓶毛利：NT$ ${unitMargin}（若 100% 履約毛利額：${formatMoney(c.demand * (c.price - unitTotalCost))}）
+            </div>
+            <div class="contract-story">「${c.story}」</div>
+          </label>
+        `;
+      }).join("");
+    }
+
+    function selectContract(id) {
+      if (state.gameOver) return;
+      state.selectedContract = id;
+      renderContracts();
+      updateSimulation();
+    }
+
+    function syncInput(type, val) {
+      if (state.gameOver) return;
+      let num = parseInt(val, 10);
+      if (isNaN(num) || num < 0) num = 0;
+
+      if (type === "procure") {
+        if (num > 2000) num = 2000;
+        state.procureQty = num;
+        document.getElementById("procureSlider").value = num;
+        document.getElementById("procureInput").value = num;
+      } else if (type === "prod") {
+        const cfg = getCurrentConfig();
+        if (num > cfg.maxCapacity) num = cfg.maxCapacity;
+        state.prodQty = num;
+        document.getElementById("prodSlider").value = num;
+        document.getElementById("prodInput").value = num;
+      }
+      updateSimulation();
+    }
+
+    function calculateOutcome(contractId, procureQty, prodQty, rawStock, finishedStock, cfg, contractsList) {
+      const contract = contractsList.find(c => c.id === contractId);
+      const billedKg = procureQty > 0 ? Math.max(procureQty, MOQ_KG) : 0;
+      const totalRawAvailable = Number((rawStock + billedKg).toFixed(2));
+      const kgPerBottle = Number((BASE_KG_PER_BOTTLE / cfg.yieldRate).toFixed(3));
+      const maxBottlesByRaw = Math.floor(totalRawAvailable / kgPerBottle);
+      const actualProd = Math.min(prodQty, cfg.maxCapacity, maxBottlesByRaw);
+
+      const usedRaw = Number((actualProd * kgPerBottle).toFixed(2));
+      const endingRaw = Number((totalRawAvailable - usedRaw).toFixed(2));
+
+      const totalAvailableFinished = finishedStock + actualProd;
+      const delivered = Math.min(totalAvailableFinished, contract.demand);
+      const shortage = Math.max(0, contract.demand - delivered);
+      const endingFinished = totalAvailableFinished - delivered;
+
+      const revenue = delivered * contract.price;
+      const procureCost = billedKg * RAW_PRICE;
+      const mfgCost = actualProd * MFG_COST;
+      const overStock = Math.max(0, endingFinished - WH_LIMIT);
+      const baseWhCost = endingFinished * WH_RENT;
+      const overWhPenalty = overStock * WH_OVER_PENALTY;
+      const whCost = baseWhCost + overWhPenalty;
+      const penaltyCost = shortage * contract.penalty;
+
+      const totalCost = procureCost + mfgCost + whCost + penaltyCost;
+      const netProfit = revenue - totalCost;
+
+      return {
+        initialRaw: rawStock,
+        initialFinished: finishedStock,
+        cfg,
+        contract,
+        inputProcureQty: procureQty,
+        inputProdQty: prodQty,
+        billedKg,
+        totalRawAvailable,
+        kgPerBottle,
+        maxBottlesByRaw,
+        actualProd,
+        usedRaw,
+        endingRaw,
+        totalAvailableFinished,
+        delivered,
+        shortage,
+        endingFinished,
+        overStock,
+        baseWhCost,
+        overWhPenalty,
+        revenue,
+        procureCost,
+        mfgCost,
+        whCost,
+        penaltyCost,
+        totalCost,
+        netProfit
+      };
+    }
+
+    function findOptimalDecision(rawStock, finishedStock, cfg, contractsList) {
+      let best = null;
+      const kgPerBottle = BASE_KG_PER_BOTTLE / cfg.yieldRate;
+
+      for (const c of contractsList) {
+        const neededProd = Math.max(0, c.demand - finishedStock);
+        const exactRawNeeded = Math.ceil(neededProd * kgPerBottle);
+        const exactProcureNeeded = Math.max(0, exactRawNeeded - rawStock);
+
+        const procureCandidates = new Set([0, 500, 600, 700, 800, 900, 1000, 1200]);
+        if (exactProcureNeeded > 0) {
+          procureCandidates.add(Math.max(MOQ_KG, exactProcureNeeded));
+        }
+
+        for (const pQty of procureCandidates) {
+          const billed = pQty > 0 ? Math.max(pQty, MOQ_KG) : 0;
+          const maxByRaw = Math.floor((rawStock + billed) / kgPerBottle);
+          const maxPossibleProd = Math.min(cfg.maxCapacity, maxByRaw);
+
+          const prodCandidates = new Set([0, maxPossibleProd]);
+          if (neededProd <= maxPossibleProd) {
+            prodCandidates.add(neededProd);
+          }
+
+          for (const prod of prodCandidates) {
+            const res = calculateOutcome(c.id, pQty, prod, rawStock, finishedStock, cfg, contractsList);
+            if (!best || res.netProfit > best.outcome.netProfit) {
+              best = {
+                contractId: c.id,
+                procureQty: pQty,
+                prodQty: prod,
+                outcome: res
+              };
+            }
+          }
+        }
+      }
+
+      const o = best.outcome;
+      const unitRawCost = Number((kgPerBottle * RAW_PRICE).toFixed(1));
+      const unitMargin = o.contract.price - unitRawCost - MFG_COST;
+      const reasons = [];
+
+      reasons.push(
+        `<strong>合約選擇邏輯（${o.contract.name}）：</strong>在良率 ${Math.round(cfg.yieldRate * 100)}% 下，每瓶原料成本為 NT$ ${unitRawCost} ＋ 製造成本 NT$ 12 ＝ 邊際變動成本 NT$ ${(unitRawCost + 12).toFixed(1)}。選擇此標案每瓶毛利達 <strong>NT$ ${unitMargin.toFixed(1)}</strong>，且交貨能力與罰金風險達到最佳平衡。`
+      );
+
+      if (best.procureQty === 0) {
+        reasons.push(
+          `<strong>採購門檻精算（0 kg）：</strong>期初原料庫存（${rawStock} kg）已足夠支應排產，若額外採購將強制觸發 MOQ 500 kg（NT$ 40,000）固定支出，反而拉低淨利，因此 AI 決定「零採購」。`
+        );
+      } else {
+        reasons.push(
+          `<strong>採購門檻精算（${best.procureQty} kg）：</strong>期初原料不足以支撐高毛利訂單，AI 跨越 MOQ 500 kg 門檻進貨 ${o.billedKg} kg，讓增加的銷售毛利遠大於採購支出。`
+        );
+      }
+
+      if (o.shortage > 0) {
+        reasons.push(
+          `<strong>缺貨容忍臨界點：</strong>受限於產能上限（${cfg.maxCapacity.toLocaleString()} 瓶），本案雖缺貨 ${o.shortage.toLocaleString()} 瓶並支付罰金 ${formatMoney(o.penaltyCost)}，但已交付部分的超高單價（NT$ ${o.contract.price}/瓶）仍使總淨利勝過其他低價標案。`
+        );
+      } else {
+        reasons.push(
+          `<strong>準時生產與零庫存（JIT）：</strong>排產 ${best.prodQty.toLocaleString()} 瓶加上期初成品 ${finishedStock.toLocaleString()} 瓶，剛好 100% 交付 ${o.contract.demand.toLocaleString()} 瓶訂單，期末成品庫存為 ${o.endingFinished} 瓶，將倉儲租金壓至最低。`
+        );
+      }
+
+      best.reasons = reasons;
+      return best;
+    }
+
+    function updateSimulation() {
+      const cfg = getCurrentConfig();
+      const kgPerBottle = getKgPerBottle();
+      const unitRawCost = Number((kgPerBottle * RAW_PRICE).toFixed(1));
+      const unitTotalCost = Number((unitRawCost + MFG_COST).toFixed(1));
+
+      // 頂部 KPI 更新
+      document.getElementById("roundBadge").textContent = `第 ${state.round} / 3 回合`;
+      document.getElementById("kpiCash").textContent = formatMoney(state.cash);
+      const diff = state.cash - INITIAL_CASH;
+      document.getElementById("kpiProfitDelta").textContent =
+        `較初始資金：${diff >= 0 ? "+" : ""}${formatMoney(diff)}`;
+
+      document.getElementById("kpiRaw").textContent = `${state.raw} kg`;
+      document.getElementById("kpiRawSub").textContent =
+        `現有庫存可支應 ${Math.floor(state.raw / kgPerBottle).toLocaleString()} 瓶生產`;
+      document.getElementById("kpiFinished").textContent = `${state.finished.toLocaleString()} 瓶`;
+      document.getElementById("kpiCapacity").textContent = `${cfg.maxCapacity.toLocaleString()} 瓶`;
+      document.getElementById("kpiYieldSub").textContent =
+        `每瓶耗料：${kgPerBottle.toFixed(3)} kg（良率 ${Math.round(cfg.yieldRate * 100)}%）`;
+
+      // 更新四大部門內的動態參數規格表（Spec Sheets）
+      document.getElementById("specUnitTotalCost").textContent = `NT$ ${unitTotalCost.toFixed(1)} / 瓶`;
+      document.getElementById("specKgPerBottle").textContent = `${kgPerBottle.toFixed(3)} kg / 瓶（良率 ${Math.round(cfg.yieldRate * 100)}%）`;
+      document.getElementById("specRawCostPerBottle").textContent = `NT$ ${unitRawCost.toFixed(1)} / 瓶`;
+      document.getElementById("specMaxCap").textContent = `${cfg.maxCapacity.toLocaleString()} 瓶 / 輪`;
+      document.getElementById("specFullMfgCost").textContent = `NT$ ${unitTotalCost.toFixed(1)} / 瓶`;
+
+      // 橫幅更新
+      const banner = document.getElementById("eventBanner");
+      document.getElementById("eventTitle").textContent = cfg.title;
+      document.getElementById("eventDesc").textContent = cfg.desc;
+      if (cfg.aiUnlocked) {
+        banner.classList.add("ai-unlocked");
+        document.getElementById("aiButtonWrap").style.display = "block";
+      } else {
+        banner.classList.remove("ai-unlocked");
+        document.getElementById("aiButtonWrap").style.display = "none";
+      }
+
+      // 製造滑桿上限同步
+      document.getElementById("prodSlider").max = cfg.maxCapacity;
+      document.getElementById("prodInput").max = cfg.maxCapacity;
+      if (state.prodQty > cfg.maxCapacity) {
+        state.prodQty = cfg.maxCapacity;
+        document.getElementById("prodSlider").value = cfg.maxCapacity;
+        document.getElementById("prodInput").value = cfg.maxCapacity;
+      }
+
+      // 採購試算與換算說明
+      document.getElementById("procureDisplay").textContent = `${state.procureQty} kg`;
+      const billedKg = getEffectiveProcureKg(state.procureQty);
+      const newBottlesFromProcure = Math.floor(billedKg / kgPerBottle);
+      const moqAlert = document.getElementById("moqAlert");
+      if (state.procureQty > 0 && state.procureQty < MOQ_KG) {
+        moqAlert.textContent = `⚠️ 未達起訂量 500 kg，系統將自動按 500 kg 進貨並計價！`;
+      } else {
+        moqAlert.textContent = "";
+      }
+      document.getElementById("procureSummary").innerHTML =
+        `實際計費進貨：<strong>${billedKg} kg</strong>｜採購支出：<strong>${formatMoney(billedKg * RAW_PRICE)}</strong><br/>` +
+        `本批新購原料折合可新產出：<strong>${newBottlesFromProcure.toLocaleString()} 瓶</strong>`;
+
+      // 完整模擬計算
+      const sim = calculateOutcome(
+        state.selectedContract,
+        state.procureQty,
+        state.prodQty,
+        state.raw,
+        state.finished,
+        cfg,
+        state.currentContracts
+      );
+
+      // 更新製造部門原料瓶頸上限規格
+      document.getElementById("specRawBottleCap").textContent = `${sim.maxBottlesByRaw.toLocaleString()} 瓶（可用 ${sim.totalRawAvailable} kg）`;
+
+      // 業務部門即時損益提示
+      const selectedUnitMargin = (sim.contract.price - unitTotalCost).toFixed(1);
+      document.getElementById("salesHint").innerHTML =
+        `目前選擇：<strong>${sim.contract.name}</strong><br/>` +
+        `合約售價 NT$ ${sim.contract.price} − 變動成本 NT$ ${unitTotalCost.toFixed(1)} ＝ <strong>單瓶毛利 NT$ ${selectedUnitMargin}</strong>`;
+
+      // 製造部門提示與摘要
+      document.getElementById("prodDisplay").textContent = `${state.prodQty.toLocaleString()} 瓶`;
+      const prodAlert = document.getElementById("prodAlert");
+      if (state.prodQty > sim.maxBottlesByRaw) {
+        prodAlert.className = "alert-text";
+        prodAlert.textContent = `⚠️ 原料不足！目前總原料（${sim.totalRawAvailable} kg）最多僅能生產 ${sim.maxBottlesByRaw.toLocaleString()} 瓶`;
+      } else {
+        prodAlert.className = "ok-text";
+        prodAlert.textContent = `✓ 原料充足（預計耗料 ${sim.usedRaw} kg，期末剩餘原料 ${sim.endingRaw} kg）`;
+      }
+      document.getElementById("prodSummary").innerHTML =
+        `本輪可用總原料：<strong>${sim.totalRawAvailable} kg</strong>｜實際產出：<strong>${sim.actualProd.toLocaleString()} 瓶</strong><br/>` +
+        `本輪加工製造費（${sim.actualProd.toLocaleString()} × NT$ 12）：<strong>${formatMoney(sim.mfgCost)}</strong>`;
+
+      // 倉儲與交貨試算更新
+      const fulfillRate = Math.round((sim.delivered / sim.contract.demand) * 100);
+      document.getElementById("estSupply").textContent =
+        `${sim.totalAvailableFinished.toLocaleString()} 瓶（期初 ${state.finished.toLocaleString()} + 產出 ${sim.actualProd.toLocaleString()}）`;
+      document.getElementById("estFulfill").textContent =
+        `${fulfillRate}% (${sim.delivered.toLocaleString()} / ${sim.contract.demand.toLocaleString()} 瓶)`;
+      document.getElementById("estEndingStock").textContent = `${sim.endingFinished.toLocaleString()} 瓶`;
+
+      const occRate = Math.min(100, Math.round((sim.endingFinished / WH_LIMIT) * 100));
+      document.getElementById("whPercent").textContent = `${occRate}%`;
+      const whBar = document.getElementById("whBar");
+      whBar.style.width = `${occRate}%`;
+      whBar.style.backgroundColor = sim.overStock > 0 ? "var(--danger)" : "var(--accent)";
+
+      const whAlert = document.getElementById("whAlert");
+      if (sim.overStock > 0) {
+        whAlert.innerHTML =
+          `<span style="color:var(--danger);font-weight:700;">⚠️ 爆倉警告！超出上限 ${sim.overStock.toLocaleString()} 瓶</span><br/>` +
+          `基礎倉租 ${formatMoney(sim.baseWhCost)} ＋ 超倉罰金 ${formatMoney(sim.overWhPenalty)} ＝ <strong>${formatMoney(sim.whCost)}</strong>`;
+      } else if (sim.shortage > 0) {
+        whAlert.innerHTML =
+          `<span style="color:var(--danger);font-weight:700;">⚠️ 缺貨 ${sim.shortage.toLocaleString()} 瓶（罰金 NT$ ${sim.contract.penalty}/瓶）</span><br/>` +
+          `缺貨違約金：<strong>${formatMoney(sim.penaltyCost)}</strong>｜期末倉租：<strong>${formatMoney(sim.whCost)}</strong>`;
+      } else {
+        whAlert.innerHTML =
+          `✓ 100% 準時履約無違約金！<br/>` +
+          `期末倉租（${sim.endingFinished.toLocaleString()} 瓶 × NT$ 3）：<strong>${formatMoney(sim.whCost)}</strong>`;
+      }
+
+      // 底部預估損益更新
+      document.getElementById("prevRev").textContent = formatMoney(sim.revenue);
+      document.getElementById("prevCost").textContent = formatMoney(sim.procureCost + sim.mfgCost + sim.baseWhCost);
+      document.getElementById("prevPenalty").textContent = formatMoney(sim.penaltyCost + sim.overWhPenalty);
+      const netEl = document.getElementById("prevNet");
+      netEl.textContent = (sim.netProfit >= 0 ? "+" : "") + formatMoney(sim.netProfit);
+      netEl.style.color = sim.netProfit >= 0 ? "var(--accent)" : "var(--danger)";
+    }
+
+    function applyAiOptimization() {
+      const cfg = getCurrentConfig();
+      const best = findOptimalDecision(state.raw, state.finished, cfg, state.currentContracts);
+      if (!best) return;
+
+      state.selectedContract = best.contractId;
+      state.procureQty = best.procureQty;
+      state.prodQty = best.prodQty;
+
+      renderContracts();
+      document.getElementById("procureSlider").value = best.procureQty;
+      document.getElementById("procureInput").value = best.procureQty;
+      document.getElementById("prodSlider").value = best.prodQty;
+      document.getElementById("prodInput").value = best.prodQty;
+      updateSimulation();
+
+      const insightCard = document.getElementById("aiInsightCard");
+      const insightList = document.getElementById("aiInsightList");
+      insightList.innerHTML = best.reasons.map(r => `<li>${r}</li>`).join("");
+      insightCard.style.display = "block";
+      insightCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function commitRound() {
+      if (state.gameOver) return;
+      const cfg = getCurrentConfig();
+      const roundContractsSnapshot = [...state.currentContracts];
+      const outcome = calculateOutcome(
+        state.selectedContract,
+        state.procureQty,
+        state.prodQty,
+        state.raw,
+        state.finished,
+        cfg,
+        roundContractsSnapshot
+      );
+      const aiBest = findOptimalDecision(state.raw, state.finished, cfg, roundContractsSnapshot);
+
+      state.cash += outcome.netProfit;
+      state.raw = outcome.endingRaw;
+      state.finished = outcome.endingFinished;
+
+      state.history.push({
+        round: state.round,
+        outcome,
+        aiBest
+      });
+
+      document.getElementById("exportBtn").style.display = "inline-block";
+      renderHistoryTable();
+      showRoundModal(state.round, outcome, aiBest);
+    }
+
+    function buildStepBreakdownHtml(o, label, isAi) {
+      const moqNote = (o.inputProcureQty > 0 && o.inputProcureQty < MOQ_KG)
+        ? `（下單 ${o.inputProcureQty} kg 未達 MOQ，按 500 kg 計）`
+        : (o.inputProcureQty === 0 ? `（零採購，免觸發 MOQ 門檻）` : ``);
+
+      const whFormula = o.overStock > 0
+        ? `${o.endingFinished.toLocaleString()} 瓶 × NT$ 3 + 超倉 ${o.overStock.toLocaleString()} 瓶 × NT$ 10 = ${formatMoney(o.whCost)}`
+        : `${o.endingFinished.toLocaleString()} 瓶 × NT$ 3 = ${formatMoney(o.whCost)}`;
+
+      return `
+        <div class="step-col ${isAi ? "ai-col" : "user-col"}">
+          <div class="step-col-title">
+            <span>${label}</span>
+            <strong style="color:${o.netProfit >= 0 ? (isAi ? "var(--accent)" : "var(--secondary)") : "var(--danger)"}">
+              淨利：${o.netProfit >= 0 ? "+" : ""}${formatMoney(o.netProfit)}
+            </strong>
+          </div>
+          <ul class="step-list">
+            <li>
+              <span class="step-tag">步驟 1｜業務簽約</span> ${o.contract.name}（單價 NT$ ${o.contract.price}）
+              <span class="math-line">合約承諾需求：${o.contract.demand.toLocaleString()} 瓶｜缺貨罰金：NT$ ${o.contract.penalty}/瓶</span>
+            </li>
+            <li>
+              <span class="step-tag">步驟 2｜採購進料</span> 計價 ${o.billedKg} kg ${moqNote}
+              <span class="math-line">可用原料 = 期初 ${o.initialRaw} + 進貨 ${o.billedKg} = ${o.totalRawAvailable} kg｜採購費 = ${o.billedKg} × NT$ 80 = ${formatMoney(o.procureCost)}</span>
+            </li>
+            <li>
+              <span class="step-tag">步驟 3｜製造排產</span> 實際產出 ${o.actualProd.toLocaleString()} 瓶（良率 ${Math.round(o.cfg.yieldRate * 100)}%）
+              <span class="math-line">耗料 = ${o.actualProd.toLocaleString()} × ${o.kgPerBottle} kg = ${o.usedRaw} kg（剩 ${o.endingRaw} kg）｜製造費 = ${o.actualProd.toLocaleString()} × NT$ 12 = ${formatMoney(o.mfgCost)}</span>
+            </li>
+            <li>
+              <span class="step-tag">步驟 4｜交付與倉儲</span> 交付 ${o.delivered.toLocaleString()} 瓶｜期末庫存 ${o.endingFinished.toLocaleString()} 瓶
+              <span class="math-line">可供貨 ${o.initialFinished.toLocaleString()} + ${o.actualProd.toLocaleString()} = ${o.totalAvailableFinished.toLocaleString()} 瓶｜缺貨 ${o.shortage.toLocaleString()} 瓶</span>
+            </li>
+            <li>
+              <span class="step-tag">步驟 5｜營收與罰款</span> 營收 ${formatMoney(o.revenue)}｜倉租與違約 ${formatMoney(o.whCost + o.penaltyCost)}
+              <span class="math-line">營收 = ${o.delivered.toLocaleString()} × NT$ ${o.contract.price}｜倉儲 = ${whFormula}｜違約 = ${o.shortage.toLocaleString()} × NT$ ${o.contract.penalty} = ${formatMoney(o.penaltyCost)}</span>
+            </li>
+            <li>
+              <span class="step-tag">步驟 6｜最終淨利</span> <strong>${formatMoney(o.revenue)} − (${formatMoney(o.procureCost)} + ${formatMoney(o.mfgCost)} + ${formatMoney(o.whCost)} + ${formatMoney(o.penaltyCost)}) = ${o.netProfit >= 0 ? "+" : ""}${formatMoney(o.netProfit)}</strong>
+            </li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function buildRoundDiagnosis(userO, aiBest) {
+      const aiO = aiBest.outcome;
+      const gap = aiO.netProfit - userO.netProfit;
+      if (gap <= 0) {
+        return `🎉 <strong>完美決策！</strong>您在本輪的決策組合已達到與 AI 理論最佳解完全相同的最高淨利（<strong>${formatMoney(userO.netProfit)}</strong>），四部門產銷完全同步！`;
+      }
+
+      const notes = [];
+      if (userO.contract.id !== aiO.contract.id) {
+        notes.push(`<strong>合約策略差異：</strong>您選擇了「${userO.contract.name}」，而 AI 選擇「${aiO.contract.name}」（單價與需求規模更契合當輪產能與原料上限）。`);
+      }
+      if (userO.billedKg !== aiO.billedKg) {
+        notes.push(`<strong>採購成本差異：</strong>您實際採購計費 ${userO.billedKg} kg（${formatMoney(userO.procureCost)}），AI 則採購 ${aiO.billedKg} kg（${formatMoney(aiO.procureCost)}），兩者採購現金流相差 ${formatMoney(Math.abs(userO.procureCost - aiO.procureCost))}。`);
+      }
+      if (userO.penaltyCost > aiO.penaltyCost) {
+        notes.push(`<strong>缺貨違約損失：</strong>您的方案因供貨不足產生了 ${formatMoney(userO.penaltyCost)} 違約罰款（較 AI 多出 ${formatMoney(userO.penaltyCost - aiO.penaltyCost)}）。`);
+      }
+      if (userO.whCost > aiO.whCost) {
+        notes.push(`<strong>庫存積壓費用：</strong>您的期末剩餘成品庫存為 ${userO.endingFinished.toLocaleString()} 瓶，多支付了 ${formatMoney(userO.whCost - aiO.whCost)} 倉儲租金。`);
+      }
+      if (notes.length === 0) {
+        notes.push(`<strong>排產數量微調：</strong>AI 透過精準計算需求缺口，調整排產至 ${aiO.actualProd.toLocaleString()} 瓶，使邊際毛利最大化。`);
+      }
+
+      return `💡 <strong>本輪淨利差距分析（您與 AI 相差 ${formatMoney(gap)}）：</strong><br/>` + notes.join("<br/>");
+    }
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById("historyBody");
+      tbody.innerHTML = state.history.map(item => {
+        const o = item.outcome;
+        const aiNet = item.aiBest.outcome.netProfit;
+        return `
+          <tr>
+            <td><strong>第 ${item.round} 輪</strong></td>
+            <td>${o.contract.name}</td>
+            <td>${o.delivered.toLocaleString()} / ${o.contract.demand.toLocaleString()} 瓶</td>
+            <td>${formatMoney(o.revenue)}</td>
+            <td>${formatMoney(o.procureCost + o.mfgCost)}</td>
+            <td style="color:${o.penaltyCost > 0 ? "var(--danger)" : "inherit"}">${formatMoney(o.whCost + o.penaltyCost)}</td>
+            <td style="font-weight:700; color:${o.netProfit >= 0 ? "var(--accent)" : "var(--danger)"}">
+              ${o.netProfit >= 0 ? "+" : ""}${formatMoney(o.netProfit)}
+            </td>
+            <td style="color:var(--secondary); font-weight:600;">
+              +${formatMoney(aiNet)}（${item.aiBest.outcome.contract.name.split("｜")[0]}）
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      const chartBox = document.getElementById("chartBox");
+      chartBox.style.display = "grid";
+      const maxVal = Math.max(
+        100000,
+        ...state.history.map(h => Math.max(h.outcome.netProfit, h.aiBest.outcome.netProfit))
+      );
+
+      chartBox.innerHTML = `
+        <div style="font-weight:800; font-size:1.05rem; color:var(--secondary);">
+          📈 單輪淨利對比與逐步驟詳細算式拆解（您的決策 vs. AI 最佳解法）
+        </div>
+      ` + state.history.map(h => {
+        const uo = h.outcome;
+        const aio = h.aiBest.outcome;
+        const userW = Math.max(2, Math.round((Math.max(0, uo.netProfit) / maxVal) * 100));
+        const aiW = Math.max(2, Math.round((Math.max(0, aio.netProfit) / maxVal) * 100));
+        const gap = aio.netProfit - uo.netProfit;
+
+        return `
+          <div class="round-comparison-block">
+            <div class="round-comp-header">
+              <span class="round-comp-title">第 ${h.round} 回合｜單輪淨利長條對比與算式還原</span>
+              <span class="gap-badge ${gap <= 0 ? "perfect" : ""}">
+                ${gap <= 0 ? "★ 已達 AI 最佳解水準" : `與 AI 最佳解差距：${formatMoney(gap)}`}
+              </span>
+            </div>
+
+            <div class="chart-row">
+              <div><strong>第 ${h.round} 輪 (您)</strong></div>
+              <div class="bar-track"><div class="bar-fill" style="width:${userW}%"></div></div>
+              <div style="font-weight:700;">${uo.netProfit >= 0 ? "+" : ""}${formatMoney(uo.netProfit)}</div>
+            </div>
+            <div class="chart-row">
+              <div style="color:var(--accent); font-weight:700;">第 ${h.round} 輪 (AI)</div>
+              <div class="bar-track"><div class="bar-fill ai" style="width:${aiW}%"></div></div>
+              <div style="color:var(--accent); font-weight:700;">+${formatMoney(aio.netProfit)}</div>
+            </div>
+
+            <div class="step-compare-grid">
+              ${buildStepBreakdownHtml(uo, `👤 您的決策（第 ${h.round} 輪）逐步算式`, false)}
+              ${buildStepBreakdownHtml(aio, `🤖 AI 最佳解法（第 ${h.round} 輪）逐步算式`, true)}
+            </div>
+
+            <div class="diagnosis-box">
+              ${buildRoundDiagnosis(uo, h.aiBest)}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function showRoundModal(roundNum, outcome, aiBest) {
+      const modal = document.getElementById("resultModal");
+      const title = document.getElementById("modalTitle");
+      const body = document.getElementById("modalBody");
+      const btn = document.getElementById("modalNextBtn");
+
+      const isFinal = roundNum >= 3;
+      title.textContent = isFinal ? "🏆 3 回合商戰結束｜最終經營復盤" : `📋 第 ${roundNum} 回合結算報告`;
+
+      let html = `
+        <p>本輪您簽署了 <strong>${outcome.contract.name}</strong>，實際生產 <strong>${outcome.actualProd.toLocaleString()} 瓶</strong>，成功交付 <strong>${outcome.delivered.toLocaleString()} 瓶</strong>。</p>
+        <div class="summary-box">
+          <div>• 銷售總營收：<strong>${formatMoney(outcome.revenue)}</strong></div>
+          <div>• 原料採購支出（計價 ${outcome.billedKg} kg）：${formatMoney(outcome.procureCost)}</div>
+          <div>• 產線製造成本：${formatMoney(outcome.mfgCost)}</div>
+          <div>• 期末倉儲與超倉費：${formatMoney(outcome.whCost)}</div>
+          <div>• 缺貨違約罰款：${formatMoney(outcome.penaltyCost)}</div>
+          <hr style="margin:8px 0; border:none; border-top:1px solid #e5e7eb;" />
+          <div style="font-size:1.05rem;">本輪淨損益：<strong style="color:${outcome.netProfit >= 0 ? "var(--accent)" : "var(--danger)"}">${formatMoney(outcome.netProfit)}</strong></div>
+          <div style="font-size:0.86rem; color:#115e59; background:#f0fdfa; padding:10px; border-radius:6px; margin-top:8px;">
+            <strong>🤖 AI 最佳化對照（單輪淨利 ${formatMoney(aiBest.outcome.netProfit)}）：</strong><br/>
+            建議方案為「${aiBest.outcome.contract.name}」＋採購 ${aiBest.procureQty} kg＋排產 ${aiBest.prodQty.toLocaleString()} 瓶。<br/>
+            <span style="color:#374151;">（關閉視窗後，下方報表區已展開本輪六步驟完整算式對比！）</span>
+          </div>
+        </div>
+      `;
+
+      if (isFinal) {
+        const totalProfit = state.cash - INITIAL_CASH;
+        const totalAiProfit = state.history.reduce((sum, h) => sum + h.aiBest.outcome.netProfit, 0);
+        const efficiency = Math.round((totalProfit / totalAiProfit) * 100);
+        let rank = "C 級｜部門本位主義（需加強跨部門溝通）";
+        if (efficiency >= 92) rank = "S 級｜卓越 S&OP 供應鏈大師";
+        else if (efficiency >= 78) rank = "A 級｜穩健產銷協調者";
+        else if (efficiency >= 60) rank = "B 級｜成長中營運團隊";
+
+        html += `
+          <div class="summary-box" style="background:#fdf2f4; border-color:#fbcfe8;">
+            <div style="font-size:1.1rem; font-weight:800; color:var(--primary); margin-bottom:6px;">
+              最終評價：${rank}
+            </div>
+            <div>• 3 回合累計營運淨利：<strong>${formatMoney(totalProfit)}</strong>（期末總資金 ${formatMoney(state.cash)}）</div>
+            <div>• 決策達成率（對比 AI 理論上限）：<strong>${efficiency}%</strong></div>
+            <p style="margin-top:8px; font-size:0.86rem; color:#374151;">
+              <strong>課堂討論思考題：</strong>在真實企業中，AI 雖然能瞬間算出數字上的最佳解，但為何業務仍想衝高業績、採購想壓低單價、製造希望排程穩定？如何透過 S&amp;OP 會議建立共同 KPI？
+            </p>
+          </div>
+        `;
+        btn.textContent = "查看三回合完整算式對比報表";
+      } else {
+        btn.textContent = `抽取第 ${roundNum + 1} 回合新合約並繼續 ➔`;
+      }
+
+      body.innerHTML = html;
+      modal.classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("resultModal").classList.remove("active");
+      if (state.round >= 3) {
+        state.gameOver = true;
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.textContent = "🏁 3 回合已結束（可匯出 CSV 或重新抽題重玩）";
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.6";
+        submitBtn.style.cursor = "not-allowed";
+        document.getElementById("chartBox").scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        state.round += 1;
+        state.currentContracts = drawRoundContracts();
+        document.getElementById("aiInsightCard").style.display = "none";
+        renderContracts();
+        updateSimulation();
+      }
+    }
+
+    function exportCsvReport() {
+      if (state.history.length === 0) return;
+      const headers = ["回合", "簽署合約", "需求瓶數", "實際交付瓶數", "銷售營收", "採購計費kg", "採購成本", "製造成本", "倉儲費用", "缺貨違約金", "本輪淨利", "AI建議合約", "AI最佳淨利", "淨利差距"];
+      const rows = state.history.map(h => {
+        const o = h.outcome;
+        const ai = h.aiBest.outcome;
+        return [
+          `第${h.round}輪`,
+          o.contract.name,
+          o.contract.demand,
+          o.delivered,
+          o.revenue,
+          o.billedKg,
+          o.procureCost,
+          o.mfgCost,
+          o.whCost,
+          o.penaltyCost,
+          o.netProfit,
+          ai.contract.name,
+          ai.netProfit,
+          ai.netProfit - o.netProfit
+        ].join(",");
+      });
+
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "蔓越莓汁公司_供應鏈商戰透明參數報表.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetGame() {
+      usedPoolIndices = { A: [], B: [], C: [] };
+      state = {
+        round: 1,
+        cash: INITIAL_CASH,
+        raw: INITIAL_RAW,
+        finished: INITIAL_FINISHED,
+        currentContracts: drawRoundContracts(),
+        selectedContract: "B",
+        procureQty: 500,
+        prodQty: 4000,
+        history: [],
+        gameOver: false
+      };
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.textContent = "✅ 確認本輪決策並結算";
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "1";
+      submitBtn.style.cursor = "pointer";
+
+      document.getElementById("aiInsightCard").style.display = "none";
+      document.getElementById("exportBtn").style.display = "none";
+      document.getElementById("procureSlider").value = 500;
+      document.getElementById("procureInput").value = 500;
+      document.getElementById("prodSlider").value = 4000;
+      document.getElementById("prodInput").value = 4000;
+      document.getElementById("historyBody").innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align:center; color:var(--muted);">尚未進行回合結算，請調整上方四部門參數後點擊「確認本輪決策並結算」。</td>
+        </tr>
+      `;
+      document.getElementById("chartBox").style.display = "none";
+
+      renderContracts();
+      updateSimulation();
+    }
+
+    renderContracts();
+    updateSimulation();
+  </script>
+</body>
+</html>
