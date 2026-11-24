@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>輝達暴漲31%，美股這次真的穩了？｜深度互動解析儀表板</title>
+  <!-- Chosen Palette: Warm Editorial Slate & Sage (Main Background: #FAF8F5, Card Surface: #FFFFFF, Primary Text: #1E293B, Positive Accent: #0F766E, Risk Accent: #B45309) -->
+  <!-- Application Structure Plan: Designed a four-stage interactive decision-support dashboard rather than a linear text dump: (1) Executive Verdict & Core Pulse KPIs for immediate synthesis; (2) Rebound Anatomy & Fundamentals comparing index bounce vs. NVDA's Q3 FY27 financial fortress via interactive tabs and charts; (3) Interactive Four-Pillar Risk Explorer pairing qualitative political/macro/capex/technical breakdowns with dynamic context-switching Chart.js visualizations; and (4) Two-Week Catalyst Watchlist & Interactive Stabilization Readiness Simulator allowing users to test conditions required for true market recovery. -->
+  <!-- Visualization & Content Choices: 1. Market Index Rebound (Nov 20 vs Nov 23 % gain & YTD) -> Goal: Compare -> Horizontal Bar Chart (Chart.js Canvas) -> Hover tooltips & tab switch -> Clearly contrasts single-day surge against prior week's drawdown. 2. NVDA Revenue & Margin Trajectory (Q3 Actual vs Q4 Guidance) -> Goal: Change/Inform -> Grouped Bar Chart (Chart.js Canvas) -> Interactive financial toggle -> Highlights $115.8B/$130B growth despite 0 China DC assumption. 3. Dynamic Risk Explorer Charts (4 switchable views: China/Megaspeed Exposure, Fed 91.2% Hike & Inflation Benchmarks, Mag 7 vs S&P 493 Earnings Divergence, NVDA Price vs Moving Averages) -> Goal: Relationships/Compare -> Dynamic Bar Charts (Chart.js Canvas) -> Clicking risk tabs updates both narrative and chart -> Avoids vertical clutter while grounding every risk in hard data. 4. Interactive Stabilization Checklist -> Goal: Organize/Synthesize -> HTML/CSS/JS state calculator -> Clickable condition toggles -> Translates report's concluding criteria into an actionable readiness score. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+  <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #FAF8F5;
+      color: #1E293B;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 290px;
+      max-height: 360px;
+    }
+    @media (min-width: 768px) {
+      .chart-container {
+        height: 330px;
+      }
+    }
+    .nav-pill.active {
+      background-color: #1E293B;
+      color: #FFFFFF;
+    }
+    .risk-tab.active {
+      border-color: #B45309;
+      background-color: #FFFBEB;
+    }
+    .timeline-filter.active {
+      background-color: #0F766E;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-amber-100 selection:text-amber-900">
+
+  <header class="sticky top-0 z-30 bg-[#FAF8F5]/95 backdrop-blur border-b border-stone-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-stone-900 text-amber-400 font-bold text-sm">NV</span>
+        <div>
+          <span class="text-xs font-semibold tracking-wider uppercase text-amber-700 block">美股深度研究互動報告｜2026.11.24</span>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">輝達暴漲 31%，美股這次真的穩了？</h1>
+        </div>
+      </div>
+      <nav class="flex items-center gap-1.5 text-xs sm:text-sm overflow-x-auto">
+        <button onclick="scrollToSection('verdict')" class="nav-pill active px-3 py-1.5 rounded-full font-medium transition hover:bg-stone-200">核心結論</button>
+        <button onclick="scrollToSection('rebound')" class="nav-pill px-3 py-1.5 rounded-full font-medium text-slate-600 transition hover:bg-stone-200">反彈與財報</button>
+        <button onclick="scrollToSection('risks')" class="nav-pill px-3 py-1.5 rounded-full font-medium text-slate-600 transition hover:bg-stone-200">四大未解風險</button>
+        <button onclick="scrollToSection('watchlist')" class="nav-pill px-3 py-1.5 rounded-full font-medium text-slate-600 transition hover:bg-stone-200">兩週決戰清單</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-12">
+
+    <section id="verdict" class="space-y-6">
+      <div class="bg-white rounded-2xl border border-stone-200 p-6 sm:p-8 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-3 max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+              <span>⚠️ 核心研判：「止跌」不等於「穩了」</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              事件驅動型報復反彈，尚未消除結構性逆風
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              美東時間 11 月 23 日，輝達（NVIDIA）在美國總統川普介入促成執行長黃仁勳光速復職後，單日狂飆 <strong class="text-teal-700">31.48%</strong>（市值暴增約 9,520 億美元），帶動那斯達克勁揚 6.5%、標普 500 強彈 4.83%，成功止住連七日重挫的恐慌拋售。然而，這波行情本質上是「領導人回歸」引爆的空頭回補共振；在華府聽證會、聯準會升息威脅、AI 舉債壓力與均線反壓四大關卡過關前，美股仍處於高波動築底期。
+            </p>
+          </div>
+          <div class="lg:w-72 shrink-0 bg-stone-50 rounded-xl border border-stone-200 p-4 space-y-2.5">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">市場狀態儀表板</div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-600">短線情緒</span>
+              <span class="font-bold text-teal-700">超賣報復性修復</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-600">波段結構</span>
+              <span class="font-bold text-amber-700">高檔震盪未翻多</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-600">12/9 升息定價</span>
+              <span class="font-bold text-rose-700">91.2%（升息一碼）</span>
+            </div>
+            <div class="pt-2 border-t border-stone-200 text-xs text-slate-500">
+              觀察重點：11/25 PCE 通膨與 12/1–12/3 國會連環聽證會。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-medium text-slate-500 mb-1">
+            <span>輝達（NVDA）11/23 收盤</span>
+            <span class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded font-semibold">+31.48%</span>
+          </div>
+          <div class="text-2xl font-extrabold text-slate-900">$165.05</div>
+          <p class="text-xs text-slate-500 mt-2">市值回升至 3.977 兆美元，但仍較 10/6 高點（$243.37）低約 32%。</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-medium text-slate-500 mb-1">
+            <span>標普 500 / 那斯達克</span>
+            <span class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded font-semibold">+4.83% / +6.5%</span>
+          </div>
+          <div class="text-2xl font-extrabold text-slate-900">7,243.94</div>
+          <p class="text-xs text-slate-500 mt-2">僅收復前週標普（-8.61%）約一半跌幅，那斯達克 YTD 轉為 +3.6%。</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-medium text-slate-500 mb-1">
+            <span>恐慌指數（VIX）開盤前</span>
+            <span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold">-12.23%</span>
+          </div>
+          <div class="text-2xl font-extrabold text-slate-900">31.42</div>
+          <p class="text-xs text-slate-500 mt-2">雖自 35.89 高點回落，仍遠高於 11/13 的 19.30，避險戒心未退。</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-medium text-slate-500 mb-1">
+            <span>10 年期美債殖利率</span>
+            <span class="text-rose-700 bg-rose-50 px-2 py-0.5 rounded font-semibold">+1 bps</span>
+          </div>
+          <div class="text-2xl font-extrabold text-slate-900">4.92%</div>
+          <p class="text-xs text-slate-500 mt-2">緊貼 5% 整數心理關卡，持續壓縮高估值科技股與舉債融資空間。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="rebound" class="space-y-5">
+      <div class="space-y-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-teal-700">01｜反彈真相與基本面底氣</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">不只是政治救援：極端超賣後的財報價值修復</h2>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+          本區塊拆解 11 月 23 日反彈的雙重驅動力：一方面是川普與范斯施壓董事會讓黃仁勳復職、引爆單日 1,100 萬口選擇權空頭回補；另一方面則是輝達 11 月 17 日公布的 Q3 FY27 財報展現強勁算力需求，使先前被壓縮至 16～18 倍的預估本益比具備機構回補底氣。您可透過下方按鈕切換檢視「指數反彈對照」與「輝達財報成長軌跡」。
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-stone-100">
+          <div class="inline-flex rounded-lg bg-stone-100 p-1">
+            <button id="btn-chart-market" onclick="switchReboundChart('market')" class="px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-white text-slate-900 shadow-sm transition">
+              📊 主要指數與半導體單日反彈幅度
+            </button>
+            <button id="btn-chart-earnings" onclick="switchReboundChart('earnings')" class="px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
+              💰 輝達 Q3 財報與 Q4 財測（含零中國假設）
+            </button>
+          </div>
+          <span id="rebound-chart-badge" class="text-xs font-medium text-slate-500">單位：百分比（%）｜基準日：2026/11/23</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-6 items-center">
+          <div class="lg:col-span-7">
+            <div class="chart-container">
+              <canvas id="reboundChartCanvas"></canvas>
+            </div>
+          </div>
+          <div id="rebound-insight-panel" class="lg:col-span-5 bg-stone-50 rounded-xl border border-stone-200 p-5 space-y-3">
+            <h3 class="font-bold text-slate-900 text-base">指數強彈背後的真實定位</h3>
+            <ul class="space-y-2.5 text-sm text-slate-600">
+              <li class="flex items-start gap-2">
+                <span class="text-teal-700 font-bold mt-0.5">✓</span>
+                <span><strong>半導體全面噴出：</strong>VanEck 半導體 ETF（SMH）單日跳漲 15.92%，台積電 ADR 大漲 13.7%～17%，輝達成交量暴增至 4.54～5.79 億股（遠超均量 2.87 億股）。</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-amber-700 font-bold mt-0.5">!</span>
+                <span><strong>僅收復失土的一半：</strong>標普 500 單日漲 4.83%，僅彌補前週重挫 8.61% 的約一半跌幅；那斯達克前週跌 10.02% 吐光全年漲幅後，目前 YTD 僅微幅回正至 +3.6%。</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-slate-700 font-bold mt-0.5">•</span>
+                <span><strong>公司治理補破網：</strong>輝達同步宣布增設法遵長（CCO）並成立國安與出口管制委員會，以回應華府質疑。</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="risks" class="space-y-5">
+      <div class="space-y-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">02｜結構性逆風拆解</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">為何說美股還沒穩？四大未解風險正在前方排隊</h2>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+          將單一個股的「人事警報解除」等同於「大盤全面轉危為安」過於樂觀。請點選下方四個風險支柱，系統將同步更新該領域的關鍵數據圖表與華爾街深度拆解，協助您評估未來兩週的潛在波動來源。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <button onclick="selectRisk(0)" id="risk-tab-0" class="risk-tab active text-left p-4 rounded-xl border-2 border-amber-600 bg-amber-50/70 transition shadow-sm">
+          <div class="text-xs font-bold text-amber-800 mb-1">風險 01｜華府與合規</div>
+          <div class="font-bold text-slate-900 text-sm sm:text-base">國會連環聽證與出口黑名單</div>
+          <div class="text-xs text-slate-600 mt-1">11/25 財政部期限、Megaspeed 案、12/1–12/3 聽證</div>
+        </button>
+
+        <button onclick="selectRisk(1)" id="risk-tab-1" class="risk-tab text-left p-4 rounded-xl border-2 border-stone-200 bg-white hover:border-stone-300 transition shadow-sm">
+          <div class="text-xs font-bold text-rose-700 mb-1">風險 02｜總經與利率</div>
+          <div class="font-bold text-slate-900 text-sm sm:text-base">聯準會 12 月「升息」幽靈</div>
+          <div class="text-xs text-slate-600 mt-1">升息一碼定價 91.2%、10Y 美債逼近 5%</div>
+        </button>
+
+        <button onclick="selectRisk(2)" id="risk-tab-2" class="risk-tab text-left p-4 rounded-xl border-2 border-stone-200 bg-white hover:border-stone-300 transition shadow-sm">
+          <div class="text-xs font-bold text-indigo-700 mb-1">風險 03｜產業融資結構</div>
+          <div class="font-bold text-slate-900 text-sm sm:text-base">AI 舉債壓力與科技七雄分化</div>
+          <div class="text-xs text-slate-600 mt-1">雲端巨頭 FCF 萎縮、Mag 7 獲利落後大盤</div>
+        </button>
+
+        <button onclick="selectRisk(3)" id="risk-tab-3" class="risk-tab text-left p-4 rounded-xl border-2 border-stone-200 bg-white hover:border-stone-300 transition shadow-sm">
+          <div class="text-xs font-bold text-slate-700 mb-1">風險 04｜技術面結構</div>
+          <div class="font-bold text-slate-900 text-sm sm:text-base">尚未收復均線與市場廣度不足</div>
+          <div class="text-xs text-slate-600 mt-1">上方 20/50/200 日均線反壓、僅 45.9% 站穩年線</div>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-6 shadow-sm">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div id="risk-detail-content" class="lg:col-span-6 space-y-4">
+          </div>
+          <div class="lg:col-span-6 bg-stone-50 rounded-xl border border-stone-200 p-4">
+            <div id="risk-chart-title" class="text-xs font-bold text-slate-600 text-center mb-2"></div>
+            <div class="chart-container">
+              <canvas id="riskChartCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="watchlist" class="space-y-6">
+      <div class="space-y-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-teal-700">03｜未來兩週決戰清單與回穩指標</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">從「單日止血」到「趨勢回穩」的驗證路徑</h2>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+          在 12 月初國會聽證與聯準會利率決議落地前，美股將持續受消息面牽引。左側為未來兩週關鍵事件時間軸（可依類別篩選）；右側為報告總結的「五大真正回穩確認指標」，您可以勾選已達成的條件，即時模擬大盤回穩成熟度。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-stone-200 p-5 sm:p-6 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-stone-100">
+            <h3 class="font-bold text-slate-900">關鍵事件與數據觀察行事曆</h3>
+            <div class="flex gap-1 text-xs">
+              <button onclick="filterTimeline('all')" class="timeline-filter active px-2.5 py-1 rounded-md font-medium transition">全部</button>
+              <button onclick="filterTimeline('policy')" class="timeline-filter px-2.5 py-1 rounded-md font-medium text-slate-600 hover:bg-stone-100 transition">華府/合規</button>
+              <button onclick="filterTimeline('macro')" class="timeline-filter px-2.5 py-1 rounded-md font-medium text-slate-600 hover:bg-stone-100 transition">聯準會/通膨</button>
+            </div>
+          </div>
+
+          <div id="timeline-list" class="space-y-3">
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-stone-200 p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-slate-900">美股真正回穩互動檢核表</h3>
+              <span id="readiness-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">目前達成：0 / 5 項</span>
+            </div>
+            <p class="text-xs text-slate-500">
+              點擊勾選下方條件，測試當市場逐步排除不確定性時，美股回穩信號的變化：
+            </p>
+            <div id="checklist-items" class="space-y-2.5 pt-1">
+            </div>
+          </div>
+
+          <div class="bg-stone-50 rounded-xl border border-stone-200 p-4 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="text-slate-600">大盤趨勢回穩信心指數</span>
+              <span id="readiness-score-text" class="text-amber-700">20%（高波動築底期）</span>
+            </div>
+            <div class="w-full h-2.5 bg-stone-200 rounded-full overflow-hidden">
+              <div id="readiness-bar" class="h-full bg-amber-600 transition-all duration-300" style="width: 20%;"></div>
+            </div>
+            <p id="readiness-advice" class="text-xs text-slate-600 leading-relaxed pt-1">
+              目前僅出現單日超賣反彈，五大結構指標均未確認，建議避免情緒化追高，採取分批配置並保留避險部位。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-stone-200 bg-white mt-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <div>資料來源：輝達 Q3 FY27 官方財報、Bloomberg、Reuters、The Guardian、FactSet、J.P. Morgan 研究彙整。</div>
+      <div>僅供市場研究與決策參考，不構成個別投資買賣建議。</div>
+    </div>
+  </footer>
+
+  <script>
+    function wrapLabel(label) {
+      if (typeof label !== 'string' || label.length <= 16) return label;
+      const words = label.split('');
+      const lines = [];
+      let current = '';
+      for (let i = 0; i < words.length; i++) {
+        current += words[i];
+        if (current.length >= 14 && i < words.length - 1) {
+          lines.push(current);
+          current = '';
+        }
+      }
+      if (current) lines.push(current);
+      return lines;
+    }
+
+    const commonTooltipOptions = {
+      backgroundColor: '#1E293B',
+      titleFont: { size: 13, weight: 'bold' },
+      bodyFont: { size: 12 },
+      padding: 10,
+      cornerRadius: 8,
+      callbacks: {
+        title: function(tooltipItems) {
+          const item = tooltipItems[0];
+          const label = item.chart.data.labels[item.dataIndex];
+          return Array.isArray(label) ? label.join('') : label;
+        }
+      }
+    };
+
+    let reboundChartInstance = null;
+    let riskChartInstance = null;
+
+    const reboundData = {
+      market: {
+        badge: '單位：百分比（%）｜基準日：2026/11/23',
+        type: 'bar',
+        labels: ['輝達 (NVDA)', '半導體 ETF (SMH)', '台積電 ADR (估算中值)', '那斯達克指數', '標普 500 指數', '羅素 2000 指數', '道瓊工業指數'].map(wrapLabel),
+        datasets: [
+          {
+            label: '11/23 單日反彈幅度 (%)',
+            data: [31.48, 15.92, 15.35, 6.50, 4.83, 3.40, 3.02],
+            backgroundColor: '#0F766E',
+            borderRadius: 6
+          },
+          {
+            label: '2026 年初至今 YTD 累計 (%)',
+            data: [-11.5, 14.2, 18.5, 3.60, 4.10, 7.60, 3.20],
+            backgroundColor: '#CBD5E1',
+            borderRadius: 6
+          }
+        ],
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+            tooltip: commonTooltipOptions
+          },
+          scales: {
+            x: { grid: { color: '#F1F5F9' }, ticks: { callback: v => v + '%' } },
+            y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+          }
+        },
+        insightHtml: `
+          <h3 class="font-bold text-slate-900 text-base">指數強彈背後的真實定位</h3>
+          <ul class="space-y-2.5 text-sm text-slate-600">
+            <li class="flex items-start gap-2">
+              <span class="text-teal-700 font-bold mt-0.5">✓</span>
+              <span><strong>半導體全面噴出：</strong>VanEck 半導體 ETF（SMH）單日跳漲 15.92%，台積電 ADR 大漲 13.7%～17%，輝達成交量暴增至 4.54～5.79 億股（遠超均量 2.87 億股）。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-700 font-bold mt-0.5">!</span>
+              <span><strong>僅收復失土的一半：</strong>標普 500 單日漲 4.83%，僅彌補前週重挫 8.61% 的約一半跌幅；那斯達克前週跌 10.02% 吐光全年漲幅後，目前 YTD 僅微幅回正至 +3.6%。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-slate-700 font-bold mt-0.5">•</span>
+              <span><strong>公司治理補破網：</strong>輝達同步宣布增設法遵長（CCO）並成立國安與出口管制委員會，以回應華府質疑。</span>
+            </li>
+          </ul>
+        `
+      },
+      earnings: {
+        badge: '單位：十億美元（USD Billions）｜資料來源：輝達 Q3 FY27 官方財報',
+        type: 'bar',
+        labels: ['Q3 市場預期營收', 'Q3 實際總營收', 'Q3 資料中心營收', 'Q3 自由現金流', 'Q4 營收財測中值 (含額外一週)'].map(wrapLabel),
+        datasets: [
+          {
+            label: '金額（十億美元）',
+            data: [108.8, 115.8, 107.6, 43.78, 130.0],
+            backgroundColor: ['#94A3B8', '#0F766E', '#115E59', '#D97706', '#0284C7'],
+            borderRadius: 6
+          }
+        ],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: commonTooltipOptions
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '$' + v + 'B' } },
+            x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+          }
+        },
+        insightHtml: `
+          <h3 class="font-bold text-slate-900 text-base">基本面底氣：已排除中國營收假設</h3>
+          <ul class="space-y-2.5 text-sm text-slate-600">
+            <li class="flex items-start gap-2">
+              <span class="text-teal-700 font-bold mt-0.5">✓</span>
+              <span><strong>Rubin 架構放量超預期：</strong>Q3 總營收年增 103% 達 1,158 億美元，Non-GAAP 毛利率維持 74.9%，單季自由現金流高達 437.8 億美元。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-teal-700 font-bold mt-0.5">✓</span>
+              <span><strong>財測完全扣除中國風險：</strong>Q4 給出 1,300 億美元（±3%）高標指引，且<strong>明確假設中國資料中心運算營收為零</strong>；毛利率因 Rubin 初期放量略降至 71%～72%。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-slate-700 font-bold mt-0.5">•</span>
+              <span><strong>估值修復邏輯：</strong>重挫期間前瞻本益比一度壓縮至 16～18 倍，促使 Bernstein 與 Oppenheimer 於 11/23 雙雙上調評等至「優於大盤」。</span>
+            </li>
+          </ul>
+        `
+      }
+    };
+
+    function switchReboundChart(mode) {
+      const cfg = reboundData[mode];
+      document.getElementById('rebound-chart-badge').textContent = cfg.badge;
+      document.getElementById('rebound-insight-panel').innerHTML = cfg.insightHtml;
+
+      const btnMarket = document.getElementById('btn-chart-market');
+      const btnEarnings = document.getElementById('btn-chart-earnings');
+      if (mode === 'market') {
+        btnMarket.className = 'px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-white text-slate-900 shadow-sm transition';
+        btnEarnings.className = 'px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition';
+      } else {
+        btnEarnings.className = 'px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-white text-slate-900 shadow-sm transition';
+        btnMarket.className = 'px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition';
+      }
+
+      if (reboundChartInstance) {
+        reboundChartInstance.destroy();
+      }
+      const ctx = document.getElementById('reboundChartCanvas').getContext('2d');
+      reboundChartInstance = new Chart(ctx, {
+        type: cfg.type,
+        data: { labels: cfg.labels, datasets: cfg.datasets },
+        options: cfg.options
+      });
+    }
+
+    const risksData = [
+      {
+        title: '風險 01｜華府政治反彈與出口管制連環大考',
+        summary: '川普直接介入讓黃仁勳復職，激起美國跨黨派參議員強烈反彈，質疑白宮提供何種國安擔保；未來十天內輝達將面臨財政部說明期限、新加坡 Megaspeed 黑名單案與國會三場聽證會。',
+        bullets: [
+          '<strong>11/25 財政部回覆期限：</strong>輝達須就「是否透過空殼公司規避晶片出口管制」向美國財政部提出正式合規說明。',
+          '<strong>Megaspeed 黑名單風暴：</strong>路透社揭露美國商務部擬將曾由黃仁勳緋聞對象掌控的新加坡雲端商 Megaspeed 列入黑名單，該公司曾手約 120 億美元晶片銷售並涉轉運至中國。',
+          '<strong>12/1–12/3 國會聽證與國防法案：</strong>黃仁勳與法務長 Tim Teter 須連續赴眾議院三委員會與參議院銀行委員會作證，國會 12 月國防法案亦可能納入更嚴厲晶片禁令。'
+        ],
+        chartTitle: '出口合規與營收規模對比（十億美元）',
+        chartLabels: ['Q4 輝達總營收財測', 'Megaspeed 涉案經手晶片規模', 'Q4 財測中國資料中心假設'].map(wrapLabel),
+        chartValues: [130, 12, 0],
+        chartColors: ['#0F766E', '#B45309', '#94A3B8'],
+        yAxisSuffix: 'B'
+      },
+      {
+        title: '風險 02｜聯準會「升息」幽靈未散，10Y 美債逼近 5%',
+        summary: '與過去兩年市場期待降息截然不同，2026 年底美股正正面迎戰通膨反撲與「再度升息」的緊縮威脅，高利率持續壓縮科技股估值天花板。',
+        bullets: [
+          '<strong>12/9 升息機率突破九成：</strong>聯準會偏好 PCE 年增率達 3.6%（核心 PCE 3.1%），理事 Cook 估計 10 月通膨達 3.8%；市場定價 12 月 9 日升息一碼機率高達 91.2%。',
+          '<strong>債市與油價雙重警報：</strong>10 年期美債殖利率站在 4.92% 逼近 5% 心理關卡，WTI 原油處於 81.57 美元高檔，隨時可能引發停滯性通膨擔憂。',
+          '<strong>避險資金大舉撤離：</strong>前週拋售期間單週高達 1,664 億美元湧入貨幣市場基金，黃金吸引 20 億美元流入並強彈至 3,617.50 美元。'
+        ],
+        chartTitle: '美國通膨與利率關鍵警戒水位（%）',
+        chartLabels: ['核心 PCE 年增率', '整體 PCE 年增率', 'Fed 理事估 10月通膨', '聯邦基準利率上限', '10年期美債殖利率'].map(wrapLabel),
+        chartValues: [3.1, 3.6, 3.8, 4.0, 4.92],
+        chartColors: ['#D97706', '#D97706', '#B45309', '#475569', '#DC2626'],
+        yAxisSuffix: '%'
+      },
+      {
+        title: '風險 03｜AI 資本支出融資壓力與科技七雄分化',
+        summary: '上週標普 500 創 2025 年 4 月以來最慘單週跌幅（-8.61%），深層原因在於華爾街正在對雲端巨頭進行「舉債投資 AI」的現金流壓力測試。',
+        bullets: [
+          '<strong>自由現金流急劇萎縮：</strong>摩根大通與 FactSet 指出，五大雲端巨頭（微軟、Alphabet、亞馬遜、Meta、甲骨文）資本支出增速已超越營業現金流，迫使業者在近 5% 殖利率環境下舉債支撐建設。',
+          '<strong>科技七雄獲利落後大盤：</strong>FactSet 數據顯示，Q3「科技七雄」僅有 4 家（57.1%）EPS 優於預期，整體獲利表現反而落後於標普 500 其餘 493 家公司（合計獲利成長率達 34.7%）。',
+          '<strong>商業回報檢視加劇：</strong>單靠輝達一家賣鏟子大賺，無法無限期掩蓋下游客戶資本支出回收期拉長與利潤率受壓的隱憂。'
+        ],
+        chartTitle: 'Q3 獲利表現與超預期比例分化（%）',
+        chartLabels: ['輝達 Q3 營收年增率', '科技七雄 EPS 超預期比例', '標普其餘 493 家獲利成長率'].map(wrapLabel),
+        chartValues: [103.0, 57.1, 34.7],
+        chartColors: ['#0F766E', '#B45309', '#3B82F6'],
+        yAxisSuffix: '%'
+      },
+      {
+        title: '風險 04｜技術面尚未翻多，華爾街定調「逆勢反彈」',
+        summary: '從價格結構與市場廣度來看，11 月 23 日的大漲更像「跌深反彈」而非「多頭趨勢恢復」，上方仍有多道中長期均線反壓。',
+        bullets: [
+          '<strong>上方均線層層套牢：</strong>輝達收在 $165.05，距離 20 日均線（$179）、200 日均線（$203）與 50 日均線（$206～$210）仍有 8% 至 27% 的修復空間。',
+          '<strong>市場廣度仍待修復：</strong>標普 500 成分股中站上 200 日均線的家數比例一度跌破半數（回落至 45.92%），中長期內部結構仍偏弱。',
+          '<strong>華爾街分析師態度謹慎：</strong>技術分析師 Jay Woods 將此定調為「逆勢反彈」；24/7 Wall St. 亦提醒歷史上單日最猛烈的暴漲往往發生在下跌趨勢中途。'
+        ],
+        chartTitle: '輝達股價位階與關鍵均線反壓對照（美元）',
+        chartLabels: ['11/20 波段低點', '11/23 反彈收盤', '20日均線反壓', '200日均線反壓', '50日均線反壓', '10/6 歷史高點'].map(wrapLabel),
+        chartValues: [124.50, 165.05, 179.00, 203.00, 208.00, 243.37],
+        chartColors: ['#94A3B8', '#0F766E', '#D97706', '#B45309', '#DC2626', '#475569'],
+        yAxisSuffix: '$'
+      }
+    ];
+
+    function selectRisk(index) {
+      for (let i = 0; i < 4; i++) {
+        const tab = document.getElementById(`risk-tab-${i}`);
+        if (i === index) {
+          tab.className = 'risk-tab active text-left p-4 rounded-xl border-2 border-amber-600 bg-amber-50/70 transition shadow-sm';
+        } else {
+          tab.className = 'risk-tab text-left p-4 rounded-xl border-2 border-stone-200 bg-white hover:border-stone-300 transition shadow-sm';
+        }
+      }
+
+      const data = risksData[index];
+      document.getElementById('risk-detail-content').innerHTML = `
+        <h3 class="text-lg sm:text-xl font-bold text-slate-900">${data.title}</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">${data.summary}</p>
+        <ul class="space-y-2.5 text-sm text-slate-700 pt-1">
+          ${data.bullets.map(b => `<li class="flex items-start gap-2.5"><span class="text-amber-700 font-bold mt-0.5">▸</span><span>${b}</span></li>`).join('')}
+        </ul>
+      `;
+
+      document.getElementById('risk-chart-title').textContent = data.chartTitle;
+
+      if (riskChartInstance) {
+        riskChartInstance.destroy();
+      }
+      const ctx = document.getElementById('riskChartCanvas').getContext('2d');
+      riskChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.chartLabels,
+          datasets: [{
+            label: data.chartTitle,
+            data: data.chartValues,
+            backgroundColor: data.chartColors,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: commonTooltipOptions
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#E2E8F0' },
+              ticks: {
+                callback: v => data.yAxisSuffix === '$' ? '$' + v : v + data.yAxisSuffix
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 11 } }
+            }
+          }
+        }
+      });
+    }
+
+    const timelineEvents = [
+      {
+        date: '11 月 25 日（週三）',
+        category: 'macro',
+        tag: '總經＋合規雙重考驗',
+        title: '美國 10 月 PCE 通膨報告 ＆ 輝達財政部回覆期限',
+        desc: '觀察核心 PCE 是否高於 3.1% 並推升 10 年期美債殖利率突破 5%；同時輝達須向財政部說明空殼公司轉運指控，決定感恩節前能否守住 $155–$160 支撐。'
+      },
+      {
+        date: '12 月 1 日 – 3 日',
+        category: 'policy',
+        tag: '華府政治風暴核心',
+        title: '黃仁勳與法務長出席國會三場連環聽證會',
+        desc: '12/1 眾議院外交/美中/情報委員會閉門聽證、12/2 法務長 Tim Teter 應訊、12/3 參議院銀行委員會公開聽證，聚焦 Megaspeed 轉運違規與出口管制監督。'
+      },
+      {
+        date: '12 月 9 日（週三）',
+        category: 'macro',
+        tag: '貨幣政策定調',
+        title: '聯準會（FOMC）利率決議與最新點陣圖',
+        desc: '市場已定價 91.2% 機率升息一碼；關鍵在於會後聲明是否釋出「升息告一段落」訊號，抑或對 2027 年利率路徑維持鷹派。'
+      },
+      {
+        date: '12 月中上旬',
+        category: 'policy',
+        tag: '法案與技術面收官',
+        title: '國會 12 月國防法案協商 ＆ 年終技術面修復',
+        desc: '檢視國防法案最終納入多少對中半導體限制條款，以及輝達能否放量站穩 20 日均線（$179）之上。'
+      }
+    ];
+
+    function renderTimeline(filter) {
+      const container = document.getElementById('timeline-list');
+      const filtered = filter === 'all' ? timelineEvents : timelineEvents.filter(e => e.category === filter);
+      container.innerHTML = filtered.map(item => `
+        <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 space-y-1.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-extrabold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded border border-teal-200">${item.date}</span>
+            <span class="text-xs font-medium text-slate-500">${item.tag}</span>
+          </div>
+          <div class="font-bold text-slate-900 text-sm">${item.title}</div>
+          <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    function filterTimeline(filter) {
+      document.querySelectorAll('.timeline-filter').forEach(btn => {
+        btn.className = 'timeline-filter px-2.5 py-1 rounded-md font-medium text-slate-600 hover:bg-stone-100 transition';
+      });
+      event.target.className = 'timeline-filter active px-2.5 py-1 rounded-md font-medium transition';
+      renderTimeline(filter);
+    }
+
+    const checklistDefinitions = [
+      { id: 'chk-0', label: '10 年期美債殖利率脫離 5% 威脅並回落' },
+      { id: 'chk-1', label: '恐慌指數（VIX）自 31+ 回落至 20 以下（11/13 水準）' },
+      { id: 'chk-2', label: '標普 500 站上 200 日均線家數比例重返 50% 以上' },
+      { id: 'chk-3', label: '輝達放量站穩 20 日均線（$179）並收復中長期均線' },
+      { id: 'chk-4', label: '12/1–12/3 國會聽證與 12/9 Fed 會議靴子平穩落地' }
+    ];
+
+    let checkedState = [false, false, false, false, false];
+
+    function renderChecklist() {
+      const container = document.getElementById('checklist-items');
+      container.innerHTML = checklistDefinitions.map((item, idx) => `
+        <label class="flex items-start gap-3 p-2.5 rounded-lg border ${checkedState[idx] ? 'border-teal-500 bg-teal-50/50' : 'border-stone-200 hover:bg-stone-50'} cursor-pointer transition">
+          <input type="checkbox" ${checkedState[idx] ? 'checked' : ''} onchange="toggleCheck(${idx})" class="mt-0.5 w-4 h-4 accent-teal-700 rounded cursor-pointer" />
+          <span class="text-xs sm:text-sm ${checkedState[idx] ? 'text-slate-900 font-semibold' : 'text-slate-700'}">${item.label}</span>
+        </label>
+      `).join('');
+
+      const count = checkedState.filter(Boolean).length;
+      const pct = Math.max(20, count * 20);
+      document.getElementById('readiness-badge').textContent = `目前達成：${count} / 5 項`;
+      const bar = document.getElementById('readiness-bar');
+      const scoreText = document.getElementById('readiness-score-text');
+      const advice = document.getElementById('readiness-advice');
+
+      bar.style.width = pct + '%';
+      if (count <= 1) {
+        bar.className = 'h-full bg-amber-600 transition-all duration-300';
+        scoreText.className = 'text-amber-700';
+        scoreText.textContent = `${count * 20}%（高波動築底期）`;
+        advice.textContent = '目前僅屬單日超賣反彈，結構性風險尚未排除，建議嚴控單一科技主題曝險並分批操作。';
+      } else if (count <= 3) {
+        bar.className = 'h-full bg-sky-600 transition-all duration-300';
+        scoreText.className = 'text-sky-700';
+        scoreText.textContent = `${count * 20}%（風險逐步鈍化中）`;
+        advice.textContent = '部分政策或技術指標已見改善，可逐步提高核心指數配置，但仍須留意利率與債市波動。';
+      } else {
+        bar.className = 'h-full bg-teal-700 transition-all duration-300';
+        scoreText.className = 'text-teal-700';
+        scoreText.textContent = `${count * 20}%（多頭趨勢正式確認）`;
+        advice.textContent = '總經、廣度與均線結構全面修復，美股由「跌深反彈」正式轉為「穩健多頭格局」。';
+      }
+    }
+
+    function toggleCheck(idx) {
+      checkedState[idx] = !checkedState[idx];
+      renderChecklist();
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      document.querySelectorAll('.nav-pill').forEach(pill => {
+        pill.className = 'nav-pill px-3 py-1.5 rounded-full font-medium text-slate-600 transition hover:bg-stone-200';
+      });
+      event.target.className = 'nav-pill active px-3 py-1.5 rounded-full font-medium transition hover:bg-stone-200';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      switchReboundChart('market');
+      selectRisk(0);
+      renderTimeline('all');
+      renderChecklist();
+    });
+  </script>
+</body>
+</html>
