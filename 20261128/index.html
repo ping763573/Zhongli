@@ -1,0 +1,3073 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="dashboard">
+  <meta name="design-style" content="charter">
+  <title>2026年11月28日全球財經週報戰略儀表板 | 機構宏觀、籌碼與跨週期配置研究</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Charter Institutional Style Tokens */
+      --background: #f7f4ec;
+      --surface-container-low: #fffdf8;
+      --surface-container: #ece5d4;
+      --surface-container-high: #e3dac4;
+
+      --on-surface: #1c1f26;
+      --on-surface-variant: #4f5360;
+
+      --outline: #b08d57;
+      --outline-variant: #d9cfb8;
+
+      --primary: #14213d;
+      --on-primary: #f7f4ec;
+      --primary-container: #e3e6ee;
+      --on-primary-container: #14213d;
+      --secondary: #2d5a4a;
+      --tertiary: #8a6a35;
+      --error: #9b2c2c;
+      --on-error: #f7f4ec;
+
+      --data-1: #14213d;
+      --data-2: #8a6a35;
+      --data-3: #2d5a4a;
+      --data-4: #5b7aa0;
+      --data-context: #c2bba9;
+
+      /* Typography */
+      --font-headline: 'Noto Serif TC', 'Libre Caslon Text', serif;
+      --font-body: 'Noto Sans TC', 'Inter', sans-serif;
+      --font-label: 'Noto Sans TC', 'IBM Plex Mono', 'Inter', monospace;
+      --font-mono: 'IBM Plex Mono', 'Noto Sans TC', monospace;
+
+      --rounded: 0.125rem;
+      --rounded-lg: 0.125rem;
+
+      --brass-rule: 2px solid var(--outline);
+      --brass-thick: 3px solid var(--outline);
+      --hairline: 1px solid var(--outline-variant);
+      --leaf-underline: 0 1px 0 var(--outline-variant);
+
+      /* Derived Surface & Contrast Helpers */
+      --title-lede: color-mix(in srgb, var(--on-primary) 82%, var(--primary));
+      --title-brass: color-mix(in srgb, var(--outline) 80%, var(--on-primary));
+      --primary-wash: color-mix(in srgb, var(--primary) 7%, var(--surface-container-low));
+      --secondary-wash: color-mix(in srgb, var(--secondary) 9%, var(--surface-container-low));
+      --error-wash: color-mix(in srgb, var(--error) 8%, var(--surface-container-low));
+      --tertiary-wash: color-mix(in srgb, var(--tertiary) 10%, var(--surface-container-low));
+      --brass-thin: 1px solid var(--outline);
+
+      --positive: var(--secondary);
+      --warning: var(--tertiary);
+      --focus: var(--primary);
+
+      /* Type Scale */
+      --display-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+      --label-size: 0.75rem;
+
+      /* Spacing Scale */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Title Band */
+    .title-band {
+      background: var(--primary);
+      color: var(--on-primary);
+      padding: var(--space-xl) var(--space-lg) var(--space-lg);
+      border-bottom: var(--brass-thick);
+    }
+    .title-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .title-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      padding-bottom: var(--space-sm);
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid color-mix(in srgb, var(--outline) 45%, var(--primary));
+    }
+    .title-kicker {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--title-brass);
+    }
+    .title-stamp {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--title-lede);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .title-band h1 {
+      font-family: var(--font-headline);
+      font-weight: 400;
+      font-size: var(--display-size);
+      line-height: 1.18;
+      margin: 0 0 var(--space-sm);
+      color: var(--on-primary);
+      letter-spacing: -0.01em;
+    }
+    .title-band .lede {
+      color: var(--title-lede);
+      max-width: 84ch;
+      margin: 0;
+      font-size: var(--body-size);
+      line-height: 1.65;
+    }
+    .title-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+      border-top: 1px solid color-mix(in srgb, var(--on-primary) 18%, var(--primary));
+    }
+    .desk-perspectives {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      font-size: var(--label-size);
+      color: var(--title-lede);
+    }
+    .desk-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid color-mix(in srgb, var(--outline) 60%, var(--primary));
+      border-radius: var(--rounded);
+      color: var(--title-brass);
+    }
+    .header-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    /* Main Container Grid */
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-xl);
+      padding: var(--space-lg);
+      max-width: 1280px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Navigation Bar */
+    .nav-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: 2px solid transparent;
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--on-surface-variant);
+      border-radius: var(--rounded);
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .nav-btn:hover {
+      background-color: var(--surface-container);
+      color: var(--primary);
+    }
+    .nav-btn.active {
+      color: var(--primary);
+      border-bottom: var(--brass-rule);
+      background-color: var(--surface-container-low);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      border: 1px solid var(--primary);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      font-size: var(--label-size);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-primary:hover {
+      background-color: color-mix(in srgb, var(--primary) 85%, var(--on-surface));
+    }
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      font-size: var(--label-size);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-secondary:hover {
+      background-color: var(--primary-container);
+    }
+    .btn-secondary.active {
+      background-color: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn-on-navy {
+      background-color: transparent;
+      color: var(--on-primary);
+      border: 1px solid var(--title-brass);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      font-size: var(--label-size);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-on-navy:hover {
+      background-color: color-mix(in srgb, var(--on-primary) 12%, var(--primary));
+    }
+
+    /* Section Headers */
+    .section-block {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .section-head {
+      border-top: var(--brass-rule);
+      padding-top: var(--space-md);
+      border-bottom: var(--hairline);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-sm);
+    }
+    .section-head-main {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--tertiary);
+    }
+    .section-head h2 {
+      font-family: var(--font-headline);
+      font-weight: 400;
+      font-size: var(--headline-size);
+      line-height: 1.25;
+      margin: 0;
+      color: var(--primary);
+    }
+    .section-subtitle {
+      font-size: var(--body-size);
+      color: var(--on-surface-variant);
+      margin: 0;
+      max-width: 78ch;
+    }
+
+    /* KPI Figure Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(215px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .kpi-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .figure-card {
+      background: var(--surface-container-low);
+      border-top: var(--brass-rule);
+      box-shadow: var(--leaf-underline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+    }
+    .figure-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--on-surface-variant);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .figure-value {
+      font-family: var(--font-headline);
+      font-weight: 400;
+      font-size: clamp(1.45rem, 1.25rem + 0.8vw, 1.95rem);
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums lining-nums;
+      color: var(--on-surface);
+    }
+    .figure-delta {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .figure-note {
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      line-height: 1.48;
+      margin-top: var(--space-xs);
+    }
+    .delta-positive { color: var(--positive); }
+    .delta-negative { color: var(--error); }
+    .delta-warning { color: var(--tertiary); }
+
+    /* Asymmetric Layout Splits */
+    .split-60-40 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .split-50-50 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .split-40-60 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .leaf-panel {
+      background: var(--surface-container-low);
+      border-top: var(--brass-rule);
+      box-shadow: var(--leaf-underline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .panel-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+    .panel-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--subhead-size);
+      color: var(--primary);
+      margin: 0;
+    }
+    .panel-caption {
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin: 0;
+    }
+
+    /* Stamps / Badges */
+    .stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      border: var(--brass-thin);
+      background: transparent;
+      color: var(--tertiary);
+      padding: 2px var(--space-sm);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .stamp-positive {
+      border-color: var(--positive);
+      color: var(--positive);
+      background: var(--secondary-wash);
+    }
+    .stamp-negative {
+      border-color: var(--error);
+      color: var(--error);
+      background: var(--error-wash);
+    }
+    .stamp-navy {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-wash);
+    }
+
+    /* Filter Bars */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      align-items: center;
+    }
+    .filter-btn {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      min-height: 44px;
+      cursor: pointer;
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--on-surface-variant);
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .filter-btn:hover {
+      background: var(--surface-container);
+      color: var(--primary);
+    }
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    /* Tables */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--body-size);
+    }
+    thead th {
+      background: var(--surface-container-high);
+      color: var(--primary);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--brass-rule);
+      white-space: nowrap;
+    }
+    thead th.num, tbody td.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    thead th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th.sortable:hover {
+      background: var(--surface-container);
+    }
+    tbody td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--hairline);
+      vertical-align: top;
+    }
+    tbody tr:hover {
+      background: var(--primary-wash);
+    }
+    tbody tr.total-row td {
+      border-top: var(--brass-rule);
+      border-bottom: var(--brass-rule);
+      font-weight: 600;
+      background: var(--surface-container);
+    }
+
+    /* Chart Containers */
+    .chart-box {
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      height: 300px;
+    }
+    .chart-box-tall {
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+      height: 340px;
+    }
+
+    /* Callouts */
+    .callout {
+      border-left: 3px solid var(--primary);
+      background: var(--primary-wash);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .callout-brass {
+      border-left: 3px solid var(--tertiary);
+      background: var(--tertiary-wash);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .callout-green {
+      border-left: 3px solid var(--positive);
+      background: var(--secondary-wash);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .callout-red {
+      border-left: 3px solid var(--error);
+      background: var(--error-wash);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .callout-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--body-size);
+      color: var(--primary);
+      margin: 0;
+    }
+    .callout p, .callout-brass p, .callout-green p, .callout-red p {
+      margin: 0;
+      font-size: var(--body-size);
+      color: var(--on-surface);
+      line-height: 1.55;
+    }
+
+    /* Domain Pillar Tabs */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      border-bottom: var(--hairline);
+      padding-bottom: var(--space-sm);
+    }
+    .tab-btn {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .tab-btn:hover {
+      background: var(--surface-container);
+      color: var(--primary);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: grid; gap: var(--space-lg); }
+
+    /* Horizon Sub-Tabs (Short / Medium / Long Term) */
+    .horizon-panel { display: none; }
+    .horizon-panel.active { display: grid; gap: var(--space-md); }
+
+    /* Interactive Inputs & Sliders */
+    .control-group {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .control-label {
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--on-surface-variant);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--primary);
+      cursor: pointer;
+      min-height: 36px;
+    }
+    input[type="number"], select, input[type="text"] {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      min-height: 40px;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+    }
+    input[type="number"]:focus, select:focus, input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    /* Risk Control Discipline Cards */
+    .discipline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+    .discipline-card {
+      background: var(--background);
+      border: var(--hairline);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .discipline-card.danger {
+      border-left-color: var(--error);
+    }
+    .discipline-card.safe {
+      border-left-color: var(--positive);
+    }
+    .discipline-card-title {
+      font-weight: 700;
+      font-size: var(--body-size);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-xs);
+    }
+
+    /* Tranche Progress Bar (3-3-4) */
+    .tranche-bar {
+      display: grid;
+      grid-template-columns: 3fr 3fr 4fr;
+      gap: 4px;
+      height: 14px;
+      border-radius: var(--rounded);
+      overflow: hidden;
+      background: var(--surface-container);
+    }
+    .tranche-seg-1 { background: var(--data-4); }
+    .tranche-seg-2 { background: var(--data-2); }
+    .tranche-seg-3 { background: var(--data-3); }
+
+    /* Reversal Signal Checklist */
+    .checklist-grid {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .signal-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: var(--space-md);
+      align-items: start;
+      padding: var(--space-md);
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .signal-item:hover {
+      background: var(--surface-container);
+    }
+    .signal-item.checked {
+      background: var(--secondary-wash);
+      border-color: var(--positive);
+    }
+    .signal-checkbox {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      accent-color: var(--positive);
+      cursor: pointer;
+    }
+    .signal-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: var(--space-xs);
+    }
+    .signal-desc {
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      line-height: 1.5;
+    }
+
+    /* Timeline / Catalyst Items */
+    .timeline-list {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+    .timeline-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .timeline-date {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--surface-container);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded);
+      text-align: center;
+      align-self: start;
+    }
+
+    /* Container Queries */
+    .card-wrapper { container-type: inline-size; }
+    @container (max-width: 460px) {
+      .timeline-item { grid-template-columns: 1fr; gap: var(--space-xs); }
+    }
+
+    /* Source Footer */
+    .sources-footer {
+      border-top: var(--brass-rule);
+      padding: var(--space-lg) 0 var(--space-2xl);
+      color: var(--on-surface-variant);
+      font-size: var(--label-size);
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .inline-status {
+      font-size: var(--label-size);
+      color: var(--positive);
+      font-weight: 600;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 960px) {
+      .split-60-40, .split-50-50, .split-40-60 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-md);
+        gap: var(--space-lg);
+      }
+      .title-band {
+        padding: var(--space-lg) var(--space-md);
+      }
+      .leaf-panel {
+        padding: var(--space-md);
+      }
+      .signal-item {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+    }
+
+    @media print {
+      .nav-strip, .header-btn-group, .filter-row, input[type="range"] { display: none !important; }
+      .tab-panel, .horizon-panel { display: grid !important; margin-bottom: 1.5rem; }
+      body { background: #fff; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Charter Deep Navy Title Band -->
+  <header class="title-band">
+    <div class="title-inner">
+      <div class="title-meta-row">
+        <span class="title-kicker">GLOBAL MACRO, AI INFRASTRUCTURE &amp; TWSE FLOWS · WEEKLY EXECUTIVE DOSSIER</span>
+        <span class="title-stamp">
+          <i data-lucide="calendar-clock" style="width:14px;height:14px;" aria-hidden="true"></i>
+          研究區間：2026年11月21日 – 11月28日（截至 11/28 盤後定稿）
+        </span>
+      </div>
+      <h1>全球財經週報戰略儀表板：高利率重力、算力合規重構與跨週期投資因應</h1>
+      <p class="lede">
+        機構策略總覽：2026年11月第4週，全球市場從斷頭邊緣上演「V 型強勢修復」與「貿易／合規制度重錨」。在台韓中穩市（台灣全面禁空令＋120%融資維持率）與黃仁勳復職輝達執行長催化下，美股創逾一年半最佳單週漲幅、台股單週大漲 9.09%。然而聯準會 12/9 升息機率衝破 97.8%–99.4%、USTR 301 條款對 14 國提出產能過剩關稅，加上外資台指期 107,503 口淨空單對峙，正迫使投資人嚴守「零融資資金控管、40/30/15/15 資產配置與短中長期分層布局」。
+      </p>
+      <div class="title-actions">
+        <div class="desk-perspectives">
+          <span class="desk-tag">宏觀利率：核心 PCE 3.3% / 10Y 殖利率 4.93%–4.94%</span>
+          <span class="desk-tag">強勢美元：DXY 104.04 / 台幣 32.935</span>
+          <span class="desk-tag">實體護城河：台灣 2026 GDP 上修至 13.28%</span>
+        </div>
+        <div class="header-btn-group">
+          <button type="button" class="btn-on-navy" id="fullscreen-btn" onclick="toggleFullScreen()">
+            <i data-lucide="maximize-2" style="width:15px;height:15px;" aria-hidden="true"></i>
+            <span id="fullscreen-label">全螢幕檢視</span>
+          </button>
+          <button type="button" class="btn-on-navy" onclick="window.print()">
+            <i data-lucide="printer" style="width:15px;height:15px;" aria-hidden="true"></i>
+            列印 / 存為 PDF
+          </button>
+          <button type="button" class="btn-on-navy" onclick="exportExecutiveCsv()">
+            <i data-lucide="download" style="width:15px;height:15px;" aria-hidden="true"></i>
+            匯出戰略配置 CSV
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-grid">
+
+    <!-- Quick Jump Navigation -->
+    <nav class="nav-strip" aria-label="儀表板章節導覽">
+      <div class="nav-links">
+        <button type="button" class="nav-btn active" onclick="scrollToSection('sec-overview', this)">一、跨資產週線修復</button>
+        <button type="button" class="nav-btn" onclick="scrollToSection('sec-macro', this)">二、跨大西洋利率與匯率</button>
+        <button type="button" class="nav-btn" onclick="scrollToSection('sec-ai', this)">三、AI 基建、301關稅與資安</button>
+        <button type="button" class="nav-btn" onclick="scrollToSection('sec-twse', this)">四、台股外資籌碼與富台指</button>
+        <button type="button" class="nav-btn" onclick="scrollToSection('sec-strategy', this)">五、投資人因應：配置、控管與短中長策略</button>
+      </div>
+      <span id="persistence-status" class="inline-status" aria-live="polite">研究基準已就緒（2026/11/28）</span>
+    </nav>
+
+    <!-- ===================================================================
+         SECTION 1: CROSS-ASSET RECOVERY & KPI STRIP
+         =================================================================== -->
+    <section id="sec-overview" class="section-block">
+      <div class="section-head">
+        <div class="section-head-main">
+          <span class="section-kicker">SECTION 01 · CROSS-ASSET RECOVERY &amp; HEADLINE REGIME</span>
+          <h2>全球市場 V 型修復與五大戰略核心指標</h2>
+          <p class="section-subtitle">感恩節短週美股創 2025 年 4 月以來最佳單週漲幅，台股收復近半數前週失土，惟實質利率與外資期貨避險水位仍處緊繃。</p>
+        </div>
+        <span class="stamp stamp-navy">11/27 週線收盤基準</span>
+      </div>
+
+      <div class="kpi-grid">
+        <article class="figure-card">
+          <div class="figure-label"><span>標普 500 指數 (S&amp;P 500)</span><span class="stamp">美股基準</span></div>
+          <div class="figure-value">7,297.49</div>
+          <div class="figure-delta delta-positive">+387.10 點 (+5.60%)</div>
+          <p class="figure-note">週五漲 1.60%，創 2025/4 以來最佳單週漲幅，11 大板塊全數收紅。</p>
+        </article>
+
+        <article class="figure-card">
+          <div class="figure-label"><span>台股加權指數 (TAIEX)</span><span class="stamp stamp-positive">禁空護盤</span></div>
+          <div class="figure-value">39,308.08</div>
+          <div class="figure-delta delta-positive">+3,274.79 點 (+9.09%)</div>
+          <p class="figure-note">單週市值回升 10.7 兆至 128.8 兆元；國安基金力挺台積電收 2,180 元。</p>
+        </article>
+
+        <article class="figure-card">
+          <div class="figure-label"><span>12/9 聯準會升息 1 碼機率</span><span class="stamp stamp-negative">高度定價</span></div>
+          <div class="figure-value">99.2%</div>
+          <div class="figure-delta delta-warning">CME 定價 97.8%–99.4%</div>
+          <p class="figure-note">10 月核心 PCE 加速至 3.3%、Q3 GDP 上修 4.3%，目標區間擬升至 4.00%–4.25%。</p>
+        </article>
+
+        <article class="figure-card">
+          <div class="figure-label"><span>外資台指期未平倉淨空單</span><span class="stamp stamp-negative">制度代償</span></div>
+          <div class="figure-value">-107,503 口</div>
+          <div class="figure-delta delta-negative">現股連 10 賣逾 5,000 億</div>
+          <p class="figure-note">買權淨多 10.36 億＋台指正價差 +54.92 點，揭露避險對沖而非單純看空崩盤。</p>
+        </article>
+
+        <article class="figure-card">
+          <div class="figure-label"><span>台灣 2026 年 GDP 預測</span><span class="stamp stamp-positive">48 年最強</span></div>
+          <div class="figure-value">13.28%</div>
+          <div class="figure-delta delta-positive">大幅上修 +2.23 個百分點</div>
+          <p class="figure-note">景氣燈號史上最長連 11 紅（40 分），工業生產 +29.8% 連 32 紅；明年人均破 5 萬美元。</p>
+        </article>
+      </div>
+
+      <div class="split-60-40">
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">全球主要資產表現矩陣（截至 11/27 週線收盤）</h3>
+              <p class="panel-caption">點擊表頭可排序；依資產類別篩選檢視結構驅動因子。</p>
+            </div>
+            <div class="filter-row" role="group" aria-label="資產類別篩選">
+              <button type="button" class="filter-btn active" onclick="filterAssets('all', this)">全部 (11)</button>
+              <button type="button" class="filter-btn" onclick="filterAssets('equity', this)">全球股市</button>
+              <button type="button" class="filter-btn" onclick="filterAssets('fx_rate', this)">利率與匯率</button>
+              <button type="button" class="filter-btn" onclick="filterAssets('commodity', this)">商品與加密</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table id="asset-table">
+              <thead>
+                <tr>
+                  <th class="sortable" onclick="sortAssetTable('name')">資產類別 / 指標 ↕</th>
+                  <th class="num">11/27 最新水準</th>
+                  <th class="num sortable" onclick="sortAssetTable('pct')">單週強弱變動 ↕</th>
+                  <th>核心驅動背景與結構特徵</th>
+                </tr>
+              </thead>
+              <tbody id="asset-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">全球主要股指與 AI 先鋒修復幅度對比</h3>
+              <p class="panel-caption">單位：百分比漲幅（%），對比「軟體破發、硬體爆單」分化格局</p>
+            </div>
+          </div>
+          <div class="filter-row">
+            <button type="button" class="filter-btn active" onclick="switchOverviewChart('indices', this)">主要股指單週漲幅</button>
+            <button type="button" class="filter-btn" onclick="switchOverviewChart('movers', this)">AI 儲存與系統反彈先鋒</button>
+          </div>
+          <div class="chart-box">
+            <canvas id="overview-chart"></canvas>
+          </div>
+          <div class="callout-brass">
+            <h4 class="callout-title">投行策略點評：輝達落後大盤背後的合規溢價轉移</h4>
+            <p>週五黑五強彈中，輝達僅微漲 0.80% 明顯落後那指（+2.31%），主因受制於標普列入「AA」負向信用觀察及東南亞四國出口審查。資金明顯轉向具備真實訂單與存儲定價權的 <strong>SanDisk (+15.96%)、美光 (+7.60%) 與戴爾 (+6.70%)</strong>，而 Anthropic (+10.98%) 雖重返 91.88 美元，一週內仍曾跌破 83 美元發行價，印證純模型股估值正遭二級市場嚴格檢驗。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 2: TRANSATLANTIC RATES & STRONG DOLLAR
+         =================================================================== -->
+    <section id="sec-macro" class="section-block">
+      <div class="section-head">
+        <div class="section-head-main">
+          <span class="section-kicker">SECTION 02 · MONETARY TIGHTENING &amp; FX GUARDRAILS</span>
+          <h2>跨大西洋高利率高原期、亞洲央行轉鷹與強勢美元定價</h2>
+          <p class="section-subtitle">「Fed Put 失效」迫使股債重新錨定高利率重力，但布蘭特原油仍在 95 美元高檔（週漲約 3%），能源通膨風險使 10 年期美債 4.80%–5.15% 區間難以下移。</p>
+        </div>
+        <span class="stamp stamp-negative">雙邊緊縮共振</span>
+      </div>
+
+      <div class="split-50-50">
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">全球主要央行基準利率與核心通膨座標</h3>
+              <p class="panel-caption">美國、南韓、日本、歐洲與印尼最新利率與物價讀數對比（%）</p>
+            </div>
+          </div>
+          <div class="chart-box-tall">
+            <canvas id="macro-chart"></canvas>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>經濟體 / 指標</th>
+                  <th class="num">最新讀數</th>
+                  <th>政策定價與結構訊號</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>美國核心 PCE / Q3 GDP</strong></td>
+                  <td class="num">3.3% / 4.3%</td>
+                  <td>核心 PCE 高於預期 3.2%（整體 3.8%），核心 PPI 創 2022 來新高；初領失業金降至 18.9 萬人。</td>
+                </tr>
+                <tr>
+                  <td><strong>南韓央行 (BoK)</strong></td>
+                  <td class="num">3.25% (+1碼)</td>
+                  <td>11/26 先發制人升息；受惠 11 月前 20 日半導體出口暴增 294.4%，總裁預告通膨 2028 年才達標。</td>
+                </tr>
+                <tr>
+                  <td><strong>日本東京核心 CPI</strong></td>
+                  <td class="num">2.9% (16月高)</td>
+                  <td>創 2025/7 來最快增速，市場對 12 月 BoJ 升息預期逾 70%；美元兌日圓 159.56 逼近 160 干預線。</td>
+                </tr>
+                <tr>
+                  <td><strong>歐洲央行 (ECB) &amp; 印尼</strong></td>
+                  <td class="num">ECB 擬升 / ID 6.0%</td>
+                  <td>拉加德與德國央行預告 12 月升息（BIS 總裁將接掌 ECB）；印尼央行升至 6%，印尼盾破 18,400 新低。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">利率與匯率路徑推演模擬器（2026年底 – 2027 Q1）</h3>
+              <p class="panel-caption">切換「基準通膨降溫情境」與「美銀連續升息情境」，檢視債匯定價邊界。</p>
+            </div>
+          </div>
+
+          <div class="filter-row" role="group" aria-label="宏觀路徑情境切換">
+            <button type="button" id="macro-btn-base" class="btn-secondary active" onclick="setMacroScenario('base', this)">基準情境：油價 95 高檔・利率築頂待確認</button>
+            <button type="button" id="macro-btn-hawkish" class="btn-secondary" onclick="setMacroScenario('hawkish', this)">鷹派風險：12/1/3月連三升</button>
+          </div>
+
+          <div id="macro-scenario-panel" class="callout"></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>核心利率與匯率指標</th>
+                  <th class="num">2026/11 水準</th>
+                  <th>實體護城河與 2027 Q1 預判</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>聯邦基金利率目標</strong></td>
+                  <td class="num">3.75%–4.00%</td>
+                  <td>12/9 升至 4.00%–4.25%（中位數 4.125%）機率 97.8%–99.4%；視布蘭特是否持續高於 95 美元及核心通膨決定 Q1 是否觸頂。</td>
+                </tr>
+                <tr>
+                  <td><strong>10 年期美債殖利率</strong></td>
+                  <td class="num">4.93%–4.94%</td>
+                  <td>財長貝森特警示過度緊縮風險加上預期維持 4.65%–5.10% 高檔箱型震盪。</td>
+                </tr>
+                <tr>
+                  <td><strong>美元指數 (DXY)</strong></td>
+                  <td class="num">104.04 (週高 104.53)</td>
+                  <td>美歐利差與 301 關稅推升強勢高原；待 ECB 12 月跟進升息後，單邊漲勢有望趨緩。</td>
+                </tr>
+                <tr>
+                  <td><strong>新台幣 (USD/TWD)</strong></td>
+                  <td class="num">32.935 (曾破 33)</td>
+                  <td>10 月外資匯出 280 億美元壓抑，但 Q3 經常帳順差 687.9 億、10 月外銷訂單 1,238.2 億 (+78.3%) 強撐；具向 32.2–32.5 修復空間且挹注大廠 Q4 匯兌毛利。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 3: AI INFRA, 301 TARIFFS, GOVERNANCE & CYBERSECURITY
+         =================================================================== -->
+    <section id="sec-ai" class="section-block">
+      <div class="section-head">
+        <div class="section-head-main">
+          <span class="section-kicker">SECTION 03 · COMPUTE INFRASTRUCTURE, 301 TARIFFS &amp; GOVERNANCE</span>
+          <h2>AI 算力基建重構、USTR 301 關稅地圖與資安／融資轉折</h2>
+          <p class="section-subtitle">實體擴產完全粉碎需求疑慮，但產業正沿著「15% 關稅協定護城河」、「CPO／ASIC 去中間化」、「440 億零信任資安併購」與「閉環融資審查」四大軸線劇烈洗牌。</p>
+        </div>
+        <span class="stamp">四大專題深度切換</span>
+      </div>
+
+      <div class="tab-bar" role="tablist" aria-label="AI 與貿易結構專題">
+        <button type="button" class="tab-btn active" role="tab" aria-selected="true" onclick="switchAiTab('tab-tariffs', this)">
+          <i data-lucide="globe" style="width:15px;height:15px;" aria-hidden="true"></i>
+          301 關稅與硬體 K 型分化
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="switchAiTab('tab-nvda', this)">
+          <i data-lucide="shield-alert" style="width:15px;height:15px;" aria-hidden="true"></i>
+          輝達復職治理與美中歐圍堵
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="switchAiTab('tab-security', this)">
+          <i data-lucide="cpu" style="width:15px;height:15px;" aria-hidden="true"></i>
+          資安 440 億併購、基載電力與端側
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="switchAiTab('tab-financing', this)">
+          <i data-lucide="landmark" style="width:15px;height:15px;" aria-hidden="true"></i>
+          循環融資審查與 Anthropic 破發
+        </button>
+      </div>
+
+      <!-- TAB 1: 301 Tariffs & K-shape Hardware -->
+      <div id="tab-tariffs" class="tab-panel active">
+        <div class="split-50-50">
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">USTR 301「結構性產能過剩關稅」14 國稅率衝擊對比</h3>
+                <p class="panel-caption">11/25 提案徵詢至 2027/1/5、聽證會 1/25；雙邊協定國維持 15% 淨關稅上限護身。</p>
+              </div>
+              <span class="stamp stamp-positive">台灣獲 15% 淨上限</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="tariff-chart"></canvas>
+            </div>
+            <div class="callout-brass">
+              <h4 class="callout-title">供應鏈重遷警報：東南亞轉運基地面臨高稅擠出</h4>
+              <p>越南最高 35%、馬來西亞與泰國最高 25% 擬議稅率，加上川普威脅對海外建置 AI 資料中心課徵重稅，將強迫伺服器與電子代工產線自東南亞撤離，加速向美國本土（享稅務減免，如台積電亞利桑那／德州廠、格羅方德紐約百億廠）及台灣協定保護傘集中。</p>
+            </div>
+          </div>
+
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">AI 基建實體擴產 vs. 消費電子 K 型極端分化</h3>
+                <p class="panel-caption">上游晶圓、高雄封測、ASIC 轉單與 CPO 全面爆單；純消費 PC 慘遭記憶體漲價擠壓。</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>產業鏈關鍵節點</th>
+                    <th class="num">關鍵實證數據</th>
+                    <th>架構演變與投資涵義</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>台積電先進製程</strong></td>
+                    <td class="num">10月營收 5,868.9億 (+59.7%)</td>
+                    <td>公開保證「沒有任何客戶砍單」，德州廠申請地方減稅、德國 ESMC 擬派 800 工程師。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>高雄先進封測聚落</strong></td>
+                    <td class="num">日月光擴產近 3,500億</td>
+                    <td>路竹 1,000 億＋仁武福雷 2,489 億；矽品與輝達簽約 2029 產能翻三倍；科林研發竹南動土。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>AI 伺服器與網路</strong></td>
+                    <td class="num">戴爾積壓訂單 $1,320億</td>
+                    <td>輝達 Q3 營收翻倍至 $1,158 億，Rubin NVL72 最快量產；思科 800G/1.6T 網路訂單 +22%。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>ASIC 轉單與 CPO</strong></td>
+                    <td class="num">聯發科 / 雙鴻 / Marvell</td>
+                    <td>Google 傳繞過博通下修百萬顆 TPU 轉單聯發科；雙鴻明年 ASIC 散熱過半；Marvell 併 Lumentum 衝 CPO。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>消費 PC 下行風險</strong></td>
+                    <td class="num delta-negative">宏碁預警出貨年減 20%</td>
+                    <td>記憶體漲價直接侵蝕傳統筆電需求，建議淘汰高依賴越南/馬泰的二線純消費組裝廠。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: NVIDIA Governance -->
+      <div id="tab-nvda" class="tab-panel">
+        <div class="split-50-50">
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">黃仁勳閃電復職代價：治理重組與標普降評觀察</h3>
+                <p class="panel-caption">白宮斡旋結束 11 天離任風波，但單一領袖依賴引發信用評級與監管雙重緊盯。</p>
+              </div>
+              <span class="stamp stamp-negative">12/1 美國眾院聽證</span>
+            </div>
+            <div class="timeline-list">
+              <div class="timeline-item">
+                <span class="timeline-date">11/23 週一</span>
+                <div>
+                  <strong>董事會一致表決復職，治理全面重塑</strong>
+                  <p class="figure-note">川普協調促成黃仁勳重返總裁與 CEO，單日市值暴增 9,500 億至近 1 兆美元（CoreWeave 飆 +29.8%）。代價為董事會新設獨立「國家安全與出口管制監督委員會」並急聘首席合規官，Harvey Jones 留任董事長。</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">11/25 週三</span>
+                <div>
+                  <strong>標普 (S&amp;P) 列入 AA 負向信用觀察</strong>
+                  <p class="figure-note">因黃仁勳於員工大會拒絕建立正式接班計畫，標普將輝達「AA」評等列入 CreditWatch Negative，直指董事會獨立性與過度依賴單一領袖風險。</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">11/27–28</span>
+                <div>
+                  <strong>東南亞暫停出貨與上海現 Blackwell</strong>
+                  <p class="figure-note">上海官方文件驚現 Blackwell 蹤跡，輝達隨即要求夥伴暫停對四個東南亞國家出貨伺服器以配合審查，拖累週五股價僅微漲 0.80%。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">美中歐半導體多線攻防地圖</h3>
+                <p class="panel-caption">出口實體清單、歐洲主權反制與中國國產替代同步深化技術分流。</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>戰線 / 行動方</th>
+                    <th>11 月第四週關鍵事件</th>
+                    <th>中長期戰略影響</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>美國商務部</strong></td>
+                    <td>11/23 將新加坡轉運商 <strong>Megaspeed</strong> 及其馬、泰關聯企業列入實體清單黑名單。</td>
+                    <td>東南亞算力轉運通道遭徹底封堵，KYC 合規成本永久墊高。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>華為 (Huawei)</strong></td>
+                    <td>11/27 正式擴大 <strong>Ascend 昇騰</strong> AI 晶片產能與本土供應計畫。</td>
+                    <td>填補禁令留下的中國國內算力缺口，加速美中雙軌生態分流。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>荷蘭政府 / ASML</strong></td>
+                    <td>表態反對並協商美方對 ASML 更嚴苛的設備與維修新限令，強調歐洲不可在競賽落後。</td>
+                    <td>跨大西洋出口管制出現政策摩擦，設備維修與成熟製程管制留有談判空間。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>「矽和平」聯盟</strong></td>
+                    <td>Pax Silica 供應鏈安全聯盟擴大至 <strong>26 國</strong>，鎖定可信賴盟國製造。</td>
+                    <td>強化台美日韓荷的排他性供應鏈結盟。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Cybersecurity, Baseload Power & Edge AI -->
+      <div id="tab-security" class="tab-panel">
+        <div class="split-50-50">
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">CrowdStrike 440 億美元併購 Zscaler：平台級資安剛需</h3>
+                <p class="panel-caption">AI 輔助網攻已實質癱瘓歐盟與北歐能源系統，企業被迫轉向「端點＋零信任」合一。</p>
+              </div>
+              <span class="stamp stamp-navy">合併 ARR 破 $100 億</span>
+            </div>
+            <div class="callout">
+              <h4 class="callout-title">11/23 世紀資安整併與實戰威脅</h4>
+              <p>端點霸主 CrowdStrike (CRWD) 以約 439–440 億美元全股票收購雲端零信任巨頭 Zscaler (ZS)，預計 30 個月內釋放 10 億美元營收綜效。同日歐盟 EU Academy 遭 AI 網攻離線、挪威兩大能源商遭 Azure API 漏洞入侵；此前 Claude Code 亦爆出明文密鑰外洩波及近 2,000 個開源庫，Fed 理事巴爾更警告 AI Agent 恐引爆毫秒級銀行擠兌。</p>
+            </div>
+            <div class="callout-brass">
+              <h4 class="callout-title">台灣核電重啟公投：亞洲基載電力樞紐保衛戰</h4>
+              <p>台灣於 11/27 啟動核電重啟公投投票。充沛且穩定的基載電力將直接決定台灣在新加坡、日、韓競逐中，能否兼顧「先進晶圓製造」與「區域 AI 訓練中心」雙重戰略樞紐地位，並直接支撐重電、變壓器與千瓦級水冷散熱的多年剛性開支。</p>
+            </div>
+          </div>
+
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">端側輕量化 (On-Device) 與 Agent 商業降本突破</h3>
+                <p class="panel-caption">算力「去雲端化」拐點浮現，高頻隱私運算與客服流程正迅速轉向本地與垂直降本。</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>技術層級</th>
+                    <th>11 月代表性實證</th>
+                    <th>商業效率與架構意義</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>桌面／晶片端側硬體</strong></td>
+                    <td>輝達 <strong>64GB DGX Spark</strong>（邊緣營收 +42% 至 $82 億）；台大電機 <strong>16nm 節能晶片</strong>。</td>
+                    <td>突破記憶體頻寬瓶頸，帶動華碩 RTX Spark 等本地工作站出貨。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>本地離線軟體引擎</strong></td>
+                    <td><strong>ShrinkLoop Local MLX Proxy</strong>（蘋果晶片專用）、32MB Woof 離線語音。</td>
+                    <td>大幅降低雲端 API 訂閱成本並消弭外部單點故障與資料外洩風險。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>企業代理真實變現</strong></td>
+                    <td>微軟解散 AI Frontiers 併入 Copilot；Airbnb AI 接管 <strong>逾 70%</strong> 客服年省數億美元。</td>
+                    <td>Sema4.ai 3.0 共享快取降 <strong>80% Token 消耗</strong>；Carpool 推任務批次編譯。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Circular Financing & Anthropic IPO -->
+      <div id="tab-financing" class="tab-panel">
+        <div class="split-50-50">
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">舊融資模式失靈 vs. 硬體閉環循環融資崛起</h3>
+                <p class="panel-caption">高負債 Neoclouds 與天價舉債併購遇阻，賣鏟人轉以股權綁定長約但面臨華府審查。</p>
+              </div>
+              <span class="stamp stamp-negative">華府嚴審合規風險</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>融資範式</th>
+                    <th>代表案例與金額</th>
+                    <th>市場反饋與結構風險</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>舊模式承壓</strong></td>
+                    <td>CoreWeave 洽談 40 億美元新貸；軟銀孫正義擱置 <strong>1 兆美元</strong>收購 SK 海力士。</td>
+                    <td>再融資利率與折舊疑慮引爆波動；軟銀帳上現金僅 343 億且已投 OpenAI 300 億。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>表外專案基金 (SPV)</strong></td>
+                    <td>博通＋美銀＋黑石設立 <strong>630 億美元</strong>基金採購設備回租客戶。</td>
+                    <td>繞開單一科技巨頭資產負債表上限，維持算力採購動能。</td>
+                  </tr>
+                  <tr>
+                    <td><strong>硬體閉環循環融資</strong></td>
+                    <td>台積電 10 億入股 OpenAI/Anthropic（再砸 5 億參與 IPO）；美光投 10 億基石投資。</td>
+                    <td>鎖定數百億美元晶圓與 HBM 長約，惟《Focus Taiwan》揭露恐面臨美國政界嚴審。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="leaf-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Anthropic (ANT) 破發警示：純模型股的 FCF 嚴審時代</h3>
+                <p class="panel-caption">史上最大 813 億美元 IPO 掛牌第 4 天跌破 83 美元發行價，宣告估值邏輯徹底重錨。</p>
+              </div>
+            </div>
+            <div class="callout-brass">
+              <h4 class="callout-title">「軟體破發、硬體爆單」的資本分水嶺</h4>
+              <p>儘管 Anthropic 週五隨大盤反彈 10.98% 重返 91.88 美元，但 11/24 破發 83 美元明確宣告二級市場已拒絕為缺乏清晰自由現金流（FCF）回報表的純大模型燒錢買單。此外，其公開 17.5 萬個 Lean 檔案聲稱證明黎曼猜想卻遭學界質疑可驗證性，亦凸顯 AI 產出仍須嚴格「人類最終查核（Human-in-the-Loop）」。</p>
+            </div>
+            <div class="callout">
+              <h4 class="callout-title">投行投資紀律：遠離套殼 SaaS，擁抱雙重免疫賣鏟人</h4>
+              <p>無論未來贏家是輝達 Rubin、Google TPU 轉單聯發科，抑或 Cerebras 晶圓級算力，所有晶片終須台積電製造、日月光高雄鏈封測、HBM/NAND 儲存及設備廠支援——此類「架構與循環融資雙重免疫」標的才是長線核心。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 4: TAIWAN FOREIGN FLOWS, FUTURES HEDGING & SHORT BAN
+         =================================================================== -->
+    <section id="sec-twse" class="section-block">
+      <div class="section-head">
+        <div class="section-head-main">
+          <span class="section-kicker">SECTION 04 · TWSE INSTITUTIONAL FLOWS, TX FUTURES &amp; FTSE TAIWAN</span>
+          <h2>台股外資籌碼「土洋對決」、期現貨制度性代償與軋空槓桿試算</h2>
+          <p class="section-subtitle">11/23 全面禁空令與 11/24 融資維持率降至 120% 拆解斷頭鏈；外資雖連 10 賣逾 5,000 億且台指期淨空達 107,503 口，但選擇權買權與正價差揭露「避險而非全面看空」真相。</p>
+        </div>
+        <span class="stamp stamp-navy">36,000–41,000 箱型築底架構</span>
+      </div>
+
+      <div class="split-60-40">
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">11 月外資台指期淨空單階梯攀升 vs. 融資餘額極端清洗</h3>
+              <p class="panel-caption">散戶融資自 10/6 高點 6,533 億清洗 33.4% 至 4,344.8 億（勝過指數跌幅 28.5%），籌碼已深度去槓桿。</p>
+            </div>
+          </div>
+          <div class="chart-box-tall">
+            <canvas id="twse-flow-chart"></canvas>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>台股籌碼核心維度</th>
+                  <th class="num">11 月初 / 波段極值</th>
+                  <th class="num">11/25 – 11/27 水準</th>
+                  <th>制度結構與多空解讀</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>外資現股買賣超</strong></td>
+                  <td class="num">11/25 單日賣 1,236.54 億</td>
+                  <td class="num">11/27 縮至 -296.28 億</td>
+                  <td>連 10 賣逾 5,000 億（今年累賣逾 3 兆），惟賣壓遞減且買盤轉向航運金控。</td>
+                </tr>
+                <tr>
+                  <td><strong>投信與國安基金</strong></td>
+                  <td class="num">11/25 投信猛接 +535 億</td>
+                  <td class="num">11/27 +85.19 億(含櫃買+31.2億)</td>
+                  <td>11/27 尾盤傳國安基金砸逾 300 億挺台積電，投信承接 AI 儲存與散熱。</td>
+                </tr>
+                <tr>
+                  <td><strong>選擇權與價差結構</strong></td>
+                  <td class="num">11/26 買權淨額 +19.83 億</td>
+                  <td class="num">11/27 +10.36 億 / 正價差 +54.92</td>
+                  <td>十大特法淨多 10,934 口（電子期正價差 +23.43），外資買 Call 防禦上檔軋空。</td>
+                </tr>
+                <tr>
+                  <td><strong>11/27 富台指 (TWN) 結算</strong></td>
+                  <td class="num">承接摩台指離岸流動性</td>
+                  <td class="num">台積電尾盤爆量收 2,180 元</td>
+                  <td>禁空令限制現貨放空，引發外資透過「在岸台指＋離岸富台」避險代償，壓低結算未果順勢換倉 12 月（下週一 11/30 銜接 MSCI 季度調整生效）。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">10.75 萬口外資空單「軋空槓桿動態試算器」</h3>
+              <p class="panel-caption">依靜態試算模型：指數每漲 1,000 點，外資期貨空單帳面損益變動約 -215 億元（每點 200 元）。</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="slider-taiex-move">
+              <span>模擬加權指數後續漲跌點數（基準 39,308 點）</span>
+              <span id="sim-target-index" style="font-family:var(--font-mono);color:var(--primary);">40,308 點</span>
+            </label>
+            <div class="input-row">
+              <input type="range" id="slider-taiex-move" min="-3000" max="3000" step="100" value="1000" oninput="syncMoveFromSlider(this.value)">
+              <input type="number" id="input-taiex-move" min="-3000" max="3000" step="100" value="1000" style="width:96px;" oninput="syncMoveFromNumber(this.value)">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="slider-cover-pct">
+              <span>模擬外資空單被迫回補比例（%）</span>
+              <span id="sim-cover-contracts" style="font-family:var(--font-mono);color:var(--primary);">21,501 口</span>
+            </label>
+            <div class="input-row">
+              <input type="range" id="slider-cover-pct" min="0" max="50" step="5" value="20" oninput="syncCoverFromSlider(this.value)">
+              <input type="number" id="input-cover-pct" min="0" max="50" step="5" value="20" style="width:96px;" oninput="syncCoverFromNumber(this.value)">
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="figure-card">
+              <div class="figure-label"><span>外資空單帳面損益預估</span></div>
+              <div id="sim-pnl-output" class="figure-value delta-negative">-215.0 億</div>
+              <div class="figure-note">基於 107,503 口 × 每點 200 元計算</div>
+            </div>
+            <div class="figure-card">
+              <div class="figure-label"><span>觸發期貨回補名目買盤</span></div>
+              <div id="sim-squeeze-buy" class="figure-value delta-positive">1,733 億</div>
+              <div id="sim-squeeze-note" class="figure-note">指數上漲時觸發空單停損回補名目價值</div>
+            </div>
+          </div>
+
+          <div class="panel-header" style="margin-top:var(--space-sm);">
+            <div>
+              <h3 class="panel-title">11/27 土洋法人現貨換手排行</h3>
+              <p class="panel-caption">外資提款權值電與記憶體，轉買防禦金控航運；投信精準承接 AI 儲存散熱。</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>法人買賣陣營</th>
+                  <th>前五大代表標的</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="stamp stamp-navy">外資買超前五大</span></td>
+                  <td><strong>長榮 (2603)、國泰金 (2882)、鴻海 (2317)、南電 (8046)、華碩 (2357)</strong> — 低基期防禦與高息換手。</td>
+                </tr>
+                <tr>
+                  <td><span class="stamp stamp-negative">外資賣超前五大</span></td>
+                  <td><strong>台積電 (2330)、中華電 (2412)、群聯 (8299)、台達電 (2308)、奇鋐 (3017)</strong> — 高流動性提款機。</td>
+                </tr>
+                <tr>
+                  <td><span class="stamp stamp-positive">投信買超前五大</span></td>
+                  <td><strong>群聯 (8299)、中華電 (2412)、奇鋐 (3017)、台積電 (2330)、聯電 (2303)</strong> — 精準接走外資倒出籌碼。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout-brass">
+            <h4 class="callout-title">總經基本面三大歷史紀錄 vs. 散戶謹慎沉澱</h4>
+            <p>主計總處上修 2026 GDP 至 <strong>13.28%</strong>（2027 估 6.51%）、10 月景氣對策信號 40 分創史上最長連 11 紅、工業生產年增 <strong>29.8%</strong> 連 32 紅；同時 11 月 CCI 微降至 65.91（六項僅「投資股票時機」下降），反而印證散戶退出槓桿後有利權值股築底。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 5: INVESTOR ACTION PLAN
+         =================================================================== -->
+    <section id="sec-strategy" class="section-block">
+      <div class="section-head">
+        <div class="section-head-main">
+          <span class="section-kicker">SECTION 05 · INVESTOR ACTION PLAN: ALLOCATION, CAPITAL CONTROL &amp; MULTI-HORIZON STRATEGY</span>
+          <h2>投資人現階段因應措施：資產配置、資金控管與短／中／長期投資策略</h2>
+          <p class="section-subtitle">針對「實體基本面創 48 年最強，但 12/1 聽證、12/9 升息與 10.75 萬口外資淨空單猶存」的雙重格局，建立紀律化操作系統。</p>
+        </div>
+        <span class="stamp stamp-positive">四模組全互動決策系統</span>
+      </div>
+
+      <!-- MODULE A & B -->
+      <div class="split-50-50">
+        <!-- MODULE A: 40/30/15/15 Asset Allocation Simulator -->
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">模組 A｜戰略資產配置模擬器（40% / 30% / 15% / 15%）</h3>
+              <p class="panel-caption">選擇情境劇本或自訂總資金與權重，即時計算四層資產配置金額與選股邏輯。</p>
+            </div>
+            <div class="filter-row">
+              <button type="button" class="btn-secondary" id="normalize-btn" onclick="normalizePortfolioWeights()">自動配平 100%</button>
+              <button type="button" class="btn-secondary" id="reset-portfolio-btn" onclick="resetPortfolioDefaults(this)">重設基準 (40/30/15/15)</button>
+            </div>
+          </div>
+
+          <div class="filter-row" role="group" aria-label="戰略配置劇本預設">
+            <button type="button" class="filter-btn active" id="preset-base" onclick="applyPortfolioPreset('base', this)">基準防禦 (40/30/15/15)</button>
+            <button type="button" class="filter-btn" id="preset-offense" onclick="applyPortfolioPreset('offense', this)">反轉確認進攻 (50/15/15/20)</button>
+            <button type="button" class="filter-btn" id="preset-defend" onclick="applyPortfolioPreset('defend', this)">極端鷹派避險 (30/45/15/10)</button>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="input-capital">
+              <span>投資組合總資金規模（新台幣萬元）</span>
+              <span id="capital-display" style="font-family:var(--font-mono);color:var(--primary);">1,000 萬元</span>
+            </label>
+            <div class="input-row">
+              <input type="range" id="slider-capital" min="100" max="10000" step="100" value="1000" oninput="syncCapitalFromSlider(this.value)">
+              <input type="number" id="input-capital" min="100" max="50000" step="100" value="1000" style="width:110px;" oninput="syncCapitalFromNumber(this.value)">
+            </div>
+          </div>
+
+          <div class="split-40-60" style="align-items:center;">
+            <div class="chart-box" style="min-height:230px;height:240px;">
+              <canvas id="portfolio-chart"></canvas>
+            </div>
+            <div style="display:grid;gap:var(--space-sm);">
+              <div class="control-group">
+                <label class="control-label" for="w-core"><span>1. 核心製造賣鏟人（目標 40%）</span><span id="val-core" style="font-family:var(--font-mono);">40%</span></label>
+                <input type="range" id="w-core" min="10" max="70" step="5" value="40" oninput="onWeightSliderChange()">
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="w-cash"><span>2. 高息現金與美元短債（目標 30%）</span><span id="val-cash" style="font-family:var(--font-mono);">30%</span></label>
+                <input type="range" id="w-cash" min="5" max="60" step="5" value="30" oninput="onWeightSliderChange()">
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="w-defense"><span>3. 平台資安與高息金融（目標 15%）</span><span id="val-defense" style="font-family:var(--font-mono);">15%</span></label>
+                <input type="range" id="w-defense" min="5" max="40" step="5" value="15" oninput="onWeightSliderChange()">
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="w-satellite"><span>4. AI 伺服器與端側衛星（目標 15%）</span><span id="val-satellite" style="font-family:var(--font-mono);">15%</span></label>
+                <input type="range" id="w-satellite" min="0" max="40" step="5" value="15" oninput="onWeightSliderChange()">
+              </div>
+              <div id="weight-sum-note" class="figure-note" aria-live="polite">權重合計：100%（符合機構配置約束）</div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>配置層級</th>
+                  <th class="num">權重</th>
+                  <th class="num">模擬金額</th>
+                  <th>細分標的與執行紀律</th>
+                </tr>
+              </thead>
+              <tbody id="portfolio-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MODULE B: Capital & Risk Control Discipline Dashboard -->
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">模組 B｜資金控管與風控紀律儀表板</h3>
+              <p class="panel-caption">杜絕斷頭風險、落實「3-3-4」分批低接與雙幣安全墊動態降倉機制。</p>
+            </div>
+            <span class="stamp stamp-negative">零融資 · 100% 現股</span>
+          </div>
+
+          <div class="discipline-grid">
+            <div class="discipline-card danger">
+              <div class="discipline-card-title">
+                <span>1. 槓桿禁令與 ETF 警覺</span>
+                <span class="stamp stamp-negative">紅線</span>
+              </div>
+              <p class="figure-note">堅持 <strong>100% 現股操作</strong>，嚴禁信用融資（即便維持率降至 120%）；遠離 <strong>00631L（正2）、00685L</strong> 等槓桿 ETF 長抱，避免國際回測引發贖回潮與每日再平衡耗損。</p>
+            </div>
+
+            <div class="discipline-card">
+              <div class="discipline-card-title">
+                <span>2. 單一標的與設計商上限</span>
+                <span class="stamp stamp-navy">風控</span>
+              </div>
+              <p class="figure-note">衛星部位（ASIC、低軌衛星、資安）<strong>單一標的比重上限不超過總資金 5%</strong>；降低單一 GPU 設計商集中度，以台積電與多元伺服器組裝廠分散出口審查風險。</p>
+            </div>
+
+            <div class="discipline-card safe">
+              <div class="discipline-card-title">
+                <span>3. 雙幣安全墊與降倉觸發</span>
+                <span class="stamp stamp-positive">彈藥</span>
+              </div>
+              <p class="figure-note">30% 流動性拆分為 <strong>20% 美元短債/MMF（領近 5% 息）＋ 10% 新台幣現金</strong>；當四大反轉指標達成 <strong>&ge; 2 項</strong> 時，安全墊由 30% 逐步降至 15% 進場承接。</p>
+            </div>
+          </div>
+
+          <div style="border-top:var(--hairline);padding-top:var(--space-md);display:grid;gap:var(--space-sm);">
+            <div class="panel-header" style="border-bottom:none;padding-bottom:0;">
+              <div>
+                <h3 class="panel-title">「3 - 3 - 4」三階段分批低接資金計算器</h3>
+                <p class="panel-caption">預設連動總資金（或可手動輸入擬分批投入之股票預算），嚴守「買黑不買紅、不追漲停日」。</p>
+              </div>
+              <button type="button" class="filter-btn" onclick="syncTrancheToTotalCapital()">同步總資金規模</button>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="input-tranche-budget">
+                <span>擬分批低接總預算（新台幣萬元）</span>
+                <span id="tranche-budget-display" style="font-family:var(--font-mono);color:var(--primary);">1,000 萬元</span>
+              </label>
+              <div class="input-row">
+                <input type="range" id="slider-tranche-budget" min="100" max="10000" step="100" value="1000" oninput="syncTrancheFromSlider(this.value)">
+                <input type="number" id="input-tranche-budget" min="100" max="50000" step="100" value="1000" style="width:110px;" oninput="syncTrancheFromNumber(this.value)">
+              </div>
+            </div>
+
+            <div class="tranche-bar" aria-label="30% 30% 40% 分批進場比例條">
+              <div class="tranche-seg-1" title="第一批 30%"></div>
+              <div class="tranche-seg-2" title="第二批 30%"></div>
+              <div class="tranche-seg-3" title="第三批 40%"></div>
+            </div>
+
+            <div class="kpi-grid-3">
+              <article class="figure-card">
+                <div class="figure-label"><span>第一批試單 (30%)</span><span class="stamp">防守試單</span></div>
+                <div id="tranche-1-amt" class="figure-value">300.0 萬元</div>
+                <p class="figure-note"><strong>觸發條件：</strong>回測守穩 <strong>35,738 點</strong> 波段低點不破或年線附近分批買進，不追感恩節強彈紅K。</p>
+              </article>
+
+              <article class="figure-card">
+                <div class="figure-label"><span>第二批加碼 (30%)</span><span class="stamp stamp-navy">利空出盡</span></div>
+                <div id="tranche-2-amt" class="figure-value">300.0 萬元</div>
+                <p class="figure-note"><strong>觸發條件：</strong>跨過 <strong>12/1 黃仁勳眾院聽證</strong> 與 <strong>12/9 Fed 升息</strong> 兩大門檻且未引發失控破底。</p>
+              </article>
+
+              <article class="figure-card">
+                <div class="figure-label"><span>第三批確認 (40%)</span><span class="stamp stamp-positive">趨勢轉多</span></div>
+                <div id="tranche-3-amt" class="figure-value">400.0 萬元</div>
+                <p class="figure-note"><strong>觸發條件：</strong>外資現貨轉為<strong>連 2–3 日買超</strong>＋台指期淨空單降至 <strong>10 萬口以下</strong>且帶量站回 4 萬點。</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="callout-green">
+            <h4 class="callout-title">雙幣流動性安全墊明細（目前配置 = <span id="cash-total-amt">300.0</span> 萬元）</h4>
+            <p>美元短天期國債／貨幣市場基金（2/3 比例 = <strong id="cash-usd-amt">200.0</strong> 萬元，鎖定近 5% 無風險利息對沖升息與強勢美元 104）＋ 新台幣高流動現金（1/3 比例 = <strong id="cash-twd-amt">100.0</strong> 萬元，作為 36,000–41,000 點箱型震盪低接彈藥）。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE C: SHORT / MEDIUM / LONG TERM INVESTMENT STRATEGIES -->
+      <div class="leaf-panel">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">模組 C｜短、中、長期三維度投資策略矩陣（2026年底 – 2029年）</h3>
+            <p class="panel-caption">點擊時間軸切換檢視各週期核心任務、重點配置標的與明確汰弱規則，並附完整三維對照總表。</p>
+          </div>
+          <span class="stamp stamp-navy">跨週期作戰藍圖</span>
+        </div>
+
+        <div class="tab-bar" role="tablist" aria-label="短中長期投資策略切換">
+          <button type="button" class="tab-btn active" role="tab" aria-selected="true" onclick="switchHorizonTab('hor-short', this)">
+            <i data-lucide="clock" style="width:15px;height:15px;" aria-hidden="true"></i>
+            短期策略（1週 – 1個月｜2026/12 關鍵窗口）
+          </button>
+          <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="switchHorizonTab('hor-medium', this)">
+            <i data-lucide="trending-up" style="width:15px;height:15px;" aria-hidden="true"></i>
+            中期策略（3個月 – 1年｜2027 H1 籌碼重組）
+          </button>
+          <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="switchHorizonTab('hor-long', this)">
+            <i data-lucide="layers" style="width:15px;height:15px;" aria-hidden="true"></i>
+            長期策略（1年 – 3年以上｜2027–2029 結構贏家）
+          </button>
+          <button type="button" class="tab-btn" role="tab" aria-selected="false" onclick="switchHorizonTab('hor-all', this)">
+            <i data-lucide="table" style="width:15px;height:15px;" aria-hidden="true"></i>
+            三週期策略總覽對照表
+          </button>
+        </div>
+
+        <!-- Short Term -->
+        <div id="hor-short" class="horizon-panel active">
+          <div class="split-50-50">
+            <div class="callout-brass">
+              <h4 class="callout-title">短期核心定調：跨過 12/1 聽證與 12/9 升息兩大門檻，守現金不追高</h4>
+              <p>感恩節短週美股雖創一年半最佳漲幅，但週三盤中仍曾急挫 3.2%，且台灣 11 月 CCI 唯獨「投資股票時機」下降至 65.91、外資台指期淨空單高達 107,503 口。在 <strong>12/1 黃仁勳赴美國眾議院作證</strong> 與 <strong>12/9 FOMC 升息（機率 97.8%–99.4%）</strong> 落地前，籌碼仍屬敏感脆弱。</p>
+            </div>
+            <div class="callout-red">
+              <h4 class="callout-title">短期汰弱換強清單：趁反彈出清高關稅東南亞轉運與純 PC 鏈</h4>
+              <p>USTR 301 提案給予台灣 15% 淨關稅上限，卻對 <strong>越南（35%）、馬來西亞與泰國（25%）</strong> 祭出高稅威脅；加上 <strong>宏碁（Acer）預警本季全球 PC 出貨年減 20%</strong>。應趁本波反彈果斷汰除產能過度集中東南亞、缺乏美國建廠能力的傳統低毛利組裝廠與純消費 PC 鏈。</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>短期執行維度</th>
+                  <th>具體操作指令</th>
+                  <th>觀察指標與風控底線</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>倉位與槓桿紀律</strong></td>
+                  <td>維持 30% 高息現金與美元短債；100% 現股操作，嚴禁融資與槓桿 ETF。</td>
+                  <td>等待 12/9 升息後若油價回落、通膨降溫帶動「利空出盡」，再啟動第二批加碼。</td>
+                </tr>
+                <tr>
+                  <td><strong>反彈換股方向</strong></td>
+                  <td>減碼越南/馬泰純組裝代工與消費筆電；資金轉入高息防禦金控、航運與電信。</td>
+                  <td>順應外資 11/27 買超長榮、國泰金與中華電抗跌特性，穩住淨值波動。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Medium Term -->
+        <div id="hor-medium" class="horizon-panel">
+          <div class="split-50-50">
+            <div class="callout">
+              <h4 class="callout-title">中期核心定調：36,000–41,000 箱型築底，布局「土洋交集」業績股</h4>
+              <p>美國 301 關稅公眾意見徵詢至 2027/1/5、聽證會 1/25 召開，台股未來一至數月將進入 36,000–41,000 點箱型築底並等待四大反轉指標確認。中期選股緊扣「外資轉向防禦與伺服器、投信鎖碼 AI 儲存散熱」的交集贏家。</p>
+            </div>
+            <div class="callout-red">
+              <h4 class="callout-title">中期排雷準則：遠離負 FCF 純大模型與套殼 SaaS 股</h4>
+              <p>Anthropic 掛牌第 4 天即跌破 83 美元發行價，宣告二級市場已拒絕為缺乏明確自由現金流的純模型燒錢買單；同時微軟解散純研究實驗室併入 Copilot、Sema4 削減 80% Token 消耗，中小型套殼軟體將面臨嚴重估值壓縮。</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>中期佈局賽道</th>
+                  <th>精選代表標的</th>
+                  <th>中期基本面與籌碼催化邏輯</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>土洋交集 AI 硬體</strong></td>
+                  <td><strong>台積電 (2330)、鴻海 (2317)、奇鋐 (3017)、健策、群聯 (8299)、華邦電、南電 (8046)、台光電</strong></td>
+                  <td>投信 11/27 精準承接群聯、奇鋐、台積電；外資轉買鴻海與南電；受惠新台幣 32.9–33 元匯兌紅利。</td>
+                </tr>
+                <tr>
+                  <td><strong>防禦高息與低油價受惠</strong></td>
+                  <td><strong>國泰金 (2882)、富邦金、長榮 (2603)、中華電 (2412)</strong></td>
+                  <td>富邦/國泰前 10 月獲利超越去年全年；布蘭特原油仍在 $95 上方，運輸股僅屬選擇性配置，宜以金控配息為防禦主軸。</td>
+                </tr>
+                <tr>
+                  <td><strong>高景氣 Alpha 次產業</strong></td>
+                  <td><strong>聯發科 (TPU 轉單)、華通 / 昇達科 (低軌衛星)</strong></td>
+                  <td>Google 擬下修百萬顆 TPU 轉單聯發科；低軌衛星族群於大盤修正期間逆勢創高。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Long Term -->
+        <div id="hor-long" class="horizon-panel">
+          <div class="split-50-50">
+            <div class="callout-green">
+              <h4 class="callout-title">長期核心定調（40% 重倉）：無懼架構變動與循環融資審查的「實體賣鏟人」</h4>
+              <p>無論未來算力贏家是輝達 Rubin、Google TPU 轉單聯發科，或 Cerebras 晶圓級晶片，所有算力最終皆須由 <strong>台積電</strong> 製造、<strong>日月光高雄 3,500 億聚落</strong> 封測，並仰賴 <strong>HBM／企業級儲存</strong> 與 <strong>科林研發／應材</strong> 設備，完全免疫華府對「循環融資」的合規審查。</p>
+            </div>
+            <div class="callout">
+              <h4 class="callout-title">長期雙翼引擎：平台零信任資安 ＋ 基載電力重電水冷 ＋ 端側生態</h4>
+              <p>CrowdStrike 440 億美元併購 Zscaler 確立「端點＋零信任」企業剛性支出；台灣核電公投與川普強制資料中心留美，推升 <strong>高壓重電、變壓器與千瓦級水冷散熱</strong> 多年資本開支；輝達 64GB DGX Spark 與台大 16nm 晶片則開啟 <strong>端側高現金流生態（蘋果）</strong> 長線爆發。</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>長期結構賽道</th>
+                  <th>核心標的與聚落</th>
+                  <th>2027 – 2029 長線護城河</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>美台雙基地先進製造與封測</strong></td>
+                  <td><strong>台積電（美國＋台灣擴產鏈）、亞利桑那/德州廠務設備、日月光高雄路竹/仁武擴產鏈、矽品、科林研發</strong></td>
+                  <td>享有美國在地稅務減免與 15% 協定關稅淨上限，矽品目標 2029 先進封裝產能翻三倍。</td>
+                </tr>
+                <tr>
+                  <td><strong>儲存記憶體與 CPO 光互聯</strong></td>
+                  <td><strong>SK 海力士／美光／閃迪 (SNDK) 供應鏈、Marvell / Lumentum、鴻海 CPO 模組</strong></td>
+                  <td>戴爾 1,320 億美元 AI 伺服器積壓訂單支撐企業級 NAND 與 HBM 多年稀缺定價權。</td>
+                </tr>
+                <tr>
+                  <td><strong>平台級零信任資安</strong></td>
+                  <td><strong>CrowdStrike / Zscaler 整合受惠鏈、Palo Alto Networks (PANW)、中華資安</strong></td>
+                  <td>合併 ARR 破 100 億美元，AI 自動化網攻迫使資安成為企業不可刪減的剛性預算。</td>
+                </tr>
+                <tr>
+                  <td><strong>基載電力重電、散熱與端側生態</strong></td>
+                  <td><strong>高壓重電／變壓器／儲能、千瓦級水冷散熱（雙鴻/奇鋐）、蘋果 (Apple)</strong></td>
+                  <td>算力競爭延伸至基載電網穩定度；蘋果單季 280 億美元營運現金流主導端側推論入口。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Complete Matrix Comparison -->
+        <div id="hor-all" class="horizon-panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>投資週期</th>
+                  <th>核心戰略目標</th>
+                  <th>重點增持 / 鎖定標的</th>
+                  <th>明確減碼 / 避開地雷</th>
+                  <th>資金控管與調整節奏</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>短期<br>(1週 – 1個月)</strong></td>
+                  <td>安全跨過 12/1 黃仁勳聽證與 12/9 Fed 升息關卡，嚴防短線回測。</td>
+                  <td>美元短債/MMF (20%)、台幣現金 (10%)、高息防禦（國泰金、長榮、中華電）。</td>
+                  <td>越南 (35%)、馬泰 (25%) 純組裝代工；純消費 PC 鏈（宏碁預警減 20%）。</td>
+                  <td>零融資、100% 現股；不追感恩節強彈紅K，僅於回測不破 35,738 啟動第一批 30% 試單。</td>
+                </tr>
+                <tr>
+                  <td><strong>中期<br>(3個月 – 1年)</strong></td>
+                  <td>掌握 36,000–41,000 箱型築底轉折，卡位「土洋交集」業績股。</td>
+                  <td>台積電、鴻海、奇鋐/健策、群聯/華邦電、南電、聯發科 ASIC、華通/昇達科。</td>
+                  <td>無自由現金流之虧損純大模型股、套殼 SaaS、槓桿型 ETF (00631L/00685L)。</td>
+                  <td>四大反轉指標達成 &ge;2 項時，安全墊由 30% 降至 15%，依「3-3-4」完成現股建倉。</td>
+                </tr>
+                <tr>
+                  <td><strong>長期<br>(1年 – 3年以上)</strong></td>
+                  <td>重倉「雙重免疫實體賣鏟人」＋「平台資安」＋「基載電力散熱」。</td>
+                  <td>台積電美台擴產鏈、日月光高雄 3,500 億封測鏈、HBM/NAND、CRWD/ZS/PANW/中華資安、重電水冷、蘋果。</td>
+                  <td>過度依賴循環融資且缺乏實體製程護城河之高負債算力中間商。</td>
+                  <td>核心製造賣鏟人維持 40%–50% 長線底倉，衛星單一標的嚴控不超過總資金 5%。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE D -->
+      <div class="split-50-50">
+        <!-- Interactive Reversal Confirmation Tracker -->
+        <div class="leaf-panel card-wrapper">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">模組 D1｜台股「真止跌、轉多頭」四大籌碼反轉確認儀</h3>
+              <p class="panel-caption">勾選已達成的盤面條件，系統將動態評估是否啟動現金降倉（30% → 15%）與加碼節奏。</p>
+            </div>
+            <span id="regime-badge" class="stamp stamp-negative">已確認 0 / 4 項 · 箱型警戒</span>
+          </div>
+
+          <div id="reversal-checklist" class="checklist-grid"></div>
+
+          <div id="regime-guidance" class="callout"></div>
+
+          <div class="panel-header" style="margin-top:var(--space-sm);">
+            <div>
+              <h3 class="panel-title">11/30 – 12/09 關鍵催化劑行事曆</h3>
+              <p class="panel-caption">未來十天決定跨年行情走勢的五大關鍵時間點。</p>
+            </div>
+          </div>
+
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <span class="timeline-date">11/30 (一)</span>
+              <div>
+                <strong>日本央行植田和男談話、歐元區通膨初值 ＆ MSCI 季度調整生效</strong>
+                <p class="figure-note">直接牽動日圓 158–161 干預防線與年底套利交易平倉風險，並留意台股尾盤 MSCI 權重調整爆量。</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">12/01 (二)</span>
+              <div>
+                <strong>黃仁勳赴美國眾議院作證 ＆ 美國 ISM 製造業 PMI</strong>
+                <p class="figure-note">檢驗輝達國安合規新體制能否獲華府認可，消除 Megaspeed 轉運調查司法陰霾。</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">12/02–03</span>
+              <div>
+                <strong>JOLTS 職位空缺、ADP 就業、MRVL / CRM / SNOW 財報</strong>
+                <p class="figure-note">驗證企業級軟體商業變現與客製化 AI 晶片 (ASIC/CPO) 真實訂單動能。</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">12/04 (五)</span>
+              <div>
+                <strong>美國 11 月非農就業報告與失業率</strong>
+                <p class="figure-note">決定市場是否進一步提前定價「2027 年 1 月連續升息」，為美股反彈最大試金石。</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">12/08–09</span>
+              <div>
+                <strong>FOMC 利率決議（升息 1 碼機率 97.8%–99.4%）</strong>
+                <p class="figure-note">若油價回落配合點陣圖未過度鷹派，12 月升息可望成為「本輪緊縮終點」利空出盡買點。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bidirectional Risk & Hedge Matrix + Personal AI Workflow -->
+        <div class="leaf-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">模組 D2｜四大核心評估軸線：正反向風險與對沖紀律矩陣</h3>
+              <p class="panel-caption">完整拆解四大宏觀與產業變數的下行威脅、上行突破與投資人對沖手段。</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>評估軸線</th>
+                  <th>反向風險（下行威脅）</th>
+                  <th>正向機會（上行突破）</th>
+                  <th>投資人對沖與操作紀律</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>12/1 聽證與<br>出口審查</strong></td>
+                  <td>國會聽證揭露更多 Megaspeed 轉運內幕或加重罰則，引發晶片鏈再度回測。</td>
+                  <td>輝達合規新體制獲華府認可，消除司法最大不確定性並推動估值重返軌道。</td>
+                  <td>降低單一 GPU 設計商槓桿，以台積電與多元伺服器組裝廠分散風險。</td>
+                </tr>
+                <tr>
+                  <td><strong>12 月 Fed<br>升息與油價</strong></td>
+                  <td>Fed 如期升息且釋出 2027 繼續緊縮鷹派點陣圖，推升 10 年美債重破 5.1%。</td>
+                  <td>油價自 $95 高檔回落、年底核心通膨降溫，12 月升息成為本輪緊縮終點（利空出盡）。</td>
+                  <td>維持 30% 高息現金與短債，鎖定近 5% 利息同時預留利空出盡買點彈藥。</td>
+                </tr>
+                <tr>
+                  <td><strong>301 關稅與<br>產線重遷</strong></td>
+                  <td>東南亞 25%–35% 關稅提前落地，拖累跨國消費電子與筆電供應鏈毛利率。</td>
+                  <td>台灣 15% 協定淨上限穩固轉單優勢，已赴美設廠龍頭享減稅與市占雙升。</td>
+                  <td>避開純消費 PC（宏碁預警減 20% 鏈），聚焦具美國據點之 AI 硬體與設備廠。</td>
+                </tr>
+                <tr>
+                  <td><strong>軟體估值與<br>資安剛需</strong></td>
+                  <td>Anthropic 破發 83 美元壓力持續拖累虧損型基礎模型與套殼 SaaS 股評價。</td>
+                  <td>CrowdStrike 440 億併購帶動平台資安龍頭估值重估，端側 MLX 降本工具商業落地。</td>
+                  <td>出清虧損純模型／軟體題材股，增配高 ARR 現金流零信任資安龍頭。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout-brass">
+            <h4 class="callout-title">個人 AI 數位工作流同步升級實踐（呼應端側與驗證趨勢）</h4>
+            <p>借鏡 Anthropic 黎曼猜想 1,700 萬行代碼引發的「可驗證性」爭論、Claude Code 密鑰外洩，以及台大 16nm 晶片與 ShrinkLoop Local MLX 代理問世，個人知識管理與投資研究工作流應同步落實：(1) <strong>端側輕量化分工</strong>——以蘋果晶片本地 MLX 與 Carpool 批次編譯處理筆記標籤清洗與語音轉錄，將高階雲端模型留給跨文獻邏輯推理；(2) <strong>本地防彈筆記主檔＋上傳前脫敏</strong>——避免外部雲端單點故障與資料外洩；(3) <strong>人類最終查核（Human-in-the-Loop）</strong>——確保每一項財經數據與配置決策皆經親手驗證。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sources Footer -->
+    <footer class="sources-footer">
+      <strong>資料來源與研究基礎（純文字彙整，無外部追蹤連結）</strong>
+      <span>完整整合《2026年11月第4週（11/23–11/28）全球財經與科技趨勢深度研究報告》、《2026年11月台股外資籌碼趨勢與期現貨／富台摩台指布局深度研討報告》、《2026年11月全球財經與AI趨勢六大核心專題深度研討報告》及《1128本周全球市場衝擊型財經研討》。原始數據引據：美國 BEA、CME FedWatch、USTR、AP News、Charles Schwab、CappNotes、BNN Bloomberg、TheStreet Pro、Focus Taiwan、TechCrunch、Taipei Times、英國衛報、台灣主計總處、國發會、經濟部、中央社、經濟日報、鉅亨網、永豐期貨、永豐金證券及理財周刊。</span>
+    </footer>
+  </main>
+
+  <script>
+    /* =====================================================================
+       CHARTER DATA & STATE INITIALIZATION
+       ===================================================================== */
+    function getToken(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    const ASSETS_DATA = [
+      { id: 'sp500', cat: 'equity', name: '標普 500 指數 (S&P 500)', close: '7,297.49 點', pct: 5.60, changeStr: '+387.10 點 (+5.60%)', note: '週五漲 1.60%，創 2025/4 以來最佳單週，11 大板塊全數收紅' },
+      { id: 'nasdaq', cat: 'equity', name: '那斯達克綜合指數 (Nasdaq)', close: '24,129.50 點', pct: 6.70, changeStr: '+1,511.77 點 (+6.70%)', note: '週五漲 2.31%，AI 儲存與半導體領軍反攻，YTD 轉漲 3.8%' },
+      { id: 'djia', cat: 'equity', name: '道瓊工業指數 (DJIA)', close: '50,774.94 點', pct: 5.50, changeStr: '+2,627.61 點 (+5.50%)', note: '重返五萬點大關，創 2022/10 以來最大單週漲幅' },
+      { id: 'russell', cat: 'equity', name: '羅素 2000 指數 (Russell 2000)', close: '2,750.30 點', pct: 6.50, changeStr: '+168.51 點 (+6.50%)', note: '週五漲 1.71%，YTD 累計 +10.8% 持續領跑美股主指數' },
+      { id: 'taiex', cat: 'equity', name: '台股加權指數 (TAIEX)', close: '39,308.08 點', pct: 9.09, changeStr: '+3,274.79 點 (+9.09%)', note: '禁空令＋國安基金護盤，市值回升至 128.8 兆元；台積電 2,180 元' },
+      { id: 'usdtwd', cat: 'fx_rate', name: '新台幣兌美元 (USD/TWD)', close: '32.935 元', pct: 0.35, changeStr: '台幣升值 +0.35% (收復 33)', note: '股匯齊揚與月底出口拋匯緩解外資連賣匯價壓力' },
+      { id: 'dxy', cat: 'fx_rate', name: '美元指數 (DXY)', close: '104.04', pct: 0.20, changeStr: '週漲約 +0.2%（週一高 104.53）', note: '12 月 Fed 升息機率逾 97%，支撐美元處 19 個月高檔' },
+      { id: 'us10y', cat: 'fx_rate', name: '美國 10 年期公債殖利率', close: '4.93%–4.94%', pct: 0.00, changeStr: '週線持平（週五 +9bp；週區間 4.80%–4.98%）', note: '週三一度探 4.80% 為近三個月低點，週五股市反彈後回升，仍受 5% 關卡壓制' },
+      { id: 'brent', cat: 'commodity', name: '布蘭特原油 (Brent Crude)', close: '$95.44 / 桶', pct: 3.00, changeStr: '週漲約 +3%（週五 -1.2%）', note: '荷姆茲海峽油輪遇襲與沙烏地能源設施受攻擊，終結連三週跌勢；WTI 收 $83.08，仍低於 $100 關卡' },
+      { id: 'gold', cat: 'commodity', name: '現貨黃金 (Spot Gold)', close: '$3,668–$3,675 / 盎司', pct: 2.50, changeStr: '週五 +2.5%；週漲約 +2.9%', note: '避險與通膨對沖買盤回流，白銀週五大漲逾 9%' },
+      { id: 'btc', cat: 'commodity', name: '比特幣 (BTC)', close: '$59,750–$60,020', pct: -0.60, changeStr: '週五 -0.6%～-1.2%（落後股市反彈）', note: '風險資產反彈中幣價仍疲弱，守 $60,000 整數關卡為短線觀察重點' }
+    ];
+
+    const PORTFOLIO_TIERS = [
+      { key: 'core', name: '第一層：核心製造賣鏟人', sub: '先進製程/高雄封測/設備 (22%) ＋ HBM/NAND與重電水冷 (18%)', rule: '受惠 13.28% GDP 與 15% 關稅淨上限，雙重免疫架構變動，採 3-3-4 現股分批' },
+      { key: 'cash', name: '第二層：高息流動性安全墊', sub: '美元短天期國債/MMF (20%, ~5%息) ＋ 新台幣現金 (10%)', rule: '應對 12/1 聽證與 12/9 升息波動；待四大反轉訊號出現 2 項時減至 15%' },
+      { key: 'defense', name: '第三層：平台資安與價值防禦', sub: '零信任資安 CRWD/ZS 鏈・PANW・中華資安 (8%) ＋ 高息金控/運輸 (7%)', rule: '捕捉 440 億美元資安併購剛需與國泰/富邦/長榮下檔防禦配息' },
+      { key: 'satellite', name: '第四層：AI 伺服器與端側衛星', sub: '戴爾鏈鴻海・聯發科 ASIC・低軌衛星華通昇達科 (9%) ＋ 蘋果端側生態 (6%)', rule: '單一標的比重上限 5%；堅決避開負 FCF 純模型股與越南/馬泰純 PC 組裝' }
+    ];
+
+    const REVERSAL_SIGNALS = [
+      { id: 'sig1', title: '1. 測試外部利空時，嚴守 35,738 點波段低點不破', desc: '面對 12/1 黃仁勳聽證或 12/9 Fed 升息衝擊時，確認籌碼二次測試支撐有效。' },
+      { id: 'sig2', title: '2. 外資現貨賣壓止血並轉為連續 2–3 日以上買超', desc: '單日賣超縮至 300 億內（11/27 為 -296.28 億）僅是初步止血，需見實際回補台積電與權值電。' },
+      { id: 'sig3', title: '3. 外資台指期淨空單明顯回補降至 10 萬口下方', desc: '目前處 107,503 口天量，需回落至 10 萬口（進一步至 8.5 萬口）以下方能解除上檔系統壓抑。' },
+      { id: 'sig4', title: '4. 新台幣穩守 33 元內且加權帶量收復 40,000 點', desc: '目前台幣收 32.935 元已露曙光，待加權指數帶量有效站回 4 萬點整數與均線反壓。' }
+    ];
+
+    let appState = {
+      assetFilter: 'all',
+      assetSortField: 'pct',
+      assetSortAsc: false,
+      overviewChartMode: 'indices',
+      macroScenario: 'base',
+      taiexMove: 1000,
+      coverPct: 20,
+      capital: 1000,
+      trancheBudget: 1000,
+      preset: 'base',
+      weights: { core: 40, cash: 30, defense: 15, satellite: 15 },
+      checkedSignals: []
+    };
+
+    let chartOverview = null;
+    let chartMacro = null;
+    let chartTariff = null;
+    let chartTwse = null;
+    let chartPortfolio = null;
+
+    /* =====================================================================
+       PERSISTENCE & FULLSCREEN HELPERS
+       ===================================================================== */
+    function toggleFullScreen() {
+      const labelEl = document.getElementById('fullscreen-label');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().then(function () {
+          if (labelEl) labelEl.textContent = '退出全螢幕';
+        }).catch(function () {});
+      } else {
+        document.exitFullscreen().then(function () {
+          if (labelEl) labelEl.textContent = '全螢幕檢視';
+        }).catch(function () {});
+      }
+    }
+
+    document.addEventListener('fullscreenchange', function () {
+      const labelEl = document.getElementById('fullscreen-label');
+      if (labelEl) {
+        labelEl.textContent = document.fullscreenElement ? '退出全螢幕' : '全螢幕檢視';
+      }
+    });
+
+    async function persistState() {
+      const statusEl = document.getElementById('persistence-status');
+      try {
+        localStorage.setItem('twse_macro_dashboard_20261128', JSON.stringify(appState));
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === 'function') {
+          await window.notebookAppApi.setAppState(appState);
+        }
+        if (statusEl) {
+          statusEl.textContent = `研究參數已儲存 (${new Date().toLocaleTimeString('zh-TW', { hour12: false })})`;
+        }
+      } catch (err) {
+        if (statusEl) statusEl.textContent = '本地互動模式';
+      }
+    }
+
+    function applyStateToUI() {
+      const sMove = document.getElementById('slider-taiex-move');
+      const nMove = document.getElementById('input-taiex-move');
+      const sCov = document.getElementById('slider-cover-pct');
+      const nCov = document.getElementById('input-cover-pct');
+      if (sMove) sMove.value = appState.taiexMove;
+      if (nMove) nMove.value = appState.taiexMove;
+      if (sCov) sCov.value = appState.coverPct;
+      if (nCov) nCov.value = appState.coverPct;
+      updateSqueezeOutputs();
+
+      const sCap = document.getElementById('slider-capital');
+      const nCap = document.getElementById('input-capital');
+      if (sCap) sCap.value = Math.min(10000, appState.capital);
+      if (nCap) nCap.value = appState.capital;
+
+      const sTranche = document.getElementById('slider-tranche-budget');
+      const nTranche = document.getElementById('input-tranche-budget');
+      if (sTranche) sTranche.value = Math.min(10000, appState.trancheBudget);
+      if (nTranche) nTranche.value = appState.trancheBudget;
+
+      const wCore = document.getElementById('w-core');
+      const wCash = document.getElementById('w-cash');
+      const wDef = document.getElementById('w-defense');
+      const wSat = document.getElementById('w-satellite');
+      if (wCore) wCore.value = appState.weights.core;
+      if (wCash) wCash.value = appState.weights.cash;
+      if (wDef) wDef.value = appState.weights.defense;
+      if (wSat) wSat.value = appState.weights.satellite;
+
+      updatePresetButtons(appState.preset);
+      const mBase = document.getElementById('macro-btn-base');
+      const mHawk = document.getElementById('macro-btn-hawkish');
+      if (mBase) mBase.classList.toggle('active', appState.macroScenario === 'base');
+      if (mHawk) mHawk.classList.toggle('active', appState.macroScenario === 'hawkish');
+
+      renderPortfolioView();
+      renderTrancheView();
+      renderReversalChecklist();
+      renderMacroScenario(appState.macroScenario);
+    }
+
+    /* =====================================================================
+       NAVIGATION & SECTION SCROLLING
+       ===================================================================== */
+    function scrollToSection(id, btn) {
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.nav-btn').forEach(function (el) { el.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+    }
+
+    /* =====================================================================
+       SECTION 1: ASSET MATRIX TABLE & OVERVIEW CHART
+       ===================================================================== */
+    function renderAssetTable() {
+      const tbody = document.getElementById('asset-tbody');
+      if (!tbody) return;
+
+      let rows = ASSETS_DATA.filter(function (item) {
+        return appState.assetFilter === 'all' || item.cat === appState.assetFilter;
+      });
+
+      rows.sort(function (a, b) {
+        if (appState.assetSortField === 'name') {
+          return appState.assetSortAsc ? a.name.localeCompare(b.name, 'zh-Hant') : b.name.localeCompare(a.name, 'zh-Hant');
+        }
+        return appState.assetSortAsc ? a.pct - b.pct : b.pct - a.pct;
+      });
+
+      tbody.innerHTML = rows.map(function (row) {
+        const cls = row.pct > 0 ? 'delta-positive' : (row.pct < 0 ? 'delta-negative' : 'delta-warning');
+        return `
+          <tr>
+            <td><strong>${row.name}</strong></td>
+            <td class="num">${row.close}</td>
+            <td class="num ${cls}"><strong>${row.changeStr}</strong></td>
+            <td>${row.note}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterAssets(cat, btn) {
+      appState.assetFilter = cat;
+      const parent = btn ? btn.parentElement : null;
+      if (parent) {
+        parent.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+      }
+      if (btn) btn.classList.add('active');
+      renderAssetTable();
+    }
+
+    function sortAssetTable(field) {
+      if (appState.assetSortField === field) {
+        appState.assetSortAsc = !appState.assetSortAsc;
+      } else {
+        appState.assetSortField = field;
+        appState.assetSortAsc = false;
+      }
+      renderAssetTable();
+    }
+
+    function renderOverviewChart() {
+      const canvas = document.getElementById('overview-chart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      const ctx = canvas.getContext('2d');
+      if (chartOverview) chartOverview.destroy();
+
+      const cNavy = getToken('--data-1');
+      const cBrass = getToken('--data-2');
+      const cGreen = getToken('--data-3');
+      const cSlate = getToken('--data-4');
+      const cCtx = getToken('--data-context');
+      const cGrid = getToken('--outline-variant');
+      const cInk = getToken('--on-surface-variant');
+
+      if (appState.overviewChartMode === 'indices') {
+        chartOverview = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['台股加權 TAIEX', '那斯達克 Nasdaq', '羅素 2000', '標普 500', '道瓊 DJIA'],
+            datasets: [{
+              label: '單週漲幅 (%)',
+              data: [9.09, 6.70, 6.50, 5.60, 5.50],
+              backgroundColor: [cGreen, cNavy, cSlate, cNavy, cBrass],
+              borderRadius: 2
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: function (c) { return ` +${c.parsed.x.toFixed(2)}%`; } } }
+            },
+            scales: {
+              x: { grid: { color: cGrid }, ticks: { color: cInk, callback: function (v) { return v + '%'; } }, max: 11 },
+              y: { grid: { display: false }, ticks: { color: cInk, font: { weight: '600' } } }
+            }
+          }
+        });
+      } else {
+        chartOverview = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['閃迪 SanDisk', 'Anthropic (ANT)', '美光 Micron', '戴爾 Dell', '輝達 NVIDIA (落後)'],
+            datasets: [{
+              label: '週五強彈表現 (%)',
+              data: [15.96, 10.98, 7.60, 6.70, 0.80],
+              backgroundColor: [cGreen, cBrass, cNavy, cSlate, cCtx],
+              borderRadius: 2
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: function (c) { return ` +${c.parsed.x.toFixed(2)}%`; } } }
+            },
+            scales: {
+              x: { grid: { color: cGrid }, ticks: { color: cInk, callback: function (v) { return v + '%'; } }, max: 18 },
+              y: { grid: { display: false }, ticks: { color: cInk, font: { weight: '600' } } }
+            }
+          }
+        });
+      }
+    }
+
+    function switchOverviewChart(mode, btn) {
+      appState.overviewChartMode = mode;
+      const parent = btn ? btn.parentElement : null;
+      if (parent) {
+        parent.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+      }
+      if (btn) btn.classList.add('active');
+      renderOverviewChart();
+    }
+
+    /* =====================================================================
+       SECTION 2: MACRO CHART & SCENARIO TOGGLE
+       ===================================================================== */
+    function renderMacroChart() {
+      const canvas = document.getElementById('macro-chart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      const ctx = canvas.getContext('2d');
+      if (chartMacro) chartMacro.destroy();
+
+      const cNavy = getToken('--data-1');
+      const cBrass = getToken('--data-2');
+      const cGrid = getToken('--outline-variant');
+      const cInk = getToken('--on-surface-variant');
+
+      chartMacro = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['美國 (12/9擬升中位)', '美國 10Y 美債', '南韓 BoK (11/26升)', '印尼央行 BI', '日本東京 (CPI壓力)'],
+          datasets: [
+            {
+              label: '最新利率 / 殖利率水準 (%)',
+              data: [4.125, 4.94, 3.25, 6.00, 0.50],
+              backgroundColor: cNavy,
+              borderRadius: 2
+            },
+            {
+              label: '核心通膨 / 物價壓力 (%)',
+              data: [3.30, 3.80, 2.40, 2.80, 2.90],
+              backgroundColor: cBrass,
+              borderRadius: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { color: cInk, boxWidth: 12 } }
+          },
+          scales: {
+            y: { grid: { color: cGrid }, ticks: { color: cInk, callback: function (v) { return v + '%'; } }, max: 7 },
+            x: { grid: { display: false }, ticks: { color: cInk } }
+          }
+        }
+      });
+    }
+
+    function renderMacroScenario(mode) {
+      const panel = document.getElementById('macro-scenario-panel');
+      if (!panel) return;
+      if (mode === 'base') {
+        panel.className = 'callout';
+        panel.innerHTML = `
+          <h4 class="callout-title">基準情境（機構共識）：油價高檔、長端殖利率 5% 關卡築頂待確認</h4>
+          <p>儘管 12/9 升息 1 碼（4.00%–4.25%）機率高達 97.8%–99.4%，但布蘭特原油週五收 <strong>$95.44</strong>（週漲約 3%，供應風險未解除） 且密大一年通膨預期降至 3.7%，加上財長貝森特喊話警示過度緊縮，將 10 年期美債殖利率壓制於 <strong>4.80%–5.10%</strong> 箱型區間。若油價自高檔回落至明年 Q1，12 月升息可望成為本輪緊縮週期尾聲轉折點，新台幣具向 32.2–32.5 修復空間。</p>
+        `;
+      } else {
+        panel.className = 'callout-brass';
+        panel.innerHTML = `
+          <h4 class="callout-title">鷹派風險情境（美銀預警）：12 月、1 月、3 月連續三次升息</h4>
+          <p>若 12/4 美國非農就業過強、服務業房租與車險通膨持續黏著，部分 FOMC 官員不排除重啟 50bps 討論或將緊縮延長至 2027 Q1。此情境下 10 年期美債將重測 <strong>5.15%–5.20%</strong>，美元指數再衝 104.53 以上，日圓恐迫使日本央行於 12 月提前升息並引爆年末 Carry Trade 急遽平倉，台股需嚴防二次回測 35,738 點支撐。</p>
+        `;
+      }
+    }
+
+    function setMacroScenario(mode, btn) {
+      appState.macroScenario = mode;
+      const parent = btn ? btn.parentElement : null;
+      if (parent) {
+        parent.querySelectorAll('.btn-secondary').forEach(function (b) { b.classList.remove('active'); });
+      }
+      if (btn) btn.classList.add('active');
+      renderMacroScenario(mode);
+      persistState();
+    }
+
+    /* =====================================================================
+       SECTION 3: AI PILLAR TABS & 301 TARIFF CHART
+       ===================================================================== */
+    function switchAiTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+      const parent = btn ? btn.parentElement : null;
+      if (parent) {
+        parent.querySelectorAll('.tab-btn').forEach(function (b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+      }
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      if (btn) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+      }
+      if (tabId === 'tab-tariffs') renderTariffChart();
+    }
+
+    function renderTariffChart() {
+      const canvas = document.getElementById('tariff-chart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      const ctx = canvas.getContext('2d');
+      if (chartTariff) chartTariff.destroy();
+
+      const cErr = getToken('--error');
+      const cBrass = getToken('--data-2');
+      const cGreen = getToken('--data-3');
+      const cGrid = getToken('--outline-variant');
+      const cInk = getToken('--on-surface-variant');
+
+      chartTariff = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['中國 (無協定)', '越南 (轉運基地)', '馬/泰/印 (非協定)', '台灣/南韓/日/歐 (擬議名目)', '台灣/南韓/日/歐 (協定淨上限)'],
+          datasets: [{
+            label: '301 產能過剩關稅稅率 (%)',
+            data: [40, 35, 25, 25, 15],
+            backgroundColor: [cErr, cErr, cBrass, getToken('--data-context'), cGreen],
+            borderRadius: 2
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: function (c) { return ` 最高 / 淨上限 ${c.parsed.x}%`; } } }
+          },
+          scales: {
+            x: { grid: { color: cGrid }, ticks: { color: cInk, callback: function (v) { return v + '%'; } }, max: 45 },
+            y: { grid: { display: false }, ticks: { color: cInk, font: { weight: '600' } } }
+          }
+        }
+      });
+    }
+
+    /* =====================================================================
+       SECTION 4: TWSE FUTURES FLOW CHART & SQUEEZOMETER
+       ===================================================================== */
+    function renderTwseFlowChart() {
+      const canvas = document.getElementById('twse-flow-chart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      const ctx = canvas.getContext('2d');
+      if (chartTwse) chartTwse.destroy();
+
+      const cNavy = getToken('--data-1');
+      const cErr = getToken('--error');
+      const cGrid = getToken('--outline-variant');
+      const cInk = getToken('--on-surface-variant');
+
+      chartTwse = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['11/03', '11/06', '11/19', '11/25', '11/26', '11/27'],
+          datasets: [
+            {
+              label: '外資台指期未平倉淨空單 (千口，絕對值)',
+              data: [91.812, 99.930, 99.219, 105.709, 106.275, 107.503],
+              borderColor: cErr,
+              backgroundColor: cErr,
+              borderWidth: 2,
+              pointRadius: 4,
+              yAxisID: 'y'
+            },
+            {
+              label: '上市融資餘額概況 (千億元，自 10/6 高點 6.53 千億回落)',
+              data: [6.20, 5.95, 5.10, 4.341, 4.345, 4.302],
+              borderColor: cNavy,
+              backgroundColor: cNavy,
+              borderWidth: 2,
+              borderDash: [5, 4],
+              pointRadius: 4,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { color: cInk, boxWidth: 14 } }
+          },
+          scales: {
+            y: {
+              type: 'linear',
+              position: 'left',
+              min: 85,
+              max: 112,
+              grid: { color: cGrid },
+              ticks: { color: cErr, callback: function (v) { return v + '千口'; } }
+            },
+            y1: {
+              type: 'linear',
+              position: 'right',
+              min: 3.5,
+              max: 7.0,
+              grid: { display: false },
+              ticks: { color: cNavy, callback: function (v) { return v + '千億'; } }
+            },
+            x: { grid: { display: false }, ticks: { color: cInk } }
+          }
+        }
+      });
+    }
+
+    function updateSqueezeOutputs() {
+      const move = Number(appState.taiexMove) || 0;
+      const cover = Number(appState.coverPct) || 0;
+      const targetIdx = 39308 + move;
+      const pnlBillions = -(move * 107503 * 200) / 1e8;
+      const coverContracts = Math.round(107503 * (cover / 100));
+      const notionalBillions = (coverContracts * targetIdx * 200) / 1e8;
+
+      const elIdx = document.getElementById('sim-target-index');
+      const elCov = document.getElementById('sim-cover-contracts');
+      const elPnl = document.getElementById('sim-pnl-output');
+      const elBuy = document.getElementById('sim-squeeze-buy');
+      const elNote = document.getElementById('sim-squeeze-note');
+
+      if (elIdx) elIdx.textContent = `${targetIdx.toLocaleString('en-US')} 點 (${move >= 0 ? '+' : ''}${move})`;
+      if (elCov) elCov.textContent = `${coverContracts.toLocaleString('en-US')} 口 (${cover}%)`;
+      if (elPnl) {
+        elPnl.textContent = `${pnlBillions >= 0 ? '+' : ''}${pnlBillions.toFixed(1)} 億`;
+        elPnl.className = `figure-value ${pnlBillions >= 0 ? 'delta-positive' : 'delta-negative'}`;
+      }
+      if (elBuy && elNote) {
+        if (move > 0) {
+          elBuy.textContent = `${notionalBillions.toFixed(0)} 億`;
+          elBuy.className = 'figure-value delta-positive';
+          elNote.textContent = '指數上漲迫使空單停損回補名目價值';
+        } else if (move === 0) {
+          elBuy.textContent = '0 億';
+          elBuy.className = 'figure-value';
+          elNote.textContent = '指數持平，空單暫無被迫回補壓力';
+        } else {
+          elBuy.textContent = '無被迫回補';
+          elBuy.className = 'figure-value delta-warning';
+          elNote.textContent = `若主動獲利了結 ${cover}% 約釋出 ${notionalBillions.toFixed(0)} 億名目部位`;
+        }
+      }
+    }
+
+    function syncMoveFromSlider(val) {
+      appState.taiexMove = Number(val);
+      const numEl = document.getElementById('input-taiex-move');
+      if (numEl) numEl.value = val;
+      updateSqueezeOutputs();
+      persistState();
+    }
+    function syncMoveFromNumber(val) {
+      const clamped = Math.max(-3000, Math.min(3000, Number(val) || 0));
+      appState.taiexMove = clamped;
+      const slEl = document.getElementById('slider-taiex-move');
+      if (slEl) slEl.value = clamped;
+      updateSqueezeOutputs();
+      persistState();
+    }
+    function syncCoverFromSlider(val) {
+      appState.coverPct = Number(val);
+      const numEl = document.getElementById('input-cover-pct');
+      if (numEl) numEl.value = val;
+      updateSqueezeOutputs();
+      persistState();
+    }
+    function syncCoverFromNumber(val) {
+      const clamped = Math.max(0, Math.min(50, Number(val) || 0));
+      appState.coverPct = clamped;
+      const slEl = document.getElementById('slider-cover-pct');
+      if (slEl) slEl.value = clamped;
+      updateSqueezeOutputs();
+      persistState();
+    }
+
+    /* =====================================================================
+       SECTION 5: MODULE A, MODULE B, MODULE C, MODULE D
+       ===================================================================== */
+    function syncCapitalFromSlider(val) {
+      appState.capital = Number(val);
+      appState.trancheBudget = Number(val);
+      const numEl = document.getElementById('input-capital');
+      const sTr = document.getElementById('slider-tranche-budget');
+      const nTr = document.getElementById('input-tranche-budget');
+      if (numEl) numEl.value = val;
+      if (sTr) sTr.value = val;
+      if (nTr) nTr.value = val;
+      renderPortfolioView();
+      renderTrancheView();
+      persistState();
+    }
+    function syncCapitalFromNumber(val) {
+      const clamped = Math.max(100, Math.min(50000, Number(val) || 100));
+      appState.capital = clamped;
+      appState.trancheBudget = clamped;
+      const slEl = document.getElementById('slider-capital');
+      const sTr = document.getElementById('slider-tranche-budget');
+      const nTr = document.getElementById('input-tranche-budget');
+      if (slEl) slEl.value = Math.min(10000, clamped);
+      if (sTr) sTr.value = Math.min(10000, clamped);
+      if (nTr) nTr.value = clamped;
+      renderPortfolioView();
+      renderTrancheView();
+      persistState();
+    }
+
+    function syncTrancheFromSlider(val) {
+      appState.trancheBudget = Number(val);
+      const numEl = document.getElementById('input-tranche-budget');
+      if (numEl) numEl.value = val;
+      renderTrancheView();
+      persistState();
+    }
+    function syncTrancheFromNumber(val) {
+      const clamped = Math.max(100, Math.min(50000, Number(val) || 100));
+      appState.trancheBudget = clamped;
+      const slEl = document.getElementById('slider-tranche-budget');
+      if (slEl) slEl.value = Math.min(10000, clamped);
+      renderTrancheView();
+      persistState();
+    }
+    function syncTrancheToTotalCapital() {
+      appState.trancheBudget = appState.capital;
+      const sTr = document.getElementById('slider-tranche-budget');
+      const nTr = document.getElementById('input-tranche-budget');
+      if (sTr) sTr.value = Math.min(10000, appState.capital);
+      if (nTr) nTr.value = appState.capital;
+      renderTrancheView();
+      persistState();
+    }
+
+    function renderTrancheView() {
+      const budget = Number(appState.trancheBudget) || 1000;
+      const disp = document.getElementById('tranche-budget-display');
+      const t1 = document.getElementById('tranche-1-amt');
+      const t2 = document.getElementById('tranche-2-amt');
+      const t3 = document.getElementById('tranche-3-amt');
+
+      if (disp) disp.textContent = `${budget.toLocaleString('en-US')} 萬元`;
+      if (t1) t1.textContent = `${(budget * 0.30).toFixed(1)} 萬元`;
+      if (t2) t2.textContent = `${(budget * 0.30).toFixed(1)} 萬元`;
+      if (t3) t3.textContent = `${(budget * 0.40).toFixed(1)} 萬元`;
+    }
+
+    function onWeightSliderChange() {
+      appState.weights = {
+        core: Number(document.getElementById('w-core')?.value || 40),
+        cash: Number(document.getElementById('w-cash')?.value || 30),
+        defense: Number(document.getElementById('w-defense')?.value || 15),
+        satellite: Number(document.getElementById('w-satellite')?.value || 15)
+      };
+      appState.preset = 'custom';
+      updatePresetButtons('custom');
+      renderPortfolioView();
+      persistState();
+    }
+
+    function normalizePortfolioWeights() {
+      const w = appState.weights;
+      const sum = w.core + w.cash + w.defense + w.satellite;
+      if (sum <= 0) {
+        applyPortfolioPreset('base', document.getElementById('preset-base'));
+        return;
+      }
+      const scaled = {
+        core: Math.round((w.core / sum) * 100),
+        cash: Math.round((w.cash / sum) * 100),
+        defense: Math.round((w.defense / sum) * 100),
+        satellite: 0
+      };
+      scaled.satellite = Math.max(0, 100 - (scaled.core + scaled.cash + scaled.defense));
+      appState.weights = scaled;
+
+      document.getElementById('w-core').value = scaled.core;
+      document.getElementById('w-cash').value = scaled.cash;
+      document.getElementById('w-defense').value = scaled.defense;
+      document.getElementById('w-satellite').value = scaled.satellite;
+
+      renderPortfolioView();
+      persistState();
+    }
+
+    function updatePresetButtons(presetKey) {
+      ['base', 'offense', 'defend'].forEach(function (k) {
+        const el = document.getElementById(`preset-${k}`);
+        if (el) el.classList.toggle('active', k === presetKey);
+      });
+    }
+
+    function applyPortfolioPreset(presetKey, btn) {
+      if (presetKey === 'base') {
+        appState.weights = { core: 40, cash: 30, defense: 15, satellite: 15 };
+      } else if (presetKey === 'offense') {
+        appState.weights = { core: 50, cash: 15, defense: 15, satellite: 20 };
+      } else if (presetKey === 'defend') {
+        appState.weights = { core: 30, cash: 45, defense: 15, satellite: 10 };
+      }
+      appState.preset = presetKey;
+      const wCore = document.getElementById('w-core');
+      const wCash = document.getElementById('w-cash');
+      const wDef = document.getElementById('w-defense');
+      const wSat = document.getElementById('w-satellite');
+      if (wCore) wCore.value = appState.weights.core;
+      if (wCash) wCash.value = appState.weights.cash;
+      if (wDef) wDef.value = appState.weights.defense;
+      if (wSat) wSat.value = appState.weights.satellite;
+
+      updatePresetButtons(presetKey);
+      renderPortfolioView();
+      persistState();
+    }
+
+    function resetPortfolioDefaults(btn) {
+      if (btn && btn.dataset.armed !== 'true') {
+        btn.dataset.armed = 'true';
+        btn.textContent = '再次點擊確認重設';
+        setTimeout(function () {
+          if (btn) {
+            btn.dataset.armed = 'false';
+            btn.textContent = '重設基準 (40/30/15/15)';
+          }
+        }, 3000);
+        return;
+      }
+      if (btn) {
+        btn.dataset.armed = 'false';
+        btn.textContent = '重設基準 (40/30/15/15)';
+      }
+      appState.capital = 1000;
+      appState.trancheBudget = 1000;
+      const sCap = document.getElementById('slider-capital');
+      const nCap = document.getElementById('input-capital');
+      const sTr = document.getElementById('slider-tranche-budget');
+      const nTr = document.getElementById('input-tranche-budget');
+      if (sCap) sCap.value = 1000;
+      if (nCap) nCap.value = 1000;
+      if (sTr) sTr.value = 1000;
+      if (nTr) nTr.value = 1000;
+      renderTrancheView();
+      applyPortfolioPreset('base', document.getElementById('preset-base'));
+    }
+
+    function renderPortfolioView() {
+      const cap = Number(appState.capital) || 1000;
+      const w = appState.weights;
+      const sum = w.core + w.cash + w.defense + w.satellite;
+      const norm = sum > 0 ? sum : 100;
+
+      const capDisplay = document.getElementById('capital-display');
+      if (capDisplay) capDisplay.textContent = `${cap.toLocaleString('en-US')} 萬元`;
+
+      ['core', 'cash', 'defense', 'satellite'].forEach(function (k) {
+        const el = document.getElementById(`val-${k}`);
+        if (el) el.textContent = `${w[k]}%`;
+      });
+
+      const cashAmt = (cap * w.cash) / norm;
+      const elCashTotal = document.getElementById('cash-total-amt');
+      const elCashUsd = document.getElementById('cash-usd-amt');
+      const elCashTwd = document.getElementById('cash-twd-amt');
+      if (elCashTotal) elCashTotal.textContent = cashAmt.toFixed(1);
+      if (elCashUsd) elCashUsd.textContent = (cashAmt * (2 / 3)).toFixed(1);
+      if (elCashTwd) elCashTwd.textContent = (cashAmt * (1 / 3)).toFixed(1);
+
+      const sumNote = document.getElementById('weight-sum-note');
+      if (sumNote) {
+        if (sum === 100) {
+          sumNote.textContent = '權重合計：100%（符合機構配置約束）';
+          sumNote.className = 'figure-note delta-positive';
+        } else {
+          sumNote.textContent = `目前權重合計：${sum}%（可點上方「自動配平 100%」，下表已依相對比例換算金額）`;
+          sumNote.className = 'figure-note delta-negative';
+        }
+      }
+
+      const tbody = document.getElementById('portfolio-tbody');
+      if (tbody) {
+        const rowsHtml = PORTFOLIO_TIERS.map(function (tier) {
+          const pct = w[tier.key];
+          const effPct = ((pct / norm) * 100).toFixed(1);
+          const amt = (cap * pct) / norm;
+          const pctLabel = sum === 100 ? `${pct}%` : `${pct}% (實占 ${effPct}%)`;
+          return `
+            <tr>
+              <td><strong>${tier.name}</strong><div class="figure-note">${tier.sub}</div></td>
+              <td class="num"><strong>${pctLabel}</strong></td>
+              <td class="num">${amt.toFixed(1)} 萬元</td>
+              <td>${tier.rule}</td>
+            </tr>
+          `;
+        }).join('');
+        tbody.innerHTML = rowsHtml + `
+          <tr class="total-row">
+            <td>投資組合總計</td>
+            <td class="num">${sum === 100 ? '100%' : sum + '% → 100%'}</td>
+            <td class="num">${cap.toLocaleString('en-US')} 萬元</td>
+            <td>堅持 100% 現股，零信用融資，遠離槓桿 ETF 波動耗損</td>
+          </tr>
+        `;
+      }
+
+      const canvas = document.getElementById('portfolio-chart');
+      if (canvas && typeof Chart !== 'undefined') {
+        const ctx = canvas.getContext('2d');
+        if (chartPortfolio) chartPortfolio.destroy();
+        chartPortfolio = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['核心製造賣鏟人', '高息現金與短債', '平台資安與防禦', 'AI 伺服器與端側'],
+            datasets: [{
+              data: [w.core, w.cash, w.defense, w.satellite],
+              backgroundColor: [getToken('--data-1'), getToken('--data-2'), getToken('--data-3'), getToken('--data-4')],
+              borderWidth: 2,
+              borderColor: getToken('--surface-container-low')
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '58%',
+            plugins: {
+              legend: { position: 'bottom', labels: { color: getToken('--on-surface-variant'), boxWidth: 12, padding: 10 } }
+            }
+          }
+        });
+      }
+    }
+
+    function switchHorizonTab(panelId, btn) {
+      document.querySelectorAll('.horizon-panel').forEach(function (p) { p.classList.remove('active'); });
+      const parent = btn ? btn.parentElement : null;
+      if (parent) {
+        parent.querySelectorAll('.tab-btn').forEach(function (b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+      }
+      const target = document.getElementById(panelId);
+      if (target) target.classList.add('active');
+      if (btn) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+      }
+    }
+
+    function renderReversalChecklist() {
+      const container = document.getElementById('reversal-checklist');
+      const badge = document.getElementById('regime-badge');
+      const guidance = document.getElementById('regime-guidance');
+      if (!container) return;
+
+      container.innerHTML = REVERSAL_SIGNALS.map(function (sig) {
+        const isChecked = appState.checkedSignals.includes(sig.id);
+        return `
+          <label class="signal-item ${isChecked ? 'checked' : ''}" for="chk-${sig.id}">
+            <input type="checkbox" class="signal-checkbox" id="chk-${sig.id}" ${isChecked ? 'checked' : ''} onchange="toggleSignal('${sig.id}', this.checked)">
+            <div>
+              <div class="signal-title">${sig.title}</div>
+              <div class="signal-desc">${sig.desc}</div>
+            </div>
+            <span class="stamp ${isChecked ? 'stamp-positive' : ''}">${isChecked ? '已確認' : '待觀察'}</span>
+          </label>
+        `;
+      }).join('');
+
+      const count = appState.checkedSignals.length;
+      if (badge) {
+        if (count >= 3) {
+          badge.textContent = `已確認 ${count} / 4 項 · 多頭轉折確認`;
+          badge.className = 'stamp stamp-positive';
+        } else if (count >= 2) {
+          badge.textContent = `已確認 ${count} / 4 項 · 達現金降倉門檻`;
+          badge.className = 'stamp stamp-navy';
+        } else {
+          badge.textContent = `已確認 ${count} / 4 項 · 箱型築底警戒`;
+          badge.className = 'stamp stamp-negative';
+        }
+      }
+
+      if (guidance) {
+        if (count >= 3) {
+          guidance.className = 'callout';
+          guidance.innerHTML = `<h4 class="callout-title">多頭主升段確認：建議執行「50 / 15 / 15 / 20」進攻配置</h4><p>三項以上籌碼反轉條件到位，外資空單回補動能可望引爆千億級軋空買盤。可將高息安全墊由 30% 降至 15%，依「3-3-4」現股分批加碼台積電、高雄封測鏈、戴爾伺服器與聯發科 ASIC。</p>`;
+        } else if (count >= 2) {
+          guidance.className = 'callout';
+          guidance.innerHTML = `<h4 class="callout-title">初步止血達標：可分批釋放部分現金（30% → 15%–20%）</h4><p>已出現兩項反轉訊號，代表 35,738 點支撐或匯率結構正在改善。建議維持零融資紀律，於年線或回測不破日線支撐時逢低承接投信與外資雙重青睞之業績股（如奇鋐、群聯、鴻海、南電）。</p>`;
+        } else {
+          guidance.className = 'callout-brass';
+          guidance.innerHTML = `<h4 class="callout-title">維持「40 / 30 / 15 / 15」高現金防禦：切忌追高短線強彈</h4><p>目前外資期貨淨空單仍達 107,503 口且未跨過 12/1 聽證與 12/9 升息門檻。保留 30% 美元短債與現金領取近 5% 無風險利息，等待四大反轉指標至少出現兩項再行加碼。</p>`;
+        }
+      }
+    }
+
+    function toggleSignal(id, checked) {
+      if (checked && !appState.checkedSignals.includes(id)) {
+        appState.checkedSignals.push(id);
+      } else if (!checked) {
+        appState.checkedSignals = appState.checkedSignals.filter(function (item) { return item !== id; });
+      }
+      renderReversalChecklist();
+      persistState();
+    }
+
+    /* =====================================================================
+       CSV REPORT EXPORT
+       ===================================================================== */
+    function exportExecutiveCsv() {
+      const w = appState.weights;
+      const cap = appState.capital;
+      const trBudget = appState.trancheBudget;
+      const sum = (w.core + w.cash + w.defense + w.satellite) || 100;
+      const lines = [
+        '報告區間,2026/11/21 - 2026/11/28',
+        `總投資資金(新台幣萬元),${cap}`,
+        `反轉確認指標達成數,${appState.checkedSignals.length} / 4`,
+        '',
+        '【模組A：戰略資產配置】',
+        '配置層級,權重(%),模擬金額(萬元),核心標的與執行紀律',
+        `核心製造賣鏟人,${w.core},${((cap * w.core) / sum).toFixed(1)},台積電美台擴產鏈/高雄封測/HBM與重電水冷`,
+        `高息現金與短債,${w.cash},${((cap * w.cash) / sum).toFixed(1)},美元短債MMF(20%)/台幣現金(10%)`,
+        `平台資安與防禦,${w.defense},${((cap * w.defense) / sum).toFixed(1)},CRWD-ZS鏈/PANW/中華資安/國泰富邦長榮中華電`,
+        `AI伺服器與端側,${w.satellite},${((cap * w.satellite) / sum).toFixed(1)},鴻海/聯發科ASIC/低軌衛星/蘋果(單一上限5%)`,
+        '',
+        `【模組B：3-3-4分批低接資金控管（總預算 ${trBudget} 萬元）】`,
+        '批次階段,比例,金額(萬元),進場觸發條件',
+        `第一批試單,30%,${(trBudget * 0.30).toFixed(1)},回測守穩 35738 點波段低點不破或年線附近現股買進`,
+        `第二批加碼,30%,${(trBudget * 0.30).toFixed(1)},跨過 12/1 黃仁勳眾院聽證與 12/9 Fed 升息利空出盡確認`,
+        `第三批確認,40%,${(trBudget * 0.40).toFixed(1)},外資現貨連買且期貨淨空單降至10萬口下帶量站回4萬點`,
+        '',
+        '【模組C：短中長期三維度策略摘要】',
+        '投資週期,核心策略定調,重點鎖定標的,汰弱避險對象',
+        '短期(1週-1個月),跨過12/1聽證與12/9升息門檻・零融資守現金,美元短債/台幣現金/國泰金/長榮/中華電,越南(35%)與馬泰(25%)純代工及純消費PC鏈',
+        '中期(3個月-1年),36000-41000箱型築底・布局土洋交集業績股,台積電/鴻海/奇鋐/群聯/南電/聯發科/低軌衛星,負FCF虧損純大模型股與套殼SaaS',
+        '長期(1年-3年以上),重倉雙重免疫賣鏟人＋平台資安＋基載電力散熱,台積電美台廠/高雄3500億封測/HBM/CRWD-ZS/重電水冷/蘋果,高負債依賴循環融資之算力中間商',
+        '',
+        '【全球主要資產週線表現】',
+        '資產類別,11/27最新水準,單週變動',
+        ...ASSETS_DATA.map(function (a) { return `"${a.name}","${a.close}","${a.changeStr}"`; })
+      ];
+      const csvContent = '\uFEFF' + lines.join('\n');
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === 'function') {
+        window.notebookAppApi.triggerFileDownload({
+          content: csvContent,
+          contentType: 'text/csv',
+          encoding: 'UTF-8',
+          filename: '2026-11-28_Global_Macro_Investor_Action_Plan.csv'
+        });
+      } else {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '2026-11-28_Global_Macro_Investor_Action_Plan.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    /* =====================================================================
+       BOOT SEQUENCE
+       ===================================================================== */
+    async function initDashboard() {
+      try {
+        const localSaved = localStorage.getItem('twse_macro_dashboard_20261128');
+        if (localSaved) {
+          appState = Object.assign({}, appState, JSON.parse(localSaved));
+        }
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === 'function') {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && typeof saved === 'object') {
+            appState = Object.assign({}, appState, saved);
+          }
+        }
+      } catch (e) {
+        // Fallback to default state
+      }
+
+      if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+      }
+
+      renderAssetTable();
+      renderOverviewChart();
+      renderMacroChart();
+      renderTariffChart();
+      renderTwseFlowChart();
+      applyStateToUI();
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === 'function') {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDashboard);
+    } else {
+      initDashboard();
+    }
+  </script>
+</body>
+</html>
